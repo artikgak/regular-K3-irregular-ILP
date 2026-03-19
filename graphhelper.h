@@ -1,0 +1,281 @@
+#pragma once
+#include <string>
+#include <vector>
+#include <set>
+#include <boost/algorithm/string.hpp>
+#include <boost/graph/isomorphism.hpp>
+#include <boost/graph/connected_components.hpp>
+#include "TypeTraits.h"
+
+std::vector<std::vector<int>> parseExpression(const std::string& expression) {
+	std::string input = expression;
+	boost::trim(input);
+
+	// Remove the outermost square brackets
+	input = input.substr(1, input.length() - 2);
+
+	// Initialize the result vector
+	std::vector<std::vector<int>> result;
+
+	// Create a string stream for tokenization
+	std::istringstream ss(input);
+
+	// Tokenize the string by commas and square brackets
+	std::string token;
+	while (std::getline(ss, token, ']')) {
+		// Remove any leading or trailing whitespace
+		token = token.substr(token.find_first_not_of(" ,["));
+		// Create a new vector for the current token
+		std::vector<int> sub_vector;
+		std::istringstream sub_ss(token);
+		std::string sub_token;
+		while (std::getline(sub_ss, sub_token, ',')) {
+			sub_vector.push_back(std::stoi(sub_token));
+		}
+		result.push_back(sub_vector);
+	}
+
+	return result;
+}
+
+template <class TGraph>
+TGraph fromVecToGraph(const std::vector<std::vector<int>>& vectors)
+{
+	TGraph res(vectors.size());
+	for (int u = 0; u < vectors.size(); ++u)
+	{
+		for (int v = 0; v < vectors[u].size(); ++v)
+		{
+			if (!edge(u, vectors[u][v], res).second)
+			{
+				add_edge(u, vectors[u][v], res);
+			}
+		}
+	}
+
+	return std::move(res);
+}
+
+std::vector<int> K3Irregullar(const UndirectedGraph& graph)
+{
+	std::vector<int> k3_degrees;
+	UndirectedGraphVertexIterator v, vend;
+	for (boost::tie(v, vend) = vertices(graph); v != vend; ++v)
+	{
+		int k3_deg = 0;
+
+		const auto in_edges = adjacent_vertices(*v, graph); // ????
+		std::vector<int> in_edges_vec(in_edges.first, in_edges.second);
+
+		for (int i = 0; i < in_edges_vec.size() - 1; ++i)
+		{
+			for (int j = i + 1; j < in_edges_vec.size(); ++j)
+			{
+				if (edge(in_edges_vec[i], in_edges_vec[j], graph).second)
+				{
+					k3_deg++;
+				}
+			}
+		}
+		k3_degrees.push_back(k3_deg);
+	}
+	assert(k3_degrees.size() == num_vertices(graph));
+	return k3_degrees;
+}
+
+std::string generatePresove(const UndirectedGraph& graph)
+{
+	const int n = num_vertices(graph);
+	//const int E = num_edges(graph);
+	std::string res;
+
+	const std::vector<int> k3_degs = K3Irregullar(graph);
+
+	std::vector<std::pair<int, int> > k3_degs_with_index;
+	for (int i = 0; i < k3_degs.size(); ++i)
+	{
+		k3_degs_with_index.push_back(std::pair<int, int>(k3_degs[i], i));
+	}
+
+	// Сортуємо за зростанням K3-степеня. 
+	// Тепер позиція в масиві (від 0 до n-1) - це і є наш MILP-індекс!
+	std::sort(k3_degs_with_index.begin(), k3_degs_with_index.end());
+
+	// 1. Фіксуємо всі K3-степені (змінні d_i)
+	for (int milp_idx = 0; milp_idx < n; ++milp_idx)
+	{
+		res += "d" + std::to_string(milp_idx)
+			+ " " + std::to_string(k3_degs_with_index[milp_idx].first) + "\n";
+	}
+
+	for (int u_milp = 0; u_milp < n - 1; ++u_milp)
+	{
+		for (int v_milp = u_milp + 1; v_milp < n; ++v_milp)
+		{
+			// Дістаємо їхні оригінальні індекси в Boost-графі
+			int u_orig = k3_degs_with_index[u_milp].second;
+			int v_orig = k3_degs_with_index[v_milp].second;
+
+			// Перевіряємо, чи є ребро між цими вершинами в оригінальному графі
+			// Функція edge() у Boost повертає пару, де .second - це bool (існує чи ні)
+			auto e = edge(u_orig, v_orig, graph);
+			int edge_exists = e.second ? 1 : 0;
+
+			// Виводимо готове рівняння для LP файлу
+			res += "x" + std::to_string(u_milp) + "_" + std::to_string(v_milp) + " " + std::to_string(edge_exists) + "\n";
+		}
+	}
+
+	return res;
+}
+
+std::string generatePresoveSplitted(const UndirectedGraph& graph, const int splitK3deg)
+{
+	const int n = num_vertices(graph);
+	//const int E = num_edges(graph);
+	std::string res;
+
+	const std::vector<int> k3_degs = K3Irregullar(graph);
+
+	// 1. Знаходимо вершину із заданим K3-степенем (це наша MILP вершина 0)
+	int v_split_orig = -1;
+	for (int i = 0; i < n; ++i) {
+		if (k3_degs[i] == splitK3deg) {
+			v_split_orig = i;
+			break;
+		}
+	}
+
+	// Захист від помилок: якщо такої вершини в графі немає
+	if (v_split_orig == -1) {
+		std::cerr << "Помилка: Вершину з K3-степенем " << splitK3deg << " не знайдено!" << std::endl;
+		return "";
+	}
+
+	// 2. Розбиваємо решту вершин на Окіл (neighborhood) та Не-окіл (non_neighborhood)
+	std::vector<std::pair<int, int>> neighborhood;
+	std::vector<std::pair<int, int>> non_neighborhood;
+
+	for (int i = 0; i < n; ++i) 
+	{
+		if (i == v_split_orig) 
+			continue;
+
+		// Перевіряємо, чи є ребро між v_split та i
+		auto e = edge(v_split_orig, i, graph);
+		if (e.second) 
+		{
+			neighborhood.push_back({ k3_degs[i], i });
+		}
+		else 
+		{
+			non_neighborhood.push_back({ k3_degs[i], i });
+		}
+	}
+
+	// 3. Сортуємо обидві групи незалежно за їхнім K3-степенем
+	std::sort(neighborhood.begin(), neighborhood.end());
+	std::sort(non_neighborhood.begin(), non_neighborhood.end());
+
+	// 4. Будуємо фінальний мапінг: MILP-індекс -> Оригінальний індекс C++
+	std::vector<int> milp_to_orig(n);
+	milp_to_orig[0] = v_split_orig;
+
+	int current_milp_idx = 1;
+	// Спочатку записуємо відсортованих сусідів (індекси 1..R)
+	for (auto& p : neighborhood) 
+	{
+		milp_to_orig[current_milp_idx++] = p.second;
+	}
+	// Потім відсортованих не-сусідів (індекси R+1..N-1)
+	for (auto& p : non_neighborhood) 
+	{
+		milp_to_orig[current_milp_idx++] = p.second;
+	}
+
+	// Фіксуємо всі K3-степені (змінні d_i)
+	for (int milp_idx = 0; milp_idx < n; ++milp_idx) 
+	{
+		int orig_idx = milp_to_orig[milp_idx];
+		res += "d" + std::to_string(milp_idx)
+			+ " " + std::to_string(k3_degs[orig_idx]) + "\n";
+	}
+
+	for (int u_milp = 0; u_milp < n - 1; ++u_milp)
+	{
+		for (int v_milp = u_milp + 1; v_milp < n; ++v_milp)
+		{
+			// Дістаємо їхні оригінальні індекси в Boost-графі
+			int u_orig = milp_to_orig[u_milp];
+			int v_orig = milp_to_orig[v_milp];
+
+			// Перевіряємо, чи є ребро між цими вершинами в оригінальному графі
+			// Функція edge() у Boost повертає пару, де .second - це bool (існує чи ні)
+			auto e = edge(u_orig, v_orig, graph);
+			int edge_exists = e.second ? 1 : 0;
+
+			// Виводимо готове рівняння для LP файлу
+			res += "x" + std::to_string(u_milp) + "_" + std::to_string(v_milp) + " " + std::to_string(edge_exists) + "\n";
+		}
+	}
+
+	return res;
+}
+
+
+UndirectedGraph loadGraphFromSCIPSolution(const std::string& filename, int numVertices)
+{
+	UndirectedGraph graph(numVertices);
+	std::ifstream file(filename);
+
+	if (!file.is_open()) {
+		std::cerr << "Помилка: не вдалося відкрити файл " << filename << std::endl;
+		return graph;
+	}
+
+	std::string line;
+	while (getline(file, line))
+	{
+		// Видаляємо пробіли на початку рядка, якщо вони є
+		line.erase(line.begin(), std::find_if(line.begin(), line.end(), [](unsigned char ch) {
+			return !std::isspace(ch);
+			}));
+
+		if (line.empty()) continue;
+
+		// Нас цікавлять тільки змінні ребер, які починаються на 'x'
+		// Також перевіряємо, що наступний символ - це цифра (щоб не сплутати з іншими можливими змінними)
+		if (line[0] == 'x' && isdigit(line[1]))
+		{
+			std::stringstream ss(line);
+			std::string varName;
+			double value;
+
+			// Зчитуємо ім'я змінної (наприклад, "x0_1") та її значення (наприклад, 1)
+			// (об'єктивне значення "(obj:0)" ігнорується, бо ми зчитуємо лише перші два токени)
+			ss >> varName >> value;
+
+			// Якщо ребро існує (значення більше 0.5, щоб уникнути багів з float, хоча зазвичай там рівно 1)
+			if (value > 0.5)
+			{
+				size_t underscorePos = varName.find('_');
+				if (underscorePos != std::string::npos)
+				{
+					// Витягуємо індекси u та v
+					// varName.substr(1, ...) бере рядок після 'x' до '_'
+					int u = stoi(varName.substr(1, underscorePos - 1));
+					// varName.substr(...) бере рядок після '_'
+					int v = stoi(varName.substr(underscorePos + 1));
+
+					// Додаємо ребро у Boost граф
+					add_edge(u, v, graph);
+				}
+			}
+		}
+	}
+
+	file.close();
+	std::cout << "ТестіліоГраф успішно завантажено! Кількість ребер: " << num_edges(graph) << std::endl;
+
+	return graph;
+}
