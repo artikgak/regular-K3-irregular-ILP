@@ -111,6 +111,40 @@ std::string genTrianglesK3Degs(const int n, const int r)
     return res;
 }
 
+std::string genNoTrueTwinsCond(const int n, const int r)
+{
+    std::string res;
+    // Перебираємо всі можливі пари вершин (потенційні ребра)
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            res += "notruetwins_" + to_string(i) + "_" + to_string(j) + ": ";
+            bool first = true;
+
+            // Рахуємо всі можливі трикутники, які містять вершини i та j
+            for (int k = 0; k < n; k++)
+            {
+                if (k == i || k == j) continue;
+
+                if (!first) res += " + ";
+
+                // Функція tvar очікує строго відсортовані індекси a < b < c
+                int a = i, b = j, c = k;
+                if (a > b) swap(a, b);
+                if (b > c) swap(b, c);
+                if (a > b) swap(a, b);
+
+                res += tvar(a, b, c);
+                first = false;
+            }
+            // Максимум r-2 спільних сусідів (трикутників) на будь-якому ребрі
+            res += " <= " + to_string(r-2) + "\n";
+        }
+    }
+    return res;
+}
+
 std::string genBinaryVars(const int n, const int r)
 {
     std::string res;
@@ -151,6 +185,12 @@ void generateUsual(const int n, const int r, const int min_k3_deg, const int max
 
     std::string trCond = genTrianglesK3Degs(n, r);
 	f << trCond;
+
+    f << "\n";
+
+    // Додаємо відсікання "справжніх близнюків"
+    std::string noTwinsCond = genNoTrueTwinsCond(n, r);
+    f << noTwinsCond;
 
     f << "\n";
 
@@ -212,12 +252,11 @@ void generateUsual(const int n, const int r, const int min_k3_deg, const int max
     cout << "LP file written to " << filename << "\n";
 }
 
-// fix 0 = K3 0
-// 1..8 are neighbouns
-// 9..21 not neighbors
-void generateSpecialBounds(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const std::string& filename)
+// fix splitK3 - 0 index
+// 1..r are neighbouns
+// r+1..n-1 not neighbors
+void generateSplitAB(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const int splitK3, const std::string& filename)
 {
-    const int n = 22;
     ofstream f(filename);
 
     f << "Minimize\n";
@@ -233,24 +272,33 @@ void generateSpecialBounds(const int n, const int r, const int min_k3_deg, const
 
     f << "\n";
 
-    // ordering of K3-degrees
-    for (int i = 1; i < 8; i++)
+    // Додаємо відсікання "справжніх близнюків"
+    std::string noTwinsCond = genNoTrueTwinsCond(n, r);
+    f << noTwinsCond;
+
+    f << "\n";
+
+    // ordering of K3-degrees inside A
+    for (int i = 1; i < r; i++)
     {
         f << "ord" << i << ": "
             << degv(i) << " - " << degv(i + 1)
             << " <= -1\n";
     }
-    for (int i = 9; i < n-1; i++)
+    f << "\n";
+    // ordering of K3-degrees inside B
+    for (int i = r+1; i < n-1; i++)
     {
         f << "ord" << i << ": "
             << degv(i) << " - " << degv(i + 1)
             << " <= -1\n";
     }
 
-    int M = 30;
-    for (int i = 1; i <= 8; i++)
+	// some large constant for big-M constraints
+	int M = 30; // use upper bound on max_k3_deg + epsilon
+    for (int i = 1; i <= r; i++)
     {
-        for (int j = 9; j < n; j++)
+        for (int j = r+1; j < n; j++)
         {
             std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
 
@@ -270,7 +318,6 @@ void generateSpecialBounds(const int n, const int r, const int min_k3_deg, const
         }
     }
 
-
     // sum k3 = 3T
     f << "sum_k3: ";
     for (int i = 0; i < n - 1; i++)
@@ -279,51 +326,77 @@ void generateSpecialBounds(const int n, const int r, const int min_k3_deg, const
     }
     f << degv(n - 1) << " - 3 T = 0\n";
 
+    for (int i = 1; i <= r; i++)
+    {
+        f << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
+    }
+    for (int i = r+1; i < n; i++)
+    {
+        f << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
+    }
+    
+    const int EdgesToFixedK3Deg = r;
+	const int edgesInsideA = splitK3;
+	const int edgesBetweenAB = r * (r - 1) - 2 * splitK3;
+	const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
 
-    for (int i = 1; i <= 8; i++)
+    if (splitK3 == 0)
     {
-        f << "fix0_" << i << ": x_0_" << i << " = 1\n";
-    }
-    for (int i = 9; i <= 21; i++)
-    {
-        f << "fix0_" << i << ": x_0_" << i << " = 0\n";
-    }
-    for (int i = 1; i <= 7; i++)
-    {
-        for (int j = i + 1; j <= 8; j++)
+		// no edges inside A
+        for (int i = 1; i <= r-1; i++)
         {
-            f << "noedge_" << i << "_" << j
-                << ": x_" << i << "_" << j
-                << " = 0\n";
+            for (int j = i + 1; j <= r; j++)
+            {
+                f << "noedge_" << i << "_" << j
+                    << ": x" << i << "_" << j
+                    << " = 0\n";
+            }
         }
     }
+    else
+    {
+		// count edges inside A
+        for (int i = 1; i < r-1; i++)
+        {
+            for (int j = i + 1; j <= r; j++)
+            {
+                f << evar(i, j) << " + ";
+            }
+        }
+        f << evar(r - 1, r) << " = " << to_string(edgesInsideA) << "\n";
+    }
 
-
-    for (int i = 9; i < n - 1; i++)
+    // count edges inside B 
+    for (int i = r+1; i < n - 1; i++)
     {
         for (int j = i + 1; j < n; j++)
         {
             if (i != n - 2 || j != n - 1)
-            f << evar(i, j) << " + ";
-        }
-    }
-    f << evar(n-2, n-1) << " = 24\n";
-
-    for (int i = 1; i <= 8; i++)
-    {
-        for (int j = 9; j < n; j++)
-        {
-            if(i != 8 || j != n-1)
                 f << evar(i, j) << " + ";
         }
     }
-    f << evar(8, n - 1) << " = 56\n";
+    f << evar(n-2, n-1) << " = " << to_string(edgesInsideB) << "\n";
+
+    // count edges between AB 
+    for (int i = 1; i <= r; i++)
+    {
+        for (int j = r+1; j < n; j++)
+        {
+            if(i != r || j != n-1)
+                f << evar(i, j) << " + ";
+        }
+    }
+    f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n";
 
     f << "\nBounds\n";
 
-    for (int i = 0; i < n; i++)
+	const int updminBound = splitK3 == min_k3_deg ? min_k3_deg + 1 : min_k3_deg;
+	const int updmaxBound = splitK3 == max_k3_deg ? max_k3_deg - 1 : max_k3_deg;
+	// d0 is fixed to splitK3
+	f << "d0 = " << to_string(splitK3) << "\n";
+    for (int i = 1; i < n; i++)
     {
-        f << 1 << " <= " << degv(i) << " <= " << 22 << "\n";
+        f << to_string(updminBound) << " <= " << degv(i) << " <= " << to_string(updmaxBound) << "\n";
     }
 
     int sum_min = n * min_k3_deg + n * (n - 1) / 2;
@@ -339,9 +412,9 @@ void generateSpecialBounds(const int n, const int r, const int min_k3_deg, const
     std::string binVars = genBinaryVars(n, r);
     f << binVars;
 
-    for (int i = 1; i <= 8; i++)
+    for (int i = 1; i <= r; i++)
     {
-        for (int j = 9; j < n; j++)
+        for (int j = r+1; j < n; j++)
         {
             f << "b_" << i << "_" << j << "\n";
         }
