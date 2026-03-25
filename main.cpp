@@ -12,7 +12,7 @@ constexpr int N = 24;
 constexpr int R = 9;
 constexpr int MIN_K3_DEG = 3;
 constexpr int MAX_K3_DEG = 26;
-constexpr int SPLIT_K3 = 26;
+constexpr int SPLIT_K3 = 3;
 
 const string FILENAME = "N" + to_string(N) + "_R" + to_string(R) + ".lp";
 const string FILENAMESpec = "N" + to_string(N) + "_R" + to_string(R) + "_K3_" + to_string(MIN_K3_DEG) + "_" + to_string(MAX_K3_DEG) + "_split_" + to_string(SPLIT_K3) + ".lp";
@@ -29,22 +29,22 @@ int main()
 	//f.flush();
 	//f.close();
 
-	UndirectedGraph graph9 = loadGraphFromSCIPSolution("testsolSplit3.txt", 24);
-	std::vector<int> k3degs = K3Irregullar(graph9);
+	//UndirectedGraph graph9 = loadGraphFromSCIPSolution("testsolSplit3.txt", 24);
+	//std::vector<int> k3degs = K3Irregullar(graph9);
 
-	for (int i = 0; i < k3degs.size(); ++i)
-	{
-		cout << k3degs[i] << ' ';
-	}
-	cout << "\nSorted:\n";
-	std::sort(k3degs.begin(), k3degs.end());
-	for (int i = 0; i < k3degs.size(); ++i)
-	{
-		cout << k3degs[i] << ' ';
-	}
+	//for (int i = 0; i < k3degs.size(); ++i)
+	//{
+	//	cout << k3degs[i] << ' ';
+	//}
+	//cout << "\nSorted:\n";
+	//std::sort(k3degs.begin(), k3degs.end());
+	//for (int i = 0; i < k3degs.size(); ++i)
+	//{
+	//	cout << k3degs[i] << ' ';
+	//}
 
 	//generateUsual(N, R, MIN_K3_DEG, MAX_K3_DEG, FILENAME);
-	//generateSplitAB(N, R, MIN_K3_DEG, MAX_K3_DEG, SPLIT_K3, FILENAMESpec);
+	generateSplitAB(N, R, MIN_K3_DEG, MAX_K3_DEG, SPLIT_K3, FILENAMESpec);
 
 	return 0;
 }
