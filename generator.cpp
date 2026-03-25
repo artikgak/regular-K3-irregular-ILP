@@ -318,10 +318,8 @@ std::string genLemma3_4(const int n, const int r, const int d)
             sum_adj_edges += evar(i, j);
         }
 
-        res += "lemma3_4_r1_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(r) + "\n"; // (R1)
-        res += "lemma3_4_r3_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(edgesInsideB) + "\n"; // (R3)
-        res += "lemma3_4_l1_" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(1) + "\n"; // (L1)
-        res += "lemma3_4_l2_" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(verticesInsideB - 1 - nonEdgesInsideB) + "\n"; // (L2)
+        res += "lemma3_4_r" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(max(r, verticesInsideB - 1, edgesInsideB)) + "\n"; // max (R1) (R2) (R3)
+        res += "lemma3_4_l" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(min(1, verticesInsideB - 1 - nonEdgesInsideB)) + "\n"; // min (L1) (L2)
     }
     return res;
 }
