@@ -252,6 +252,80 @@ void generateUsual(const int n, const int r, const int min_k3_deg, const int max
     cout << "LP file written to " << filename << "\n";
 }
 
+// =========================================================================
+// ЛЕМА 3.1: Для кожної вершини a \in A, deg_{G[A]}(a) <= min{r - 2, d}
+// d=splitK3, A has 1...r vertices, B has r+1...n-1 vertices
+// =========================================================================
+std::string genLemma3_1(const int n, const int r, const int d)
+{
+    std::string res;
+
+    for (int i = 1; i <= r; ++i) 
+    {
+        std::string sum_adj_edges = "";
+        bool first = true;
+        for (int j = 1; j <= r; j++)
+        {
+            if (i == j) 
+                continue;
+
+            if (!first) 
+                sum_adj_edges += " + ";
+            first = false;
+
+            sum_adj_edges += evar(i, j);
+        }
+        res += "lemma3_1_a_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(r - 2) + "\n";
+        res += "lemma3_1_b_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(d) + "\n";
+    }
+    return res;
+}
+
+
+// =========================================================================
+// ЛЕМА 3.4: Для кожної вершини b \in B, max{1, |B|-1-|E(\overline{G[B]})} <= deg_{G[A]}(a) <= min{r, |E(B)|, |B| - 1}
+// d=splitK3, A has 1...r vertices, B has r+1...n-1 vertices
+// (R1) deg_B(b) <= r - maybe
+// (R2) deg_b(b) <= |B| - 1 - trivial
+// (R3) deg_b(b) <= |E(B)| - let's add this (good)
+// (L1) deg_B(b) >= 1 - yes
+// (L2) deg_B(b) >= |B| - 1 - |E(\overline{G[B]}) - yes
+// =========================================================================
+std::string genLemma3_4(const int n, const int r, const int d)
+{
+    const int EdgesToFixedK3Deg = r;
+    const int edgesInsideA = d;
+    const int edgesBetweenAB = r * (r - 1) - 2 * d;
+    const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
+	const int verticesInsideB = n - r - 1;
+	const int nonEdgesInsideB = verticesInsideB * (verticesInsideB - 1) / 2 - edgesInsideB;
+
+    std::string res;
+
+    for (int i = r+1; i < n; ++i)
+    {
+        std::string sum_adj_edges = "";
+        bool first = true;
+        for (int j = r+1; j < n; j++)
+        {
+            if (i == j)
+                continue;
+
+            if (!first)
+                sum_adj_edges += " + ";
+            first = false;
+
+            sum_adj_edges += evar(i, j);
+        }
+
+        res += "lemma3_4_r1_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(r) + "\n"; // (R1)
+        res += "lemma3_4_r3_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(edgesInsideB) + "\n"; // (R3)
+        res += "lemma3_4_l1_" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(1) + "\n"; // (L1)
+        res += "lemma3_4_l2_" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(verticesInsideB - 1 - nonEdgesInsideB) + "\n"; // (L2)
+    }
+    return res;
+}
+
 // fix splitK3 - 0 index
 // 1..r are neighbouns
 // r+1..n-1 not neighbors
@@ -387,6 +461,12 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
         }
     }
     f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n";
+
+	const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
+	f << "\n" << lemma3_1 << "\n";
+
+    const std::string lemma3_4 = genLemma3_4(n, r, splitK3);
+    f << "\n" << lemma3_4 << "\n";
 
     f << "\nBounds\n";
 
