@@ -8,11 +8,11 @@
 
 using namespace std;
 
-constexpr int N = 24;
-constexpr int R = 9;
-constexpr int MIN_K3_DEG = 3;
-constexpr int MAX_K3_DEG = 26;
-constexpr int SPLIT_K3 = 3;
+constexpr int N = 18;
+constexpr int R = 8;
+constexpr int MIN_K3_DEG = 2;
+constexpr int MAX_K3_DEG = 19;
+constexpr int SPLIT_K3 = 19;
 
 const string FILENAME = "N" + to_string(N) + "_R" + to_string(R) + ".lp";
 const string FILENAMESpec = "N" + to_string(N) + "_R" + to_string(R) + "_K3_" + to_string(MIN_K3_DEG) + "_" + to_string(MAX_K3_DEG) + "_split_" + to_string(SPLIT_K3) + ".lp";
