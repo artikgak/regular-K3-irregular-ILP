@@ -460,11 +460,11 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     }
     f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n";
 
-	const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
-	f << "\n" << lemma3_1 << "\n";
+	//const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
+	//f << "\n" << lemma3_1 << "\n";
 
-    const std::string lemma3_4 = genLemma3_4(n, r, splitK3);
-    f << "\n" << lemma3_4 << "\n";
+ //   const std::string lemma3_4 = genLemma3_4(n, r, splitK3);
+ //   f << "\n" << lemma3_4 << "\n";
 
     f << "\nBounds\n";
 
