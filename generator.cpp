@@ -275,8 +275,7 @@ std::string genLemma3_1(const int n, const int r, const int d)
 
             sum_adj_edges += evar(i, j);
         }
-        res += "lemma3_1_a_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(r - 2) + "\n";
-        res += "lemma3_1_b_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(d) + "\n";
+        res += "lemma3_1_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(min({r - 2, d})) + "\n";
     }
     return res;
 }
@@ -318,8 +317,8 @@ std::string genLemma3_4(const int n, const int r, const int d)
             sum_adj_edges += evar(i, j);
         }
 
-        res += "lemma3_4_r" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(std::max({ r, verticesInsideB - 1, edgesInsideB })) + "\n"; // max (R1) (R2) (R3)
-        res += "lemma3_4_l" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(std::min({ 1, verticesInsideB - 1 - nonEdgesInsideB })) + "\n"; // min (L1) (L2)
+        res += "lemma3_4_r" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(std::min({ r, verticesInsideB - 1, edgesInsideB })) + "\n"; // min (R1) (R2) (R3)
+        res += "lemma3_4_l" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(std::max({ 1, verticesInsideB - 1 - nonEdgesInsideB })) + "\n"; // max (L1) (L2)
     }
     return res;
 }
@@ -460,11 +459,11 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     }
     f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n";
 
-	//const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
-	//f << "\n" << lemma3_1 << "\n";
+	const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
+	f << "\n" << lemma3_1 << "\n";
 
- //   const std::string lemma3_4 = genLemma3_4(n, r, splitK3);
- //   f << "\n" << lemma3_4 << "\n";
+    const std::string lemma3_4 = genLemma3_4(n, r, splitK3);
+    f << "\n" << lemma3_4 << "\n";
 
     f << "\nBounds\n";
 
