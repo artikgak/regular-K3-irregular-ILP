@@ -11,11 +11,11 @@ using namespace std;
 constexpr int N = 20;
 constexpr int R = 8;
 constexpr int MIN_K3_DEG = 0;
-constexpr int MAX_K3_DEG = 22;
-constexpr int SPLIT_K3 = 22;
+constexpr int MAX_K3_DEG = 21;
+constexpr int SPLIT_K3 = 0;
 
 const string FILENAME = "N" + to_string(N) + "_R" + to_string(R) + ".lp";
-const string FILENAMESpec = "N" + to_string(N) + "_R" + to_string(R) + "_K3_" + to_string(MIN_K3_DEG) + "_" + to_string(MAX_K3_DEG) + "_split_" + to_string(SPLIT_K3) + "_lem_31_32" + ".lp";
+const string FILENAMESpec = "N" + to_string(N) + "_R" + to_string(R) + "_K3_" + to_string(MIN_K3_DEG) + "_" + to_string(MAX_K3_DEG) + "_split_" + to_string(SPLIT_K3) + "_lem_31_34" + ".lp";
 
 int main()
 {
