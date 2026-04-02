@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <cassert>
 
 using namespace std;
 
@@ -30,7 +31,7 @@ std::string genRegularityCondition(const int n, const int r)
     // regularity
     for (int i = 0; i < n; i++)
     {
-		res += "deg" + to_string(i) + ": ";
+        res += "deg" + to_string(i) + ": ";
 
         bool first = true;
 
@@ -139,7 +140,7 @@ std::string genNoTrueTwinsCond(const int n, const int r)
                 first = false;
             }
             // Максимум r-2 спільних сусідів (трикутників) на будь-якому ребрі
-            res += " <= " + to_string(r-2) + "\n";
+            res += " <= " + to_string(r - 2) + "\n";
         }
     }
     return res;
@@ -170,6 +171,105 @@ std::string genBinaryVars(const int n, const int r)
     return res;
 }
 
+std::string alldifferentK3Degrees(const int n, const int r, const int splitDeg, const int neighboursInB = -1)
+{
+    std::string res = "";
+
+    // ordering of K3-degrees inside A
+    for (int i = 1; i < r; i++)
+    {
+        res += "ord" + to_string(i) + ": "
+            + degv(i) + " - " + degv(i + 1)
+            + " <= -1\n";
+    }
+    res += "\n";
+
+    if (neighboursInB == -1)
+    {
+        // ordering of K3-degrees inside B
+        for (int i = r + 1; i < n - 1; i++)
+        {
+            res += "ord" + to_string(i) + ": "
+                + degv(i) + " - " + degv(i + 1)
+                + " <= -1\n";
+        }
+    }
+    else
+    {
+        // order inside neighbours 0
+        // dr+1 = 0
+        // r+2
+        for (int i = 1; i < neighboursInB; i++)
+        {
+            res += "ord" + to_string(r + 1 + i) + ": "
+                + degv(r + 1 + i) + " - " + degv(r + 1 + i + 1)
+                + " <= -1\n";
+        }
+        res += "\n";
+
+        // order inside non-neighbours 0
+        for (int i = r + 1 + neighboursInB + 1; i < n - 1; i++)
+        {
+            res += "ord" + to_string(i) + ": "
+                + degv(i) + " - " + degv(i + 1)
+                + " <= -1\n";
+        }
+        res += "\n";
+
+        // order inbetween groups
+        const int M = r*r; // use upper bound on max_k3_deg + epsilon
+        for (int i = r + 1 + 1; i <= r + 1 + neighboursInB; i++)
+        {
+            for (int j = r + 1 + neighboursInB + 1; j < n; j++)
+            {
+                std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
+
+                // binary variable
+                res += "bin_" + to_string(i) + "_" + to_string(j) + ": " + b + " <= 1\n";
+
+                // d_i < d_j or d_j < d_i
+                res += "neq1_" + to_string(i) + "_" + to_string(j) + ": "
+                    + "d" + to_string(i) + " - d" + to_string(j)
+                    + " - " + to_string(M) + " " + b
+                    + " <= -1\n";
+
+                res += "neq2_" + to_string(i) + "_" + to_string(j) + ": "
+                    + "d" + to_string(j) + " - d" + to_string(i)
+                    + " + " + to_string(M) + " " + b
+                    + " <= " + to_string(M - 1) + "\n";
+            }
+        }
+    }
+
+    // A neq B
+    // some large constant for big-M constraints
+    int M = r*r; // use upper bound on max_k3_deg + epsilon
+    for (int i = 1; i <= r; i++)
+    {
+		const int j_start = neighboursInB == -1 ? r + 1 : r + 1 + 1;
+        for (int j = j_start; j < n; j++)
+        {
+            std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
+
+            // binary variable
+            res += "bin_" + to_string(i) + "_" + to_string(j) + ": " + b + " <= 1\n";
+
+            // d_i < d_j or d_j < d_i
+            res += "neq1_" + to_string(i) + "_" + to_string(j) + ": "
+                + "d" + to_string(i) + " - d" + to_string(j)
+                + " - " + to_string(M) + " " + b
+                + " <= -1\n";
+
+            res += "neq2_" + to_string(i) + "_" + to_string(j) + ": "
+                + "d" + to_string(j) + " - d" + to_string(i)
+                + " + " + to_string(M) + " " + b
+                + " <= " + to_string(M - 1) + "\n";
+        }
+    }
+
+    return res;
+}
+
 
 void generateUsual(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const std::string& filename)
 {
@@ -184,7 +284,7 @@ void generateUsual(const int n, const int r, const int min_k3_deg, const int max
     f << regCond;
 
     std::string trCond = genTrianglesK3Degs(n, r);
-	f << trCond;
+    f << trCond;
 
     f << "\n";
 
@@ -260,22 +360,22 @@ std::string genLemma3_1(const int n, const int r, const int d)
 {
     std::string res;
 
-    for (int i = 1; i <= r; ++i) 
+    for (int i = 1; i <= r; ++i)
     {
         std::string sum_adj_edges = "";
         bool first = true;
         for (int j = 1; j <= r; j++)
         {
-            if (i == j) 
+            if (i == j)
                 continue;
 
-            if (!first) 
+            if (!first)
                 sum_adj_edges += " + ";
             first = false;
 
             sum_adj_edges += evar(i, j);
         }
-        res += "lemma3_1_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(min({r - 2, d})) + "\n";
+        res += "lemma3_1_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(min({ r - 2, d })) + "\n";
     }
     return res;
 }
@@ -296,16 +396,16 @@ std::string genLemma3_4(const int n, const int r, const int d)
     const int edgesInsideA = d;
     const int edgesBetweenAB = r * (r - 1) - 2 * d;
     const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
-	const int verticesInsideB = n - r - 1;
-	const int nonEdgesInsideB = verticesInsideB * (verticesInsideB - 1) / 2 - edgesInsideB;
+    const int verticesInsideB = n - r - 1;
+    const int nonEdgesInsideB = verticesInsideB * (verticesInsideB - 1) / 2 - edgesInsideB;
 
     std::string res;
 
-    for (int i = r+1; i < n; ++i)
+    for (int i = r + 1; i < n; ++i)
     {
         std::string sum_adj_edges = "";
         bool first = true;
-        for (int j = r+1; j < n; j++)
+        for (int j = r + 1; j < n; j++)
         {
             if (i == j)
                 continue;
@@ -323,10 +423,41 @@ std::string genLemma3_4(const int n, const int r, const int d)
     return res;
 }
 
+
+// When anchor d is high 0 vertex can't belong to A. 
+// So we can fix it in B and some edges in it's neighbourhood.
+// d0 - fixed
+// d1...d_r belong to A
+// d_r+1 .. d_n-1 belong to B
+// fix d_r+1 = 0
+// neighboursInB in B (this goes from theory).
+// Ex. d0=21 then 0 belong to B. And 0 has at max 3 edges to A and at least 5 edges to B (r=8)
+// So we can fix zero neighborhood of 0 in B (P5)
+std::string ExperimetalFixZeroInB(const int n, const int r, const int neighboursInB)
+{
+    if( neighboursInB == -1 )
+		return "";
+    std::string res = "";
+    res += degv(r + 1) + " = 0\n";
+    for (int i = 1; i <= neighboursInB; ++i)
+    {
+        res += evar(r + 1, r + 1 + i) + " = 1\n";
+    }
+
+    for (int i = 1; i <= neighboursInB - 1 && i < n - 1; ++i)
+    {
+        for (int j = i + 1; j <= neighboursInB && j < n; ++j)
+        {
+            res += evar(r + 1 + i, r + 1 + j) + " = 0\n";
+        }
+    }
+    return res;
+}
+
 // fix splitK3 - 0 index
 // 1..r are neighbouns
 // r+1..n-1 not neighbors
-void generateSplitAB(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const int splitK3, const std::string& filename)
+void generateSplitAB(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const int splitK3, const std::string& filename, const int neighboursOfZeroInB)
 {
     ofstream f(filename);
 
@@ -349,45 +480,11 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
 
     f << "\n";
 
-    // ordering of K3-degrees inside A
-    for (int i = 1; i < r; i++)
-    {
-        f << "ord" << i << ": "
-            << degv(i) << " - " << degv(i + 1)
-            << " <= -1\n";
-    }
-    f << "\n";
-    // ordering of K3-degrees inside B
-    for (int i = r+1; i < n-1; i++)
-    {
-        f << "ord" << i << ": "
-            << degv(i) << " - " << degv(i + 1)
-            << " <= -1\n";
-    }
+    std::string ExpFixZeroInB = ExperimetalFixZeroInB(n, r, neighboursOfZeroInB);
+    f << ExpFixZeroInB << "\n";
 
-	// some large constant for big-M constraints
-	int M = 30; // use upper bound on max_k3_deg + epsilon
-    for (int i = 1; i <= r; i++)
-    {
-        for (int j = r+1; j < n; j++)
-        {
-            std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
-
-            // binary variable
-            f << "bin_" << i << "_" << j << ": " << b << " <= 1\n";
-
-            // d_i < d_j or d_j < d_i
-            f << "neq1_" << i << "_" << j << ": "
-                << "d" << i << " - d" << j
-                << " - " << M << " " << b
-                << " <= -1\n";
-
-            f << "neq2_" << i << "_" << j << ": "
-                << "d" << j << " - d" << i
-                << " + " << M << " " << b
-                << " <= " << M - 1 << "\n";
-        }
-    }
+    std::string allDiffK3 = alldifferentK3Degrees(n, r, splitK3, neighboursOfZeroInB);
+    f << allDiffK3 << "\n";
 
     // sum k3 = 3T
     f << "sum_k3: ";
@@ -401,20 +498,20 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     {
         f << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
     }
-    for (int i = r+1; i < n; i++)
+    for (int i = r + 1; i < n; i++)
     {
         f << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
     }
-    
+
     const int EdgesToFixedK3Deg = r;
-	const int edgesInsideA = splitK3;
-	const int edgesBetweenAB = r * (r - 1) - 2 * splitK3;
-	const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
+    const int edgesInsideA = splitK3;
+    const int edgesBetweenAB = r * (r - 1) - 2 * splitK3;
+    const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
 
     if (splitK3 == 0)
     {
-		// no edges inside A
-        for (int i = 1; i <= r-1; i++)
+        // no edges inside A
+        for (int i = 1; i <= r - 1; i++)
         {
             for (int j = i + 1; j <= r; j++)
             {
@@ -426,8 +523,9 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     }
     else
     {
-		// count edges inside A
-        for (int i = 1; i < r-1; i++)
+        // count edges inside A
+		f << "edges_inside_A: ";
+        for (int i = 1; i < r - 1; i++)
         {
             for (int j = i + 1; j <= r; j++)
             {
@@ -438,7 +536,8 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     }
 
     // count edges inside B 
-    for (int i = r+1; i < n - 1; i++)
+	f << "edges_inside_B: ";
+    for (int i = r + 1; i < n - 1; i++)
     {
         for (int j = i + 1; j < n; j++)
         {
@@ -446,33 +545,41 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
                 f << evar(i, j) << " + ";
         }
     }
-    f << evar(n-2, n-1) << " = " << to_string(edgesInsideB) << "\n";
+    f << evar(n - 2, n - 1) << " = " << to_string(edgesInsideB) << "\n";
 
     // count edges between AB 
+	f << "edges_between_AB: ";
     for (int i = 1; i <= r; i++)
     {
-        for (int j = r+1; j < n; j++)
+        for (int j = r + 1; j < n; j++)
         {
-            if(i != r || j != n-1)
+            if (i != r || j != n - 1)
                 f << evar(i, j) << " + ";
         }
     }
     f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n";
 
-	const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
-	f << "\n" << lemma3_1 << "\n";
+    const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
+    f << "\n" << lemma3_1 << "\n";
 
     const std::string lemma3_4 = genLemma3_4(n, r, splitK3);
     f << "\n" << lemma3_4 << "\n";
 
     f << "\nBounds\n";
 
-	const int updminBound = splitK3 == min_k3_deg ? min_k3_deg + 1 : min_k3_deg;
-	const int updmaxBound = splitK3 == max_k3_deg ? max_k3_deg - 1 : max_k3_deg;
-	// d0 is fixed to splitK3
-	f << "d0 = " << to_string(splitK3) << "\n";
+    assert(neighboursOfZeroInB == -1 || min_k3_deg == 0);
+    const int updminBound = splitK3 == min_k3_deg || neighboursOfZeroInB != -1 ? min_k3_deg + 1 : min_k3_deg;
+    const int updmaxBound = splitK3 == max_k3_deg ? max_k3_deg - 1 : max_k3_deg;
+    // d0 is fixed to splitK3
+    f << "d0 = " << to_string(splitK3) << "\n";
     for (int i = 1; i < n; i++)
     {
+        if (neighboursOfZeroInB != -1 && i == r + 1)
+        {
+            // d_r+1 is fixed to 0
+            f << degv(i) << " = 0\n";
+            continue;
+        }
         f << to_string(updminBound) << " <= " << degv(i) << " <= " << to_string(updmaxBound) << "\n";
     }
 
@@ -489,11 +596,27 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     std::string binVars = genBinaryVars(n, r);
     f << binVars;
 
-    for (int i = 1; i <= r; i++)
+    // b_ vars for A neq B
     {
-        for (int j = r+1; j < n; j++)
+        const int j_start = (neighboursOfZeroInB == -1) ? r + 1 : r + 1 + 1;
+        for (int i = 1; i <= r; i++)
         {
-            f << "b_" << i << "_" << j << "\n";
+            for (int j = j_start; j < n; j++)
+            {
+                f << "b_" << i << "_" << j << "\n";
+            }
+        }
+    }
+
+    // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
+    if (neighboursOfZeroInB != -1)
+    {
+        for (int i = r + 1 + 1; i <= r + 1 + neighboursOfZeroInB; i++)
+        {
+            for (int j = r + 1 + neighboursOfZeroInB + 1; j < n; j++)
+            {
+                f << "b_" << i << "_" << j << "\n";
+            }
         }
     }
 

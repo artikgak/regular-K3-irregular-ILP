@@ -10,12 +10,13 @@ using namespace std;
 
 constexpr int N = 20;
 constexpr int R = 8;
-constexpr int MIN_K3_DEG = 0;
-constexpr int MAX_K3_DEG = 21;
-constexpr int SPLIT_K3 = 0;
+constexpr int MIN_K3_DEG = 1;
+constexpr int MAX_K3_DEG = 20;
+constexpr int SPLIT_K3 = 20;
+constexpr int AtLeastZeroNeighboursInB = -1;
 
 const string FILENAME = "N" + to_string(N) + "_R" + to_string(R) + ".lp";
-const string FILENAMESpec = "N" + to_string(N) + "_R" + to_string(R) + "_K3_" + to_string(MIN_K3_DEG) + "_" + to_string(MAX_K3_DEG) + "_split_" + to_string(SPLIT_K3) + "_lem_31_34" + ".lp";
+const string FILENAMESpec = "N" + to_string(N) + "_R" + to_string(R) + "_K3_" + to_string(MIN_K3_DEG) + "_" + to_string(MAX_K3_DEG) + "_split_" + to_string(SPLIT_K3) + "_lem_31_34" + (AtLeastZeroNeighboursInB == -1 ? "" : "_fix0B") + ".lp";
 
 int main()
 {
@@ -44,7 +45,7 @@ int main()
 	//}
 
 	//generateUsual(N, R, MIN_K3_DEG, MAX_K3_DEG, FILENAME);
-	generateSplitAB(N, R, MIN_K3_DEG, MAX_K3_DEG, SPLIT_K3, FILENAMESpec);
+	generateSplitAB(N, R, MIN_K3_DEG, MAX_K3_DEG, SPLIT_K3, FILENAMESpec, AtLeastZeroNeighboursInB);
 
 	return 0;
 }

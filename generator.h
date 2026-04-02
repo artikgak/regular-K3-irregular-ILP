@@ -16,4 +16,4 @@ std::string genBinaryVars(const int n, const int r);
 void generateUsual(const int N, const int R, const int min_k3_deg, const int max_k3_deg, const std::string& filename);
 
 // for n=22
-void generateSplitAB(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const int splitK3, const std::string& filename);
+void generateSplitAB(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const int splitK3, const std::string& filename, const int neighboursOfZeroInB = -1);
