@@ -52,6 +52,7 @@ void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg)
 
         out << " = " << to_string(cfg.r) << "\n";
     }
+	out << "\n";
 }
 
 void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
@@ -104,7 +105,7 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
                 }
             }
         }
-        out << " = 0\n";
+        out << " = 0\n\n";
     }
 }
 
@@ -138,6 +139,7 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
             out << " <= " << to_string(cfg.r - 2) << "\n";
         }
     }
+	out << "\n";
 }
 
 void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
@@ -161,6 +163,32 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
             }
         }
     }
+
+    // b_ vars for A neq B
+    {
+        const int j_start = (cfg.neighbours_of_fixed_vertex_in_B == -1) ? cfg.r + 1 : cfg.r + 1 + 1;
+        for (int i = 1; i <= cfg.r; i++)
+        {
+            for (int j = j_start; j < cfg.n; j++)
+            {
+                out << "b_" << i << "_" << j << "\n";
+            }
+        }
+    }
+
+    // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
+    if (cfg.neighbours_of_fixed_vertex_in_B != -1)
+    {
+        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
+        {
+            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
+            {
+                out << "b_" << i << "_" << j << "\n";
+            }
+        }
+    }
+
+    out << "\n";
 }
 
 void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
@@ -256,6 +284,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
                 << " <= " << to_string(M - 1) << "\n";
         }
     }
+	out << "\n";
 }
 
 // =========================================================================
@@ -281,6 +310,7 @@ void writeLemma3_1(std::ostream& out, const GraphConfig& cfg)
         }
         out << "lemma3_1_" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(min({ cfg.r - 2, cfg.splitK3 })) << "\n";
     }
+	out << "\n\n";
 }
 
 
@@ -321,8 +351,34 @@ void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
         out << "lemma3_4_r" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(std::min({ cfg.r, verticesInsideB - 1, edgesInsideB })) << "\n"; // min (R1) (R2) (R3)
         out << "lemma3_4_l" << to_string(i) << ": " << sum_adj_edges << " >= " << to_string(std::max({ 1, verticesInsideB - 1 - nonEdgesInsideB })) << "\n"; // max (L1) (L2)
     }
+	out << "\n\n";
 }
 
+void writeBounds(std::ostream& out, const GraphConfig& cfg)
+{
+    const int updminBound = cfg.splitK3 == cfg.min_k3 || cfg.neighbours_of_fixed_vertex_in_B != -1 ? cfg.min_k3 + 1 : cfg.min_k3;
+    const int updmaxBound = cfg.splitK3 == cfg.max_k3 ? cfg.max_k3 - 1 : cfg.max_k3;
+    // d0 is fixed to splitK3
+    out << "d0 = " << to_string(cfg.splitK3) << "\n";
+    for (int i = 1; i < cfg.n; i++)
+    {
+        if (cfg.neighbours_of_fixed_vertex_in_B != -1 && i == cfg.r + 1)
+        {
+            // d_r+1 is fixed to 0
+            out << degv(i) << " = 0\n";
+            continue;
+        }
+        out << to_string(updminBound) << " <= " << degv(i) << " <= " << to_string(updmaxBound) << "\n";
+    }
+
+    int sum_min = cfg.n * cfg.min_k3 + cfg.n * (cfg.n - 1) / 2;
+    int sum_max = cfg.n * cfg.max_k3 - cfg.n * (cfg.n - 1) / 2;
+
+    int Tmin = ceil(static_cast<float>(sum_min) / 3.f);
+    int Tmax = floor(static_cast<float>(sum_max) / 3.f);
+
+    out << "tbounds: " << Tmin << " <= T <= " << Tmax << "\n";
+}
 
 // When anchor d is high 0 vertex can't belong to A. 
 // So we can fix it in B and some edges in it's neighbourhood.
@@ -333,7 +389,7 @@ void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
 // neighboursInB in B (this goes from theory).
 // Ex. d0=21 then 0 belong to B. And 0 has at max 3 edges to A and at least 5 edges to B (r=8)
 // So we can fix zero neighborhood of 0 in B (P5)
-void writeExperimetalFixZeroInB(std::ostream& out, const GraphConfig& cfg)
+void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
 {
     if( cfg.fixVertexInBMode == FixVertexInBMode::NONE )
 		return;
@@ -351,6 +407,7 @@ void writeExperimetalFixZeroInB(std::ostream& out, const GraphConfig& cfg)
             out << evar(cfg.r + 1 + i, cfg.r + 1 + j) << " = 0\n";
         }
     }
+	out << "\n";
 }
 
 std::string getFileName(const GraphConfig& cfg)
@@ -382,46 +439,18 @@ std::string getFileName(const GraphConfig& cfg)
     return res;
 }
 
-// fix splitK3 - 0 index
-// 1..r are neighbouns
-// r+1..n-1 not neighbors
-void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
+void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
 {
-    ofstream f(filename);
-
-    f << "Minimize\n";
-    f << " obj: 0\n\n";
-
-    f << "Subject To\n\n";
-
-    writeRegularityCondition(f, cfg);
-    wrtiteTrianglesK3Degs(f, cfg);
-    f << "\n";
-
-    // Додаємо відсікання "справжніх близнюків"
-	writeNoTrueTwinsCond(f, cfg);
-    f << "\n";
-
-	writeExperimetalFixZeroInB(f, cfg);
-    f << "\n";
-
-	writeAllDiffK3Degs(f, cfg);
-
-    // sum k3 = 3T
-    f << "sum_k3: ";
-    for (int i = 0; i < cfg.n - 1; i++)
-    {
-        f << degv(i) << " + ";
-    }
-    f << degv(cfg.n - 1) << " - 3 T = 0\n";
+    if(!cfg.use_split_AB)
+		return;
 
     for (int i = 1; i <= cfg.r; i++)
     {
-        f << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
+        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
     }
     for (int i = cfg.r + 1; i < cfg.n; i++)
     {
-        f << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
+        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
     }
 
     const int EdgesToFixedK3Deg = cfg.r;
@@ -436,7 +465,7 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
         {
             for (int j = i + 1; j <= cfg.r; j++)
             {
-                f << "noedge_" << i << "_" << j
+                out << "noedge_" << i << "_" << j
                     << ": x" << i << "_" << j
                     << " = 0\n";
             }
@@ -445,111 +474,88 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
     else
     {
         // count edges inside A
-		f << "edges_inside_A: ";
+        out << "edges_inside_A: ";
         for (int i = 1; i < cfg.r - 1; i++)
         {
             for (int j = i + 1; j <= cfg.r; j++)
             {
-                f << evar(i, j) << " + ";
+                out << evar(i, j) << " + ";
             }
         }
-        f << evar(cfg.r - 1, cfg.r) << " = " << to_string(edgesInsideA) << "\n";
+        out << evar(cfg.r - 1, cfg.r) << " = " << to_string(edgesInsideA) << "\n";
     }
 
     // count edges inside B 
-	f << "edges_inside_B: ";
+    out << "edges_inside_B: ";
     for (int i = cfg.r + 1; i < cfg.n - 1; i++)
     {
         for (int j = i + 1; j < cfg.n; j++)
         {
             if (i != cfg.n - 2 || j != cfg.n - 1)
-                f << evar(i, j) << " + ";
+                out << evar(i, j) << " + ";
         }
     }
-    f << evar(cfg.n - 2, cfg.n - 1) << " = " << to_string(edgesInsideB) << "\n";
+    out << evar(cfg.n - 2, cfg.n - 1) << " = " << to_string(edgesInsideB) << "\n";
 
     // count edges between AB 
-	f << "edges_between_AB: ";
+    out << "edges_between_AB: ";
     for (int i = 1; i <= cfg.r; i++)
     {
         for (int j = cfg.r + 1; j < cfg.n; j++)
         {
             if (i != cfg.r || j != cfg.n - 1)
-                f << evar(i, j) << " + ";
+                out << evar(i, j) << " + ";
         }
     }
-    f << evar(cfg.r, cfg.n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
+    out << evar(cfg.r, cfg.n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
+}
+
+// fix splitK3 - 0 index
+// 1..r are neighbouns
+// r+1..n-1 not neighbors
+void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
+{
+    ofstream f(filename);
+
+    f << "Minimize\n";
+    f << " obj: 0\n\n";
+
+    f << "Subject To\n\n";
+
+    writeRegularityCondition(f, cfg);
+
+    wrtiteTrianglesK3Degs(f, cfg);
+
+	writeNoTrueTwinsCond(f, cfg);
+
+	writeFixVertexInB(f, cfg);
+
+	writeAllDiffK3Degs(f, cfg);
+
+    // sum k3 = 3T
+    f << "sum_k3: ";
+    for (int i = 0; i < cfg.n - 1; i++)
+    {
+        f << degv(i) << " + ";
+    }
+    f << degv(cfg.n - 1) << " - 3 T = 0\n";
+
+    writeConditionsOnEdges(f, cfg);
 
 	writeLemma3_1(f, cfg);
-
-    f << "\n\n\n";
-
 	writeLemma3_4(f, cfg);
 
-    f << "\n\nBounds\n";
-
-    assert(cfg.neighbours_of_fixed_vertex_in_B == -1 || cfg.min_k3 == 0);
-
-    const int updminBound = cfg.splitK3 == cfg.min_k3 || cfg.neighbours_of_fixed_vertex_in_B != -1 ? cfg.min_k3 + 1 : cfg.min_k3;
-    const int updmaxBound = cfg.splitK3 == cfg.max_k3 ? cfg.max_k3 - 1 : cfg.max_k3;
-    // d0 is fixed to splitK3
-    f << "d0 = " << to_string(cfg.splitK3) << "\n";
-    for (int i = 1; i < cfg.n; i++)
-    {
-        if (cfg.neighbours_of_fixed_vertex_in_B != -1 && i == cfg.r + 1)
-        {
-            // d_r+1 is fixed to 0
-            f << degv(i) << " = 0\n";
-            continue;
-        }
-        f << to_string(updminBound) << " <= " << degv(i) << " <= " << to_string(updmaxBound) << "\n";
-    }
-
-    int sum_min = cfg.n * cfg.min_k3 + cfg.n * (cfg.n - 1) / 2;
-    int sum_max = cfg.n * cfg.max_k3 - cfg.n * (cfg.n - 1) / 2;
-
-    int Tmin = ceil(static_cast<float>(sum_min) / 3.f);
-    int Tmax = floor(static_cast<float>(sum_max) / 3.f);
-
-    f << "tbounds: " << Tmin << " <= T <= " << Tmax << "\n";
+    f << "\nBounds\n";
+    writeBounds(f, cfg);
 
     f << "\nBinary\n";
-
 	writeBinaryVars(f, cfg);
 
-    // b_ vars for A neq B
-    {
-        const int j_start = (cfg.neighbours_of_fixed_vertex_in_B == -1) ? cfg.r + 1 : cfg.r + 1 + 1;
-        for (int i = 1; i <= cfg.r; i++)
-        {
-            for (int j = j_start; j < cfg.n; j++)
-            {
-                f << "b_" << i << "_" << j << "\n";
-            }
-        }
-    }
-
-    // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
-    if (cfg.neighbours_of_fixed_vertex_in_B != -1)
-    {
-        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
-        {
-            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
-            {
-                f << "b_" << i << "_" << j << "\n";
-            }
-        }
-    }
-
-    f << "\n";
-
     f << "\nGeneral\n";
-
     for (int i = 0; i < cfg.n; i++)
     {
         f << " " << degv(i) << "\n";
     }
-
     f << " T" << "\n";
 
     f << "\nEnd\n";

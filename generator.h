@@ -2,6 +2,7 @@
 #include <string>
 #include <stdexcept>
 #include <iostream>
+#include <vector>
 
 enum class FixVertexInBMode
 {
@@ -57,6 +58,66 @@ struct GraphConfig
 		}
 		std::cout << "GraphConfig validated successfully.\n";
 	}
+};
+
+// indexes in LP file
+// 0 anchor vertex (if split_AB)
+// 1..r vertices in A
+// r+1..n-1 vertices in B
+// Note: if fixVertexInBMode != NONE, then vertex r+1 is fixed in B 
+// and has neighbours_of_fixed_vertex_in_B neighbours (r+2 .. r+1+neighbours_of_fixed_vertex_in_B) in B. 
+// So it can't be in A and can't be the anchor vertex.
+struct VertexSets {
+	const GraphConfig& cfg;
+	std::vector<int> _verticesInA;
+	std::vector<int> _verticesInB;
+	std::vector<int> _neighOfFixedInB;
+	std::vector<int> _nonNeighOfFixedInB;
+
+
+	VertexSets(const GraphConfig& cfg) : cfg(cfg) 
+	{ 
+		cfg.validate(); 
+
+		if (cfg.use_split_AB)
+		{
+			// note 0 is anchor
+			for (int i = 1; i <= cfg.r; i++)
+				_verticesInA.push_back(i);
+			for (int i = cfg.r + 1; i < cfg.n; i++)
+				_verticesInB.push_back(i);
+
+			if(cfg.fixVertexInBMode != FixVertexInBMode::NONE )
+			{
+				int fixedVertex = fixedVertexInB();
+				_neighOfFixedInB.reserve(cfg.neighbours_of_fixed_vertex_in_B);
+				for (int i = fixedVertex + 1; i <= fixedVertex + cfg.neighbours_of_fixed_vertex_in_B; ++i)
+				{
+					_neighOfFixedInB.push_back(i);
+				}
+				_nonNeighOfFixedInB.reserve(cfg.n - 1 - fixedVertex - cfg.neighbours_of_fixed_vertex_in_B);
+				for (int i = fixedVertex + cfg.neighbours_of_fixed_vertex_in_B + 1; i < cfg.n; ++i)
+				{
+					_nonNeighOfFixedInB.push_back(i);
+				}
+			}
+		}
+	}
+
+	int anchor() const { return cfg.splitK3 ? 0 : throw "There is no anchor"; }
+	bool isVertexAnchor(int v) const { return cfg.splitK3 && v == 0; }
+
+	bool isVertexInA(int v) const { return v >= 1 && v <= cfg.r; }
+	bool isVertexInB(int v) const { return v >= cfg.r + 1 && v < cfg.n; }
+	bool isVertexInFixedB(int v) const { return cfg.fixVertexInBMode != FixVertexInBMode::NONE && v == cfg.r + 1; }
+	bool isNeighbourOfFixedB(int v) const { return cfg.fixVertexInBMode != FixVertexInBMode::NONE && v > cfg.r + 1 && v <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; }
+
+	int fixedVertexInB() const { return cfg.fixVertexInBMode != FixVertexInBMode::NONE ? cfg.r + 1 : throw "There is no fixed vertex in B."; }
+
+	const std::vector<int>& A() const { return _verticesInA; }
+	const std::vector<int>& B() const { return _verticesInB; }
+	const std::vector<int>& neighOfFixedInB() const { return _neighOfFixedInB; }
+	const std::vector<int>& nonNeighOfFixedInB() const { return _nonNeighOfFixedInB; }
 };
 
 std::string getFileName(const GraphConfig& cfg);
