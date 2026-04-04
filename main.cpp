@@ -10,9 +10,9 @@ using namespace std;
 
 constexpr int N = 20;
 constexpr int R = 8;
-constexpr int MIN_K3_DEG = 1;
-constexpr int MAX_K3_DEG = 20;
-constexpr int SPLIT_K3 = 20;
+constexpr int MIN_K3_DEG = 0;
+constexpr int MAX_K3_DEG = 22;
+constexpr int SPLIT_K3 = 22;
 constexpr int AtLeastZeroNeighboursInB = -1;
 
 const string FILENAME = "N" + to_string(N) + "_R" + to_string(R) + ".lp";
@@ -30,7 +30,7 @@ int main()
 	//f.flush();
 	//f.close();
 
-	//UndirectedGraph graph9 = loadGraphFromSCIPSolution("testsolSplit3.txt", 24);
+	//UndirectedGraph graph9 = loadGraphFromSCIPSolution("testSol.txt", 24);
 	//std::vector<int> k3degs = K3Irregullar(graph9);
 
 	//for (int i = 0; i < k3degs.size(); ++i)
@@ -44,7 +44,6 @@ int main()
 	//	cout << k3degs[i] << ' ';
 	//}
 
-	//generateUsual(N, R, MIN_K3_DEG, MAX_K3_DEG, FILENAME);
 	generateSplitAB(N, R, MIN_K3_DEG, MAX_K3_DEG, SPLIT_K3, FILENAMESpec, AtLeastZeroNeighboursInB);
 
 	return 0;

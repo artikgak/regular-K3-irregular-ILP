@@ -25,13 +25,12 @@ string degv(int i)
     return "d" + to_string(i);
 }
 
-std::string genRegularityCondition(const int n, const int r)
+void writeRegularityCondition(std::ostream& out, const int n, const int r)
 {
-    std::string res;
     // regularity
     for (int i = 0; i < n; i++)
     {
-        res += "deg" + to_string(i) + ": ";
+        out << "deg" << to_string(i) << ": ";
 
         bool first = true;
 
@@ -44,21 +43,19 @@ std::string genRegularityCondition(const int n, const int r)
             int b = max(i, j);
 
             if (!first)
-                res += " + ";
+                out << " + ";
 
-            res += evar(a, b);
+            out << evar(a, b);
 
             first = false;
         }
 
-        res += " = " + to_string(r) + "\n";
+        out << " = " << to_string(r) << "\n";
     }
-    return res;
 }
 
-std::string genTrianglesK3Degs(const int n, const int r)
+void wrtiteTrianglesK3Degs(std::ostream& out, const int n, const int r)
 {
-    std::string res;
     // triangle definition
     for (int i = 0; i < n - 2; i++)
     {
@@ -68,19 +65,19 @@ std::string genTrianglesK3Degs(const int n, const int r)
             {
                 string t = tvar(i, j, k);
 
-                res += "tri1_" + to_string(i) + "_" + to_string(j) + "_" + to_string(k) + ": "
-                    + t + " - " + evar(i, j) + " <= 0\n";
+                out << "tri1_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
+                    << t << " - " << evar(i, j) << " <= 0\n";
 
-                res += "tri2_" + to_string(i) + "_" + to_string(j) + "_" + to_string(k) + ": "
-                    + t + " - " + evar(i, k) + " <= 0\n";
+                out << "tri2_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
+                    << t << " - " << evar(i, k) << " <= 0\n";
 
-                res += "tri3_" + to_string(i) + "_" + to_string(j) + "_" + to_string(k) + ": "
-                    + t + " - " + evar(j, k) + " <= 0\n";
+                out << "tri3_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
+                    << t << " - " << evar(j, k) << " <= 0\n";
 
-                res += "tri4_" + to_string(i) + "_" + to_string(j) + "_" + to_string(k) + ": "
-                    + t + " - " + evar(i, j) + " - "
-                    + evar(i, k) + " - " + evar(j, k)
-                    + " >= -2\n";
+                out << "tri4_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
+                    << t << " - " << evar(i, j) << " - "
+                    << evar(i, k) << " - " << evar(j, k)
+                    << " >= -2\n";
             }
         }
     }
@@ -88,7 +85,7 @@ std::string genTrianglesK3Degs(const int n, const int r)
     // K3-degree of vertices
     for (int v = 0; v < n; v++)
     {
-        res += "k3deg" + to_string(v) + ": " + degv(v) + " - ";
+        out << "k3deg" << to_string(v) << ": " << degv(v) << " - ";
 
         bool first = true;
 
@@ -100,27 +97,25 @@ std::string genTrianglesK3Degs(const int n, const int r)
                 {
                     if (i == v || j == v || k == v)
                     {
-                        if (!first) res += " - ";
-                        res += tvar(i, j, k);
+                        if (!first) out << " - ";
+                        out << tvar(i, j, k);
                         first = false;
                     }
                 }
             }
         }
-        res += " = 0\n";
+        out << " = 0\n";
     }
-    return res;
 }
 
-std::string genNoTrueTwinsCond(const int n, const int r)
+void writeNoTrueTwinsCond(std::ostream& out, const int n, const int r)
 {
-    std::string res;
     // Перебираємо всі можливі пари вершин (потенційні ребра)
     for (int i = 0; i < n - 1; i++)
     {
         for (int j = i + 1; j < n; j++)
         {
-            res += "notruetwins_" + to_string(i) + "_" + to_string(j) + ": ";
+            out << "notruetwins_" << to_string(i) << "_" << to_string(j) << ": ";
             bool first = true;
 
             // Рахуємо всі можливі трикутники, які містять вершини i та j
@@ -128,7 +123,7 @@ std::string genNoTrueTwinsCond(const int n, const int r)
             {
                 if (k == i || k == j) continue;
 
-                if (!first) res += " + ";
+                if (!first) out << " + ";
 
                 // Функція tvar очікує строго відсортовані індекси a < b < c
                 int a = i, b = j, c = k;
@@ -136,26 +131,24 @@ std::string genNoTrueTwinsCond(const int n, const int r)
                 if (b > c) swap(b, c);
                 if (a > b) swap(a, b);
 
-                res += tvar(a, b, c);
+                out << tvar(a, b, c);
                 first = false;
             }
             // Максимум r-2 спільних сусідів (трикутників) на будь-якому ребрі
-            res += " <= " + to_string(r - 2) + "\n";
+            out << " <= " << to_string(r - 2) << "\n";
         }
     }
-    return res;
 }
 
-std::string genBinaryVars(const int n, const int r)
+void writeBinaryVars(std::ostream& out, const int n, const int r)
 {
-    std::string res;
     for (int i = 0; i < n - 1; i++)
     {
         for (int j = i + 1; j < n; j++)
         {
-            res += " " + evar(i, j) + " ";
+            out << " " << evar(i, j) << " ";
         }
-        res += "\n";
+        out << "\n";
     }
 
     for (int i = 0; i < n - 2; i++)
@@ -164,34 +157,31 @@ std::string genBinaryVars(const int n, const int r)
         {
             for (int k = j + 1; k < n; k++)
             {
-                res += " " + tvar(i, j, k) + "\n";
+                out << " " << tvar(i, j, k) << "\n";
             }
         }
     }
-    return res;
 }
 
-std::string alldifferentK3Degrees(const int n, const int r, const int splitDeg, const int neighboursInB = -1)
+void writeAllDiffK3Degs(std::ostream& out, const int n, const int r, const int splitDeg, const int neighboursInB = -1)
 {
-    std::string res = "";
-
     // ordering of K3-degrees inside A
     for (int i = 1; i < r; i++)
     {
-        res += "ord" + to_string(i) + ": "
-            + degv(i) + " - " + degv(i + 1)
-            + " <= -1\n";
+        out << "ord" << to_string(i) << ": "
+            << degv(i) << " - " << degv(i + 1)
+            << " <= -1\n";
     }
-    res += "\n";
+    out << "\n";
 
     if (neighboursInB == -1)
     {
         // ordering of K3-degrees inside B
         for (int i = r + 1; i < n - 1; i++)
         {
-            res += "ord" + to_string(i) + ": "
-                + degv(i) + " - " + degv(i + 1)
-                + " <= -1\n";
+            out << "ord" << to_string(i) << ": "
+                << degv(i) << " - " << degv(i + 1)
+                << " <= -1\n";
         }
     }
     else
@@ -201,20 +191,20 @@ std::string alldifferentK3Degrees(const int n, const int r, const int splitDeg, 
         // r+2
         for (int i = 1; i < neighboursInB; i++)
         {
-            res += "ord" + to_string(r + 1 + i) + ": "
-                + degv(r + 1 + i) + " - " + degv(r + 1 + i + 1)
-                + " <= -1\n";
+            out << "ord" << to_string(r + 1 + i) << ": "
+                << degv(r + 1 + i) << " - " << degv(r + 1 + i + 1)
+                << " <= -1\n";
         }
-        res += "\n";
+        out << "\n";
 
         // order inside non-neighbours 0
         for (int i = r + 1 + neighboursInB + 1; i < n - 1; i++)
         {
-            res += "ord" + to_string(i) + ": "
-                + degv(i) + " - " + degv(i + 1)
-                + " <= -1\n";
+            out << "ord" << to_string(i) << ": "
+                << degv(i) << " - " << degv(i + 1)
+                << " <= -1\n";
         }
-        res += "\n";
+        out << "\n";
 
         // order inbetween groups
         const int M = r*r; // use upper bound on max_k3_deg + epsilon
@@ -225,18 +215,18 @@ std::string alldifferentK3Degrees(const int n, const int r, const int splitDeg, 
                 std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
 
                 // binary variable
-                res += "bin_" + to_string(i) + "_" + to_string(j) + ": " + b + " <= 1\n";
+                out << "bin_" << to_string(i) << "_" << to_string(j) << ": " << b << " <= 1\n";
 
                 // d_i < d_j or d_j < d_i
-                res += "neq1_" + to_string(i) + "_" + to_string(j) + ": "
-                    + "d" + to_string(i) + " - d" + to_string(j)
-                    + " - " + to_string(M) + " " + b
-                    + " <= -1\n";
+                out << "neq1_" << to_string(i) << "_" << to_string(j) << ": "
+                    << "d" << to_string(i) << " - d" << to_string(j)
+                    << " - " << to_string(M) << " " << b
+                    << " <= -1\n";
 
-                res += "neq2_" + to_string(i) + "_" + to_string(j) + ": "
-                    + "d" + to_string(j) + " - d" + to_string(i)
-                    + " + " + to_string(M) + " " + b
-                    + " <= " + to_string(M - 1) + "\n";
+                out << "neq2_" << to_string(i) << "_" << to_string(j) << ": "
+                    << "d" << to_string(j) << " - d" << to_string(i)
+                    << " + " << to_string(M) << " " << b
+                    << " <= " << to_string(M - 1) << "\n";
             }
         }
     }
@@ -252,114 +242,28 @@ std::string alldifferentK3Degrees(const int n, const int r, const int splitDeg, 
             std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
 
             // binary variable
-            res += "bin_" + to_string(i) + "_" + to_string(j) + ": " + b + " <= 1\n";
+            out << "bin_" << to_string(i) << "_" << to_string(j) << ": " << b << " <= 1\n";
 
             // d_i < d_j or d_j < d_i
-            res += "neq1_" + to_string(i) + "_" + to_string(j) + ": "
-                + "d" + to_string(i) + " - d" + to_string(j)
-                + " - " + to_string(M) + " " + b
-                + " <= -1\n";
+            out << "neq1_" << to_string(i) << "_" << to_string(j) << ": "
+                << "d" << to_string(i) << " - d" << to_string(j)
+                << " - " << to_string(M) << " " << b
+                << " <= -1\n";
 
-            res += "neq2_" + to_string(i) + "_" + to_string(j) + ": "
-                + "d" + to_string(j) + " - d" + to_string(i)
-                + " + " + to_string(M) + " " + b
-                + " <= " + to_string(M - 1) + "\n";
+            out << "neq2_" << to_string(i) << "_" << to_string(j) << ": "
+                << "d" << to_string(j) << " - d" << to_string(i)
+                << " + " << to_string(M) << " " << b
+                << " <= " << to_string(M - 1) << "\n";
         }
     }
-
-    return res;
-}
-
-
-void generateUsual(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const std::string& filename)
-{
-    ofstream f(filename);
-
-    f << "Minimize\n";
-    f << " obj: 0\n\n";
-
-    f << "Subject To\n\n";
-
-    std::string regCond = genRegularityCondition(n, r);
-    f << regCond;
-
-    std::string trCond = genTrianglesK3Degs(n, r);
-    f << trCond;
-
-    f << "\n";
-
-    // Додаємо відсікання "справжніх близнюків"
-    std::string noTwinsCond = genNoTrueTwinsCond(n, r);
-    f << noTwinsCond;
-
-    f << "\n";
-
-    // ordering of K3-degrees
-    for (int i = 0; i < n - 1; i++)
-    {
-        f << "ord" << i << ": "
-            << degv(i) << " - " << degv(i + 1)
-            << " <= -1\n";
-    }
-
-    // sum k3 = 3T
-    f << "sum_k3: ";
-    for (int i = 0; i < n - 1; i++)
-    {
-        f << degv(i) << " + ";
-    }
-    f << degv(n - 1) << " - 3 T = 0\n";
-
-    f << "\nBounds\n";
-
-    for (int i = 0; i < n; i++)
-    {
-        const int lb = min_k3_deg + i;
-        const int ub = max_k3_deg - (n - 1 - i);
-
-        f << lb << " <= " << degv(i) << " <= " << ub << "\n";
-    }
-
-    int sum_min = n * min_k3_deg + n * (n - 1) / 2;
-    int sum_max = n * max_k3_deg - n * (n - 1) / 2;
-
-    int Tmin = ceil(static_cast<float>(sum_min) / 3.f);
-    int Tmax = floor(static_cast<float>(sum_max) / 3.f);
-
-    f << "tbounds: " << Tmin << " <= T <= " << Tmax << "\n";
-
-    f << "\nBinary\n";
-
-    std::string binVars = genBinaryVars(n, r);
-    f << binVars;
-
-    f << "\n";
-
-    f << "\nGeneral\n";
-
-    for (int i = 0; i < n; i++)
-    {
-        f << " " << degv(i) << "\n";
-    }
-
-    f << " T" << "\n";
-
-    f << "\nEnd\n";
-
-    f.flush();
-    f.close();
-
-    cout << "LP file written to " << filename << "\n";
 }
 
 // =========================================================================
 // ЛЕМА 3.1: Для кожної вершини a \in A, deg_{G[A]}(a) <= min{r - 2, d}
 // d=splitK3, A has 1...r vertices, B has r+1...n-1 vertices
 // =========================================================================
-std::string genLemma3_1(const int n, const int r, const int d)
+void writeLemma3_1(std::ostream& out, const int n, const int r, const int d)
 {
-    std::string res;
-
     for (int i = 1; i <= r; ++i)
     {
         std::string sum_adj_edges = "";
@@ -375,9 +279,8 @@ std::string genLemma3_1(const int n, const int r, const int d)
 
             sum_adj_edges += evar(i, j);
         }
-        res += "lemma3_1_" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(min({ r - 2, d })) + "\n";
+        out << "lemma3_1_" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(min({ r - 2, d })) << "\n";
     }
-    return res;
 }
 
 
@@ -390,7 +293,7 @@ std::string genLemma3_1(const int n, const int r, const int d)
 // (L1) deg_B(b) >= 1 - yes
 // (L2) deg_B(b) >= |B| - 1 - |E(\overline{G[B]}) - yes
 // =========================================================================
-std::string genLemma3_4(const int n, const int r, const int d)
+void writeLemma3_4(std::ostream& out, const int n, const int r, const int d)
 {
     const int EdgesToFixedK3Deg = r;
     const int edgesInsideA = d;
@@ -398,8 +301,6 @@ std::string genLemma3_4(const int n, const int r, const int d)
     const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
     const int verticesInsideB = n - r - 1;
     const int nonEdgesInsideB = verticesInsideB * (verticesInsideB - 1) / 2 - edgesInsideB;
-
-    std::string res;
 
     for (int i = r + 1; i < n; ++i)
     {
@@ -417,10 +318,9 @@ std::string genLemma3_4(const int n, const int r, const int d)
             sum_adj_edges += evar(i, j);
         }
 
-        res += "lemma3_4_r" + to_string(i) + ": " + sum_adj_edges + " <= " + to_string(std::min({ r, verticesInsideB - 1, edgesInsideB })) + "\n"; // min (R1) (R2) (R3)
-        res += "lemma3_4_l" + to_string(i) + ": " + sum_adj_edges + " >= " + to_string(std::max({ 1, verticesInsideB - 1 - nonEdgesInsideB })) + "\n"; // max (L1) (L2)
+        out << "lemma3_4_r" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(std::min({ r, verticesInsideB - 1, edgesInsideB })) << "\n"; // min (R1) (R2) (R3)
+        out << "lemma3_4_l" << to_string(i) << ": " << sum_adj_edges << " >= " << to_string(std::max({ 1, verticesInsideB - 1 - nonEdgesInsideB })) << "\n"; // max (L1) (L2)
     }
-    return res;
 }
 
 
@@ -433,25 +333,24 @@ std::string genLemma3_4(const int n, const int r, const int d)
 // neighboursInB in B (this goes from theory).
 // Ex. d0=21 then 0 belong to B. And 0 has at max 3 edges to A and at least 5 edges to B (r=8)
 // So we can fix zero neighborhood of 0 in B (P5)
-std::string ExperimetalFixZeroInB(const int n, const int r, const int neighboursInB)
+void writeExperimetalFixZeroInB(std::ostream& out, const int n, const int r, const int neighboursInB)
 {
     if( neighboursInB == -1 )
-		return "";
-    std::string res = "";
-    res += degv(r + 1) + " = 0\n";
+		return;
+
+    out << degv(r + 1) << " = 0\n";
     for (int i = 1; i <= neighboursInB; ++i)
     {
-        res += evar(r + 1, r + 1 + i) + " = 1\n";
+        out << evar(r + 1, r + 1 + i) << " = 1\n";
     }
 
     for (int i = 1; i <= neighboursInB - 1 && i < n - 1; ++i)
     {
         for (int j = i + 1; j <= neighboursInB && j < n; ++j)
         {
-            res += evar(r + 1 + i, r + 1 + j) + " = 0\n";
+            out << evar(r + 1 + i, r + 1 + j) << " = 0\n";
         }
     }
-    return res;
 }
 
 // fix splitK3 - 0 index
@@ -466,25 +365,18 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
 
     f << "Subject To\n\n";
 
-    std::string regCond = genRegularityCondition(n, r);
-    f << regCond;
-
-    std::string trCond = genTrianglesK3Degs(n, r);
-    f << trCond;
-
+    writeRegularityCondition(f, n, r);
+    wrtiteTrianglesK3Degs(f, n, r);
     f << "\n";
 
     // Додаємо відсікання "справжніх близнюків"
-    std::string noTwinsCond = genNoTrueTwinsCond(n, r);
-    f << noTwinsCond;
-
+	writeNoTrueTwinsCond(f, n, r);
     f << "\n";
 
-    std::string ExpFixZeroInB = ExperimetalFixZeroInB(n, r, neighboursOfZeroInB);
-    f << ExpFixZeroInB << "\n";
+	writeExperimetalFixZeroInB(f, n, r, neighboursOfZeroInB);
+    f << "\n";
 
-    std::string allDiffK3 = alldifferentK3Degrees(n, r, splitK3, neighboursOfZeroInB);
-    f << allDiffK3 << "\n";
+	writeAllDiffK3Degs(f, n, r, splitK3, neighboursOfZeroInB);
 
     // sum k3 = 3T
     f << "sum_k3: ";
@@ -557,15 +449,15 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
                 f << evar(i, j) << " + ";
         }
     }
-    f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n";
+    f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
 
-    const std::string lemma3_1 = genLemma3_1(n, r, splitK3);
-    f << "\n" << lemma3_1 << "\n";
+	writeLemma3_1(f, n, r, splitK3);
 
-    const std::string lemma3_4 = genLemma3_4(n, r, splitK3);
-    f << "\n" << lemma3_4 << "\n";
+    f << "\n\n\n";
 
-    f << "\nBounds\n";
+	writeLemma3_4(f, n, r, splitK3);
+
+    f << "\n\nBounds\n";
 
     assert(neighboursOfZeroInB == -1 || min_k3_deg == 0);
     const int updminBound = splitK3 == min_k3_deg || neighboursOfZeroInB != -1 ? min_k3_deg + 1 : min_k3_deg;
@@ -593,8 +485,7 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
 
     f << "\nBinary\n";
 
-    std::string binVars = genBinaryVars(n, r);
-    f << binVars;
+	writeBinaryVars(f, n, r);
 
     // b_ vars for A neq B
     {
