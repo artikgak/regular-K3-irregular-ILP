@@ -25,16 +25,16 @@ string degv(int i)
     return "d" + to_string(i);
 }
 
-void writeRegularityCondition(std::ostream& out, const int n, const int r)
+void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg)
 {
     // regularity
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < cfg.n; i++)
     {
         out << "deg" << to_string(i) << ": ";
 
         bool first = true;
 
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < cfg.n; j++)
         {
             if (i == j)
                 continue;
@@ -50,18 +50,18 @@ void writeRegularityCondition(std::ostream& out, const int n, const int r)
             first = false;
         }
 
-        out << " = " << to_string(r) << "\n";
+        out << " = " << to_string(cfg.r) << "\n";
     }
 }
 
-void wrtiteTrianglesK3Degs(std::ostream& out, const int n, const int r)
+void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
 {
     // triangle definition
-    for (int i = 0; i < n - 2; i++)
+    for (int i = 0; i < cfg.n - 2; i++)
     {
-        for (int j = i + 1; j < n - 1; j++)
+        for (int j = i + 1; j < cfg.n - 1; j++)
         {
-            for (int k = j + 1; k < n; k++)
+            for (int k = j + 1; k < cfg.n; k++)
             {
                 string t = tvar(i, j, k);
 
@@ -83,17 +83,17 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const int n, const int r)
     }
 
     // K3-degree of vertices
-    for (int v = 0; v < n; v++)
+    for (int v = 0; v < cfg.n; v++)
     {
         out << "k3deg" << to_string(v) << ": " << degv(v) << " - ";
 
         bool first = true;
 
-        for (int i = 0; i < n - 2; i++)
+        for (int i = 0; i < cfg.n - 2; i++)
         {
-            for (int j = i + 1; j < n - 1; j++)
+            for (int j = i + 1; j < cfg.n - 1; j++)
             {
-                for (int k = j + 1; k < n; k++)
+                for (int k = j + 1; k < cfg.n; k++)
                 {
                     if (i == v || j == v || k == v)
                     {
@@ -108,18 +108,18 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const int n, const int r)
     }
 }
 
-void writeNoTrueTwinsCond(std::ostream& out, const int n, const int r)
+void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
 {
     // Перебираємо всі можливі пари вершин (потенційні ребра)
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < cfg.n - 1; i++)
     {
-        for (int j = i + 1; j < n; j++)
+        for (int j = i + 1; j < cfg.n; j++)
         {
             out << "notruetwins_" << to_string(i) << "_" << to_string(j) << ": ";
             bool first = true;
 
             // Рахуємо всі можливі трикутники, які містять вершини i та j
-            for (int k = 0; k < n; k++)
+            for (int k = 0; k < cfg.n; k++)
             {
                 if (k == i || k == j) continue;
 
@@ -135,27 +135,27 @@ void writeNoTrueTwinsCond(std::ostream& out, const int n, const int r)
                 first = false;
             }
             // Максимум r-2 спільних сусідів (трикутників) на будь-якому ребрі
-            out << " <= " << to_string(r - 2) << "\n";
+            out << " <= " << to_string(cfg.r - 2) << "\n";
         }
     }
 }
 
-void writeBinaryVars(std::ostream& out, const int n, const int r)
+void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
 {
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < cfg.n - 1; i++)
     {
-        for (int j = i + 1; j < n; j++)
+        for (int j = i + 1; j < cfg.n; j++)
         {
             out << " " << evar(i, j) << " ";
         }
         out << "\n";
     }
 
-    for (int i = 0; i < n - 2; i++)
+    for (int i = 0; i < cfg.n - 2; i++)
     {
-        for (int j = i + 1; j < n - 1; j++)
+        for (int j = i + 1; j < cfg.n - 1; j++)
         {
-            for (int k = j + 1; k < n; k++)
+            for (int k = j + 1; k < cfg.n; k++)
             {
                 out << " " << tvar(i, j, k) << "\n";
             }
@@ -163,10 +163,10 @@ void writeBinaryVars(std::ostream& out, const int n, const int r)
     }
 }
 
-void writeAllDiffK3Degs(std::ostream& out, const int n, const int r, const int splitDeg, const int neighboursInB = -1)
+void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
 {
     // ordering of K3-degrees inside A
-    for (int i = 1; i < r; i++)
+    for (int i = 1; i < cfg.r; i++)
     {
         out << "ord" << to_string(i) << ": "
             << degv(i) << " - " << degv(i + 1)
@@ -174,10 +174,10 @@ void writeAllDiffK3Degs(std::ostream& out, const int n, const int r, const int s
     }
     out << "\n";
 
-    if (neighboursInB == -1)
+    if (cfg.neighbours_of_fixed_vertex_in_B == -1)
     {
         // ordering of K3-degrees inside B
-        for (int i = r + 1; i < n - 1; i++)
+        for (int i = cfg.r + 1; i < cfg.n - 1; i++)
         {
             out << "ord" << to_string(i) << ": "
                 << degv(i) << " - " << degv(i + 1)
@@ -189,16 +189,16 @@ void writeAllDiffK3Degs(std::ostream& out, const int n, const int r, const int s
         // order inside neighbours 0
         // dr+1 = 0
         // r+2
-        for (int i = 1; i < neighboursInB; i++)
+        for (int i = 1; i < cfg.neighbours_of_fixed_vertex_in_B; i++)
         {
-            out << "ord" << to_string(r + 1 + i) << ": "
-                << degv(r + 1 + i) << " - " << degv(r + 1 + i + 1)
+            out << "ord" << to_string(cfg.r + 1 + i) << ": "
+                << degv(cfg.r + 1 + i) << " - " << degv(cfg.r + 1 + i + 1)
                 << " <= -1\n";
         }
         out << "\n";
 
         // order inside non-neighbours 0
-        for (int i = r + 1 + neighboursInB + 1; i < n - 1; i++)
+        for (int i = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; i < cfg.n - 1; i++)
         {
             out << "ord" << to_string(i) << ": "
                 << degv(i) << " - " << degv(i + 1)
@@ -207,10 +207,10 @@ void writeAllDiffK3Degs(std::ostream& out, const int n, const int r, const int s
         out << "\n";
 
         // order inbetween groups
-        const int M = r*r; // use upper bound on max_k3_deg + epsilon
-        for (int i = r + 1 + 1; i <= r + 1 + neighboursInB; i++)
+        const int M = cfg.r * cfg.r; // use upper bound on max_k3_deg + epsilon
+        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
         {
-            for (int j = r + 1 + neighboursInB + 1; j < n; j++)
+            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
             {
                 std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
 
@@ -233,11 +233,11 @@ void writeAllDiffK3Degs(std::ostream& out, const int n, const int r, const int s
 
     // A neq B
     // some large constant for big-M constraints
-    int M = r*r; // use upper bound on max_k3_deg + epsilon
-    for (int i = 1; i <= r; i++)
+    int M = cfg.r * cfg.r; // use upper bound on max_k3_deg + epsilon
+    for (int i = 1; i <= cfg.r; i++)
     {
-		const int j_start = neighboursInB == -1 ? r + 1 : r + 1 + 1;
-        for (int j = j_start; j < n; j++)
+		const int j_start = cfg.neighbours_of_fixed_vertex_in_B == -1 ? cfg.r + 1 : cfg.r + 1 + 1;
+        for (int j = j_start; j < cfg.n; j++)
         {
             std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
 
@@ -262,13 +262,13 @@ void writeAllDiffK3Degs(std::ostream& out, const int n, const int r, const int s
 // ЛЕМА 3.1: Для кожної вершини a \in A, deg_{G[A]}(a) <= min{r - 2, d}
 // d=splitK3, A has 1...r vertices, B has r+1...n-1 vertices
 // =========================================================================
-void writeLemma3_1(std::ostream& out, const int n, const int r, const int d)
+void writeLemma3_1(std::ostream& out, const GraphConfig& cfg)
 {
-    for (int i = 1; i <= r; ++i)
+    for (int i = 1; i <= cfg.r; ++i)
     {
         std::string sum_adj_edges = "";
         bool first = true;
-        for (int j = 1; j <= r; j++)
+        for (int j = 1; j <= cfg.r; j++)
         {
             if (i == j)
                 continue;
@@ -279,7 +279,7 @@ void writeLemma3_1(std::ostream& out, const int n, const int r, const int d)
 
             sum_adj_edges += evar(i, j);
         }
-        out << "lemma3_1_" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(min({ r - 2, d })) << "\n";
+        out << "lemma3_1_" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(min({ cfg.r - 2, cfg.splitK3 })) << "\n";
     }
 }
 
@@ -293,20 +293,20 @@ void writeLemma3_1(std::ostream& out, const int n, const int r, const int d)
 // (L1) deg_B(b) >= 1 - yes
 // (L2) deg_B(b) >= |B| - 1 - |E(\overline{G[B]}) - yes
 // =========================================================================
-void writeLemma3_4(std::ostream& out, const int n, const int r, const int d)
+void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
 {
-    const int EdgesToFixedK3Deg = r;
-    const int edgesInsideA = d;
-    const int edgesBetweenAB = r * (r - 1) - 2 * d;
-    const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
-    const int verticesInsideB = n - r - 1;
+    const int EdgesToFixedK3Deg = cfg.r;
+    const int edgesInsideA = cfg.splitK3;
+    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.splitK3;
+    const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
+    const int verticesInsideB = cfg.n - cfg.r - 1;
     const int nonEdgesInsideB = verticesInsideB * (verticesInsideB - 1) / 2 - edgesInsideB;
 
-    for (int i = r + 1; i < n; ++i)
+    for (int i = cfg.r + 1; i < cfg.n; ++i)
     {
         std::string sum_adj_edges = "";
         bool first = true;
-        for (int j = r + 1; j < n; j++)
+        for (int j = cfg.r + 1; j < cfg.n; j++)
         {
             if (i == j)
                 continue;
@@ -318,7 +318,7 @@ void writeLemma3_4(std::ostream& out, const int n, const int r, const int d)
             sum_adj_edges += evar(i, j);
         }
 
-        out << "lemma3_4_r" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(std::min({ r, verticesInsideB - 1, edgesInsideB })) << "\n"; // min (R1) (R2) (R3)
+        out << "lemma3_4_r" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(std::min({ cfg.r, verticesInsideB - 1, edgesInsideB })) << "\n"; // min (R1) (R2) (R3)
         out << "lemma3_4_l" << to_string(i) << ": " << sum_adj_edges << " >= " << to_string(std::max({ 1, verticesInsideB - 1 - nonEdgesInsideB })) << "\n"; // max (L1) (L2)
     }
 }
@@ -333,30 +333,59 @@ void writeLemma3_4(std::ostream& out, const int n, const int r, const int d)
 // neighboursInB in B (this goes from theory).
 // Ex. d0=21 then 0 belong to B. And 0 has at max 3 edges to A and at least 5 edges to B (r=8)
 // So we can fix zero neighborhood of 0 in B (P5)
-void writeExperimetalFixZeroInB(std::ostream& out, const int n, const int r, const int neighboursInB)
+void writeExperimetalFixZeroInB(std::ostream& out, const GraphConfig& cfg)
 {
-    if( neighboursInB == -1 )
+    if( cfg.fixVertexInBMode == FixVertexInBMode::NONE )
 		return;
 
-    out << degv(r + 1) << " = 0\n";
-    for (int i = 1; i <= neighboursInB; ++i)
+    out << degv(cfg.r + 1) << " = 0\n";
+    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B; ++i)
     {
-        out << evar(r + 1, r + 1 + i) << " = 1\n";
+        out << evar(cfg.r + 1, cfg.r + 1 + i) << " = 1\n";
     }
 
-    for (int i = 1; i <= neighboursInB - 1 && i < n - 1; ++i)
+    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B - 1 && i < cfg.n - 1; ++i)
     {
-        for (int j = i + 1; j <= neighboursInB && j < n; ++j)
+        for (int j = i + 1; j <= cfg.neighbours_of_fixed_vertex_in_B && j < cfg.n; ++j)
         {
-            out << evar(r + 1 + i, r + 1 + j) << " = 0\n";
+            out << evar(cfg.r + 1 + i, cfg.r + 1 + j) << " = 0\n";
         }
     }
+}
+
+std::string getFileName(const GraphConfig& cfg)
+{
+	std::string res = "N" + std::to_string(cfg.n) + "_R" + std::to_string(cfg.r);
+    res += "_K3_" + std::to_string(cfg.min_k3) + "_" + std::to_string(cfg.max_k3);
+    
+    if (cfg.use_split_AB)
+        res += "_split_" + std::to_string(cfg.splitK3);
+         
+    if (cfg.fixVertexInBMode != FixVertexInBMode::NONE)
+    {
+        switch (cfg.fixVertexInBMode)
+        {
+        case FixVertexInBMode::ZERO_IN_B:
+            res += "_fix0B_";
+		    break;
+        case FixVertexInBMode::ONE_IN_B:
+            res += "_fix1B_";
+		    break;
+        default:
+			std::cerr << "Warning: Unknown FixVertexInBMode\n";
+            res += "_fix__B_";
+            break;
+        }
+    }
+
+    res += ".lp";
+    return res;
 }
 
 // fix splitK3 - 0 index
 // 1..r are neighbouns
 // r+1..n-1 not neighbors
-void generateSplitAB(const int n, const int r, const int min_k3_deg, const int max_k3_deg, const int splitK3, const std::string& filename, const int neighboursOfZeroInB)
+void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 {
     ofstream f(filename);
 
@@ -365,47 +394,47 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
 
     f << "Subject To\n\n";
 
-    writeRegularityCondition(f, n, r);
-    wrtiteTrianglesK3Degs(f, n, r);
+    writeRegularityCondition(f, cfg);
+    wrtiteTrianglesK3Degs(f, cfg);
     f << "\n";
 
     // Додаємо відсікання "справжніх близнюків"
-	writeNoTrueTwinsCond(f, n, r);
+	writeNoTrueTwinsCond(f, cfg);
     f << "\n";
 
-	writeExperimetalFixZeroInB(f, n, r, neighboursOfZeroInB);
+	writeExperimetalFixZeroInB(f, cfg);
     f << "\n";
 
-	writeAllDiffK3Degs(f, n, r, splitK3, neighboursOfZeroInB);
+	writeAllDiffK3Degs(f, cfg);
 
     // sum k3 = 3T
     f << "sum_k3: ";
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < cfg.n - 1; i++)
     {
         f << degv(i) << " + ";
     }
-    f << degv(n - 1) << " - 3 T = 0\n";
+    f << degv(cfg.n - 1) << " - 3 T = 0\n";
 
-    for (int i = 1; i <= r; i++)
+    for (int i = 1; i <= cfg.r; i++)
     {
         f << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
     }
-    for (int i = r + 1; i < n; i++)
+    for (int i = cfg.r + 1; i < cfg.n; i++)
     {
         f << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
     }
 
-    const int EdgesToFixedK3Deg = r;
-    const int edgesInsideA = splitK3;
-    const int edgesBetweenAB = r * (r - 1) - 2 * splitK3;
-    const int edgesInsideB = n * r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
+    const int EdgesToFixedK3Deg = cfg.r;
+    const int edgesInsideA = cfg.splitK3;
+    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.splitK3;
+    const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
 
-    if (splitK3 == 0)
+    if (cfg.splitK3 == 0)
     {
         // no edges inside A
-        for (int i = 1; i <= r - 1; i++)
+        for (int i = 1; i <= cfg.r - 1; i++)
         {
-            for (int j = i + 1; j <= r; j++)
+            for (int j = i + 1; j <= cfg.r; j++)
             {
                 f << "noedge_" << i << "_" << j
                     << ": x" << i << "_" << j
@@ -417,56 +446,56 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     {
         // count edges inside A
 		f << "edges_inside_A: ";
-        for (int i = 1; i < r - 1; i++)
+        for (int i = 1; i < cfg.r - 1; i++)
         {
-            for (int j = i + 1; j <= r; j++)
+            for (int j = i + 1; j <= cfg.r; j++)
             {
                 f << evar(i, j) << " + ";
             }
         }
-        f << evar(r - 1, r) << " = " << to_string(edgesInsideA) << "\n";
+        f << evar(cfg.r - 1, cfg.r) << " = " << to_string(edgesInsideA) << "\n";
     }
 
     // count edges inside B 
 	f << "edges_inside_B: ";
-    for (int i = r + 1; i < n - 1; i++)
+    for (int i = cfg.r + 1; i < cfg.n - 1; i++)
     {
-        for (int j = i + 1; j < n; j++)
+        for (int j = i + 1; j < cfg.n; j++)
         {
-            if (i != n - 2 || j != n - 1)
+            if (i != cfg.n - 2 || j != cfg.n - 1)
                 f << evar(i, j) << " + ";
         }
     }
-    f << evar(n - 2, n - 1) << " = " << to_string(edgesInsideB) << "\n";
+    f << evar(cfg.n - 2, cfg.n - 1) << " = " << to_string(edgesInsideB) << "\n";
 
     // count edges between AB 
 	f << "edges_between_AB: ";
-    for (int i = 1; i <= r; i++)
+    for (int i = 1; i <= cfg.r; i++)
     {
-        for (int j = r + 1; j < n; j++)
+        for (int j = cfg.r + 1; j < cfg.n; j++)
         {
-            if (i != r || j != n - 1)
+            if (i != cfg.r || j != cfg.n - 1)
                 f << evar(i, j) << " + ";
         }
     }
-    f << evar(r, n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
+    f << evar(cfg.r, cfg.n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
 
-	writeLemma3_1(f, n, r, splitK3);
+	writeLemma3_1(f, cfg);
 
     f << "\n\n\n";
 
-	writeLemma3_4(f, n, r, splitK3);
+	writeLemma3_4(f, cfg);
 
     f << "\n\nBounds\n";
 
-    assert(neighboursOfZeroInB == -1 || min_k3_deg == 0);
-    const int updminBound = splitK3 == min_k3_deg || neighboursOfZeroInB != -1 ? min_k3_deg + 1 : min_k3_deg;
-    const int updmaxBound = splitK3 == max_k3_deg ? max_k3_deg - 1 : max_k3_deg;
+    assert(cfg.neighbours_of_fixed_vertex_in_B == -1 || cfg.min_k3 == 0);
+    const int updminBound = cfg.splitK3 == cfg.min_k3 || cfg.neighbours_of_fixed_vertex_in_B != -1 ? cfg.min_k3 + 1 : cfg.min_k3;
+    const int updmaxBound = cfg.splitK3 == cfg.max_k3 ? cfg.max_k3 - 1 : cfg.max_k3;
     // d0 is fixed to splitK3
-    f << "d0 = " << to_string(splitK3) << "\n";
-    for (int i = 1; i < n; i++)
+    f << "d0 = " << to_string(cfg.splitK3) << "\n";
+    for (int i = 1; i < cfg.n; i++)
     {
-        if (neighboursOfZeroInB != -1 && i == r + 1)
+        if (cfg.neighbours_of_fixed_vertex_in_B != -1 && i == cfg.r + 1)
         {
             // d_r+1 is fixed to 0
             f << degv(i) << " = 0\n";
@@ -475,8 +504,8 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
         f << to_string(updminBound) << " <= " << degv(i) << " <= " << to_string(updmaxBound) << "\n";
     }
 
-    int sum_min = n * min_k3_deg + n * (n - 1) / 2;
-    int sum_max = n * max_k3_deg - n * (n - 1) / 2;
+    int sum_min = cfg.n * cfg.min_k3 + cfg.n * (cfg.n - 1) / 2;
+    int sum_max = cfg.n * cfg.max_k3 - cfg.n * (cfg.n - 1) / 2;
 
     int Tmin = ceil(static_cast<float>(sum_min) / 3.f);
     int Tmax = floor(static_cast<float>(sum_max) / 3.f);
@@ -485,14 +514,14 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
 
     f << "\nBinary\n";
 
-	writeBinaryVars(f, n, r);
+	writeBinaryVars(f, cfg);
 
     // b_ vars for A neq B
     {
-        const int j_start = (neighboursOfZeroInB == -1) ? r + 1 : r + 1 + 1;
-        for (int i = 1; i <= r; i++)
+        const int j_start = (cfg.neighbours_of_fixed_vertex_in_B == -1) ? cfg.r + 1 : cfg.r + 1 + 1;
+        for (int i = 1; i <= cfg.r; i++)
         {
-            for (int j = j_start; j < n; j++)
+            for (int j = j_start; j < cfg.n; j++)
             {
                 f << "b_" << i << "_" << j << "\n";
             }
@@ -500,11 +529,11 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
     }
 
     // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
-    if (neighboursOfZeroInB != -1)
+    if (cfg.neighbours_of_fixed_vertex_in_B != -1)
     {
-        for (int i = r + 1 + 1; i <= r + 1 + neighboursOfZeroInB; i++)
+        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
         {
-            for (int j = r + 1 + neighboursOfZeroInB + 1; j < n; j++)
+            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
             {
                 f << "b_" << i << "_" << j << "\n";
             }
@@ -515,7 +544,7 @@ void generateSplitAB(const int n, const int r, const int min_k3_deg, const int m
 
     f << "\nGeneral\n";
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < cfg.n; i++)
     {
         f << " " << degv(i) << "\n";
     }
