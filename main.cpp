@@ -16,7 +16,7 @@ int main()
 		.min_k3 = 0,
 		.max_k3 = 22,
 		.use_split_AB = true,
-		.splitK3 = 22,
+		.anchorK3 = 22,
 		.fixVertexInBMode = FixVertexInBMode::NONE,
 		.neighbours_of_fixed_vertex_in_B = -1
 	};

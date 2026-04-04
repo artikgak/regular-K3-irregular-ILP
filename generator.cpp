@@ -31,7 +31,7 @@ std::string getFileName(const GraphConfig& cfg)
     res += "_K3_" + std::to_string(cfg.min_k3) + "_" + std::to_string(cfg.max_k3);
 
     if (cfg.use_split_AB)
-        res += "_split_" + std::to_string(cfg.splitK3);
+        res += "_split_" + std::to_string(cfg.anchorK3);
 
     if (cfg.fixVertexInBMode != FixVertexInBMode::NONE)
     {
@@ -182,22 +182,39 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
 // So we can fix zero neighborhood of 0 in B (P5)
 void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
 {
-    if (cfg.fixVertexInBMode == FixVertexInBMode::NONE)
+	VertexSets vs(cfg);
+    switch (cfg.fixVertexInBMode)
+    {
+    case FixVertexInBMode::NONE:
         return;
-
-    out << degv(cfg.r + 1) << " = 0\n";
-    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B; ++i)
+    case FixVertexInBMode::ZERO_IN_B:
     {
-        out << evar(cfg.r + 1, cfg.r + 1 + i) << " = 1\n";
-    }
+		const int fixedVertex = vs.fixedVertexInB();
 
-    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B - 1 && i < cfg.n - 1; ++i)
-    {
-        for (int j = i + 1; j <= cfg.neighbours_of_fixed_vertex_in_B && j < cfg.n; ++j)
+        out << degv(fixedVertex) << " = 0\n";
+
+        const auto& fixedAdj = vs.getNeighOfFixedInB();
+        for (int i : fixedAdj)
         {
-            out << evar(cfg.r + 1 + i, cfg.r + 1 + j) << " = 0\n";
+            out << evar(fixedVertex, i) << " = 1\n";
+        }
+
+        for (int i = 0; i < fixedAdj.size() - 1; ++i)
+        {
+            for (int j = i + 1; j < fixedAdj.size(); ++j)
+            {
+                out << evar(fixedAdj[i], fixedAdj[j]) << " = 0\n";
+            }
         }
     }
+		break;
+    case FixVertexInBMode::ONE_IN_B:
+        throw "not implemented yet";
+		break;
+    default:
+        break;
+    }
+
     out << "\n";
 }
 
@@ -302,30 +319,35 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
     if (!cfg.use_split_AB)
         return;
 
-    for (int i = 1; i <= cfg.r; i++)
+	VertexSets vertexSets(cfg);
+
+    for ( int a : vertexSets.verticesInA )
     {
-        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
-    }
-    for (int i = cfg.r + 1; i < cfg.n; i++)
+        out << "fix0_" << a << ": x" << 0 << "_" << a << " = 1\n";
+	}
+
+    for (int b : vertexSets.verticesInB)
     {
-        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
+        out << "fix0_" << b << ": x" << 0 << "_" << b << " = 0\n";
     }
 
-    const int EdgesToFixedK3Deg = cfg.r;
-    const int edgesInsideA = cfg.splitK3;
-    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.splitK3;
-    const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
+    const int EdgesForAnchor = cfg.r;
+    const int edgesInsideA = cfg.anchorK3;
+    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.anchorK3;
+    const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesForAnchor - edgesInsideA - edgesBetweenAB;
 
-    if (cfg.splitK3 == 0)
+	const auto& verticesInA = vertexSets.verticesInA;
+    const auto& verticesInB = vertexSets.verticesInB;
+
+    if (vertexSets.anchorK3() == 0)
     {
         // no edges inside A
-        for (int i = 1; i <= cfg.r - 1; i++)
+        for (int i = 0; i < verticesInA.size() - 1; i++)
         {
-            for (int j = i + 1; j <= cfg.r; j++)
+            for (int j = i + 1; j < verticesInA.size(); j++)
             {
-                out << "noedge_" << i << "_" << j
-                    << ": x" << i << "_" << j
-                    << " = 0\n";
+                out << "noedge_" << verticesInA[i] << "_" << verticesInA[j] << ": " 
+                    << evar(verticesInA[i], verticesInA[j]) << " = 0\n";
             }
         }
     }
@@ -333,71 +355,90 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
     {
         // count edges inside A
         out << "edges_inside_A: ";
-        for (int i = 1; i < cfg.r - 1; i++)
+        bool first = true;
+        for (int i = 0; i < verticesInA.size() - 1; i++)
         {
-            for (int j = i + 1; j <= cfg.r; j++)
+            for (int j = i + 1; j < verticesInA.size(); j++)
             {
-                out << evar(i, j) << " + ";
+                if (!first) {
+                    out << " + ";
+                }
+                out << evar(verticesInA[i], verticesInA[j]);
+                first = false;
             }
         }
-        out << evar(cfg.r - 1, cfg.r) << " = " << to_string(edgesInsideA) << "\n";
+        out << " = " << to_string(edgesInsideA) << "\n";
     }
 
-    // count edges inside B 
-    out << "edges_inside_B: ";
-    for (int i = cfg.r + 1; i < cfg.n - 1; i++)
     {
-        for (int j = i + 1; j < cfg.n; j++)
+        // count edges inside B 
+        out << "edges_inside_B: ";
+        bool first = true;
+        for (int i = 0; i < verticesInB.size() - 1; i++)
         {
-            if (i != cfg.n - 2 || j != cfg.n - 1)
-                out << evar(i, j) << " + ";
+            for (int j = i + 1; j < verticesInB.size(); j++)
+            {
+                if (!first) {
+                    out << " + ";
+                }
+                out << evar(verticesInB[i], verticesInB[j]);
+                first = false;
+            }
         }
+        out << " = " << to_string(edgesInsideB) << "\n";
     }
-    out << evar(cfg.n - 2, cfg.n - 1) << " = " << to_string(edgesInsideB) << "\n";
 
-    // count edges between AB 
-    out << "edges_between_AB: ";
-    for (int i = 1; i <= cfg.r; i++)
     {
-        for (int j = cfg.r + 1; j < cfg.n; j++)
+        // count edges between AB 
+        out << "edges_between_AB: ";
+        bool first = true;
+        for (int i = 0; i < verticesInA.size(); i++)
         {
-            if (i != cfg.r || j != cfg.n - 1)
-                out << evar(i, j) << " + ";
+            for (int j = 0; j < verticesInB.size(); j++)
+            {
+                if (!first) {
+                    out << " + ";
+                }
+                out << evar(verticesInA[i], verticesInB[j]);
+                first = false;
+            }
         }
+        out << " = " << to_string(edgesBetweenAB) << "\n\n";
     }
-    out << evar(cfg.r, cfg.n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
 }
 
 // =========================================================================
 // ЛЕМА 3.1: Для кожної вершини a \in A, deg_{G[A]}(a) <= min{r - 2, d}
-// d=splitK3, A has 1...r vertices, B has r+1...n-1 vertices
+// d=anchorK3, A has 1...r vertices, B has r+1...n-1 vertices
 // =========================================================================
 void writeLemma3_1(std::ostream& out, const GraphConfig& cfg)
 {
-    for (int i = 1; i <= cfg.r; ++i)
+	VertexSets vertexSets(cfg);
+	const auto& verticesInA = vertexSets.verticesInA;
+    for (int v : verticesInA)
     {
         std::string sum_adj_edges = "";
         bool first = true;
-        for (int j = 1; j <= cfg.r; j++)
+        for (int u : verticesInA)
         {
-            if (i == j)
+            if (v == u)
                 continue;
 
             if (!first)
                 sum_adj_edges += " + ";
             first = false;
 
-            sum_adj_edges += evar(i, j);
+            sum_adj_edges += evar(v, u);
         }
-        out << "lemma3_1_" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(min({ cfg.r - 2, cfg.splitK3 })) << "\n";
+        out << "lemma3_1_" << to_string(v) << ": " << sum_adj_edges << " <= " << to_string(min({ cfg.r - 2, cfg.anchorK3 })) << "\n";
     }
 	out << "\n\n";
 }
 
 
 // =========================================================================
-// ЛЕМА 3.4: Для кожної вершини b \in B, max{1, |B|-1-|E(\overline{G[B]})} <= deg_{G[A]}(a) <= min{r, |E(B)|, |B| - 1}
-// d=splitK3, A has 1...r vertices, B has r+1...n-1 vertices
+// ЛЕМА 3.4: Для кожної вершини b \in B, max{1, |B|-1-|E(\overline{G[B]})} <= deg_{G[B]}(b) <= min{r, |E(B)|, |B| - 1}
+// d=anchorK3, A has 1...r vertices, B has r+1...n-1 vertices
 // (R1) deg_B(b) <= r - maybe
 // (R2) deg_b(b) <= |B| - 1 - trivial
 // (R3) deg_b(b) <= |E(B)| - let's add this (good)
@@ -407,40 +448,42 @@ void writeLemma3_1(std::ostream& out, const GraphConfig& cfg)
 void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
 {
     const int EdgesToFixedK3Deg = cfg.r;
-    const int edgesInsideA = cfg.splitK3;
-    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.splitK3;
+    const int edgesInsideA = cfg.anchorK3;
+    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.anchorK3;
     const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
     const int verticesInsideB = cfg.n - cfg.r - 1;
     const int nonEdgesInsideB = verticesInsideB * (verticesInsideB - 1) / 2 - edgesInsideB;
 
-    for (int i = cfg.r + 1; i < cfg.n; ++i)
+	const auto& verticesInB = VertexSets(cfg).verticesInB;
+
+    for (int v : verticesInB)
     {
         std::string sum_adj_edges = "";
         bool first = true;
-        for (int j = cfg.r + 1; j < cfg.n; j++)
+        for (int u : verticesInB)
         {
-            if (i == j)
+            if (v == u)
                 continue;
 
             if (!first)
                 sum_adj_edges += " + ";
             first = false;
 
-            sum_adj_edges += evar(i, j);
+            sum_adj_edges += evar(v, u);
         }
 
-        out << "lemma3_4_r" << to_string(i) << ": " << sum_adj_edges << " <= " << to_string(std::min({ cfg.r, verticesInsideB - 1, edgesInsideB })) << "\n"; // min (R1) (R2) (R3)
-        out << "lemma3_4_l" << to_string(i) << ": " << sum_adj_edges << " >= " << to_string(std::max({ 1, verticesInsideB - 1 - nonEdgesInsideB })) << "\n"; // max (L1) (L2)
+        out << "lemma3_4_r" << to_string(v) << ": " << sum_adj_edges << " <= " << to_string(std::min({ cfg.r, verticesInsideB - 1, edgesInsideB })) << "\n"; // min (R1) (R2) (R3)
+        out << "lemma3_4_l" << to_string(v) << ": " << sum_adj_edges << " >= " << to_string(std::max({ 1, verticesInsideB - 1 - nonEdgesInsideB })) << "\n"; // max (L1) (L2)
     }
 	out << "\n\n";
 }
 
 void writeBounds(std::ostream& out, const GraphConfig& cfg)
 {
-    const int updminBound = cfg.splitK3 == cfg.min_k3 || cfg.neighbours_of_fixed_vertex_in_B != -1 ? cfg.min_k3 + 1 : cfg.min_k3;
-    const int updmaxBound = cfg.splitK3 == cfg.max_k3 ? cfg.max_k3 - 1 : cfg.max_k3;
-    // d0 is fixed to splitK3
-    out << "d0 = " << to_string(cfg.splitK3) << "\n";
+    const int updminBound = cfg.anchorK3 == cfg.min_k3 || cfg.neighbours_of_fixed_vertex_in_B != -1 ? cfg.min_k3 + 1 : cfg.min_k3;
+    const int updmaxBound = cfg.anchorK3 == cfg.max_k3 ? cfg.max_k3 - 1 : cfg.max_k3;
+    // d0 is fixed to anchorK3
+    out << "d0 = " << to_string(cfg.anchorK3) << "\n";
     for (int i = 1; i < cfg.n; i++)
     {
         if (cfg.neighbours_of_fixed_vertex_in_B != -1 && i == cfg.r + 1)
@@ -510,7 +553,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
     out << "\n";
 }
 
-// fix splitK3 - 0 index
+// fix anchorK3 - 0 index
 // 1..r are neighbouns
 // r+1..n-1 not neighbors
 void generateGraphLP(const GraphConfig& cfg, const std::string& filename)

@@ -20,7 +20,7 @@ struct GraphConfig
 	int max_k3;
 
 	bool use_split_AB = false;
-	int splitK3 = -1; // only used if use_split_AB
+	int anchorK3 = -1; // only used if use_split_AB
 
 	FixVertexInBMode fixVertexInBMode = FixVertexInBMode::NONE;
 	int neighbours_of_fixed_vertex_in_B = - 1; // only used if fixVertexInBMode != NONE
@@ -31,8 +31,8 @@ struct GraphConfig
 			throw std::invalid_argument("Invalid graph dimentions (n, r).");
 		if (min_k3 > max_k3 || min_k3 < 0 || max_k3 < 0)
 			throw std::invalid_argument("Invalid k3 bounds.");
-		if (use_split_AB && (splitK3 < 0 || splitK3 < min_k3 || splitK3 > max_k3))
-			throw std::invalid_argument("Invalid splitK3 value.");
+		if (use_split_AB && (anchorK3 < 0 || anchorK3 < min_k3 || anchorK3 > max_k3))
+			throw std::invalid_argument("Invalid anchorK3 value.");
 		if (!use_split_AB && fixVertexInBMode != FixVertexInBMode::NONE)
 			throw std::invalid_argument("fixVertexInBMode can only be used with split_AB.");
 		if (fixVertexInBMode != FixVertexInBMode::NONE) {
@@ -45,12 +45,12 @@ struct GraphConfig
 			case FixVertexInBMode::NONE:
 				break;
 			case FixVertexInBMode::ZERO_IN_B:
-				if(min_k3 > 0 || splitK3 == 0)
-					throw std::invalid_argument("Invalid config: can't fix zero in B if min_k3 > 0 or splitK3 == 0.");
+				if(min_k3 > 0 || anchorK3 == 0)
+					throw std::invalid_argument("Invalid config: can't fix zero in B if min_k3 > 0 or anchorK3 == 0.");
 				break;
 			case FixVertexInBMode::ONE_IN_B:
-				if (min_k3 > 1 || splitK3 == 1)
-					throw std::invalid_argument("Invalid config: can't fix one in B if min_k3 > 1 or splitK3 == 1.");
+				if (min_k3 > 1 || anchorK3 == 1)
+					throw std::invalid_argument("Invalid config: can't fix one in B if min_k3 > 1 or anchorK3 == 1.");
 				break;
 			default:
 				break;
@@ -69,11 +69,9 @@ struct GraphConfig
 // So it can't be in A and can't be the anchor vertex.
 struct VertexSets {
 	const GraphConfig& cfg;
-	std::vector<int> _verticesInA;
-	std::vector<int> _verticesInB;
-	std::vector<int> _neighOfFixedInB;
-	std::vector<int> _nonNeighOfFixedInB;
-
+	std::vector<int> verticesInA;
+	std::vector<int> verticesInB;
+	std::vector<int> neighOfFixedInB;
 
 	VertexSets(const GraphConfig& cfg) : cfg(cfg) 
 	{ 
@@ -83,29 +81,27 @@ struct VertexSets {
 		{
 			// note 0 is anchor
 			for (int i = 1; i <= cfg.r; i++)
-				_verticesInA.push_back(i);
+				verticesInA.push_back(i);
 			for (int i = cfg.r + 1; i < cfg.n; i++)
-				_verticesInB.push_back(i);
+				verticesInB.push_back(i);
 
 			if(cfg.fixVertexInBMode != FixVertexInBMode::NONE )
 			{
 				int fixedVertex = fixedVertexInB();
-				_neighOfFixedInB.reserve(cfg.neighbours_of_fixed_vertex_in_B);
+				neighOfFixedInB.reserve(cfg.neighbours_of_fixed_vertex_in_B);
 				for (int i = fixedVertex + 1; i <= fixedVertex + cfg.neighbours_of_fixed_vertex_in_B; ++i)
 				{
-					_neighOfFixedInB.push_back(i);
-				}
-				_nonNeighOfFixedInB.reserve(cfg.n - 1 - fixedVertex - cfg.neighbours_of_fixed_vertex_in_B);
-				for (int i = fixedVertex + cfg.neighbours_of_fixed_vertex_in_B + 1; i < cfg.n; ++i)
-				{
-					_nonNeighOfFixedInB.push_back(i);
+					neighOfFixedInB.push_back(i);
 				}
 			}
 		}
 	}
 
-	int anchor() const { return cfg.splitK3 ? 0 : throw "There is no anchor"; }
-	bool isVertexAnchor(int v) const { return cfg.splitK3 && v == 0; }
+	int anchorIndex() const { return cfg.use_split_AB ? 0 : throw "There is no anchor"; }
+	bool isVertexAnchorIndex(int v) const { return cfg.use_split_AB && v == 0; }
+
+	int anchorK3() const { return cfg.use_split_AB ? cfg.anchorK3 : throw "There is no anchor"; }
+	bool isVertexAnchorK3(int v_k3) const { return cfg.use_split_AB && v_k3 == cfg.anchorK3; }
 
 	bool isVertexInA(int v) const { return v >= 1 && v <= cfg.r; }
 	bool isVertexInB(int v) const { return v >= cfg.r + 1 && v < cfg.n; }
@@ -114,10 +110,9 @@ struct VertexSets {
 
 	int fixedVertexInB() const { return cfg.fixVertexInBMode != FixVertexInBMode::NONE ? cfg.r + 1 : throw "There is no fixed vertex in B."; }
 
-	const std::vector<int>& A() const { return _verticesInA; }
-	const std::vector<int>& B() const { return _verticesInB; }
-	const std::vector<int>& neighOfFixedInB() const { return _neighOfFixedInB; }
-	const std::vector<int>& nonNeighOfFixedInB() const { return _nonNeighOfFixedInB; }
+	const std::vector<int>& A() const { return verticesInA; }
+	const std::vector<int>& B() const { return verticesInB; }
+	const std::vector<int>& getNeighOfFixedInB() const { return neighOfFixedInB; }
 };
 
 std::string getFileName(const GraphConfig& cfg);
