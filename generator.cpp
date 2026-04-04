@@ -38,10 +38,10 @@ std::string getFileName(const GraphConfig& cfg)
         switch (cfg.fixVertexInBMode)
         {
         case FixVertexInBMode::ZERO_IN_B:
-            res += "_fix0B_";
+            res += "_fix0B";
             break;
         case FixVertexInBMode::ONE_IN_B:
-            res += "_fix1B_";
+            res += "_fix1B";
             break;
         default:
             std::cerr << "Warning: Unknown FixVertexInBMode\n";
@@ -212,6 +212,7 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
         throw "not implemented yet";
 		break;
     default:
+        throw "not implemented yet";
         break;
     }
 
@@ -220,26 +221,32 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
 
 void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
 {
+	const VertexSets vs(cfg);
+    const auto& verticesInA = vs.verticesInA;
     // ordering of K3-degrees inside A
-    for (int i = 1; i < cfg.r; i++)
+    for (int i = 0; i < verticesInA.size() - 1; i++)
     {
-        out << "ord" << to_string(i) << ": "
-            << degv(i) << " - " << degv(i + 1)
+        out << "ord" << to_string(verticesInA[i]) << ": "
+            << degv(verticesInA[i]) << " - " << degv(verticesInA[i + 1])
             << " <= -1\n";
     }
     out << "\n";
 
-    if (cfg.neighbours_of_fixed_vertex_in_B == -1)
+    const auto& verticesInB = vs.verticesInB;
+    if (cfg.fixVertexInBMode == FixVertexInBMode::NONE)
     {
         // ordering of K3-degrees inside B
-        for (int i = cfg.r + 1; i < cfg.n - 1; i++)
+        for (int i = 0; i < verticesInB.size() - 1; i++)
         {
-            out << "ord" << to_string(i) << ": "
-                << degv(i) << " - " << degv(i + 1)
+            out << "ord" << to_string(verticesInB[i]) << ": "
+                << degv(verticesInB[i]) << " - " << degv(verticesInB[i + 1])
                 << " <= -1\n";
         }
     }
-    else
+    //*************** TODO
+    // also fix if fixed vertex is not max min then we need pairwise check not equalit of if to other vertices
+    // di < anchor || di > anchor
+    else if (cfg.fixVertexInBMode == FixVertexInBMode::ZERO_IN_B)
     {
         // order inside neighbours 0
         // dr+1 = 0
@@ -285,28 +292,39 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
             }
         }
     }
+    else if (cfg.fixVertexInBMode == FixVertexInBMode::ONE_IN_B)
+    {
+        throw "not implemented yet";
+    }
+    else 
+    {
+        throw "not implemented yet";
+    }
+    
 
     // A neq B
     // some large constant for big-M constraints
     int M = cfg.r * cfg.r; // use upper bound on max_k3_deg + epsilon
-    for (int i = 1; i <= cfg.r; i++)
+    for (int v : verticesInA)
     {
-		const int j_start = cfg.neighbours_of_fixed_vertex_in_B == -1 ? cfg.r + 1 : cfg.r + 1 + 1;
-        for (int j = j_start; j < cfg.n; j++)
+        for (int u : verticesInB)
         {
-            std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
+            if( cfg.fixVertexInBMode != FixVertexInBMode::NONE && u == vs.fixedVertexInB())
+				continue;
+
+            std::string b = "b_" + std::to_string(v) + "_" + std::to_string(u);
 
             // binary variable
-            out << "bin_" << to_string(i) << "_" << to_string(j) << ": " << b << " <= 1\n";
+            out << "bin_" << to_string(v) << "_" << to_string(u) << ": " << b << " <= 1\n";
 
             // d_i < d_j or d_j < d_i
-            out << "neq1_" << to_string(i) << "_" << to_string(j) << ": "
-                << "d" << to_string(i) << " - d" << to_string(j)
+            out << "neq1_" << to_string(v) << "_" << to_string(u) << ": "
+                << "d" << to_string(v) << " - d" << to_string(u)
                 << " - " << to_string(M) << " " << b
                 << " <= -1\n";
 
-            out << "neq2_" << to_string(i) << "_" << to_string(j) << ": "
-                << "d" << to_string(j) << " - d" << to_string(i)
+            out << "neq2_" << to_string(v) << "_" << to_string(u) << ": "
+                << "d" << to_string(u) << " - d" << to_string(v)
                 << " + " << to_string(M) << " " << b
                 << " <= " << to_string(M - 1) << "\n";
         }
@@ -480,21 +498,60 @@ void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
 
 void writeBounds(std::ostream& out, const GraphConfig& cfg)
 {
-    const int updminBound = cfg.anchorK3 == cfg.min_k3 || cfg.neighbours_of_fixed_vertex_in_B != -1 ? cfg.min_k3 + 1 : cfg.min_k3;
-    const int updmaxBound = cfg.anchorK3 == cfg.max_k3 ? cfg.max_k3 - 1 : cfg.max_k3;
-    // d0 is fixed to anchorK3
-    out << "d0 = " << to_string(cfg.anchorK3) << "\n";
-    for (int i = 1; i < cfg.n; i++)
+	VertexSets vs(cfg);
+    int updminBound = cfg.min_k3;
+	int updmaxBound = cfg.max_k3;
+
+    // 1. Межі для якоря (якщо є розбиття)
+    if (cfg.use_split_AB)
     {
-        if (cfg.neighbours_of_fixed_vertex_in_B != -1 && i == cfg.r + 1)
+        out << "d0 = " << to_string(cfg.anchorK3) << "\n";
+        if (cfg.anchorK3 == cfg.min_k3)
+			updminBound = cfg.min_k3 + 1;
+		if (cfg.anchorK3 == cfg.max_k3)
+			updmaxBound = cfg.max_k3 - 1;
+    }
+
+    // 2. Межі для фіксованої вершини в B (якщо є)
+    if (cfg.fixVertexInBMode == FixVertexInBMode::ZERO_IN_B)
+    {
+        const int fixedVertex = vs.fixedVertexInB();
+
+        out << degv(fixedVertex) << " = 0\n";
+
+        if (updminBound == 0)
+            updminBound = 1;
+	}
+    else if (cfg.fixVertexInBMode == FixVertexInBMode::ONE_IN_B)
+    {
+        const int fixedVertex = vs.fixedVertexInB();
+
+        out << degv(fixedVertex) << " = 1\n";
+
+        if (updminBound == 1)
+            updminBound = 2;
+	}
+
+    // 3. Записуємо межі для всіх інших вершин
+    for (int i = 0; i < cfg.n; i++)
+    {
+        if (cfg.use_split_AB && i == 0)
         {
-            // d_r+1 is fixed to 0
-            out << degv(i) << " = 0\n";
+            // d0 is fixed to anchorK3
             continue;
-        }
+		}
+
+        if (cfg.fixVertexInBMode != FixVertexInBMode::NONE && i == vs.fixedVertexInB())
+        {
+            // already handled fixed vertex in B
+            continue;
+		}
+        
         out << to_string(updminBound) << " <= " << degv(i) << " <= " << to_string(updmaxBound) << "\n";
     }
 
+	// write bounds for T using sum of k3 degrees
+	// TODO maybe update bounds based on anchorK3 and fixVertexInBMode
     int sum_min = cfg.n * cfg.min_k3 + cfg.n * (cfg.n - 1) / 2;
     int sum_max = cfg.n * cfg.max_k3 - cfg.n * (cfg.n - 1) / 2;
 
@@ -506,6 +563,9 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg)
 
 void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
 {
+	VertexSets vs(cfg);
+
+    // edges
     for (int i = 0; i < cfg.n - 1; i++)
     {
         for (int j = i + 1; j < cfg.n; j++)
@@ -515,6 +575,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
         out << "\n";
     }
 
+    // triangles
     for (int i = 0; i < cfg.n - 2; i++)
     {
         for (int j = i + 1; j < cfg.n - 1; j++)
@@ -526,26 +587,35 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
         }
     }
 
+	const auto& verticesInA = vs.verticesInA;
+	const auto& verticesInB = vs.verticesInB;
+
     // b_ vars for A neq B
+    if (cfg.use_split_AB)
     {
-        const int j_start = (cfg.neighbours_of_fixed_vertex_in_B == -1) ? cfg.r + 1 : cfg.r + 1 + 1;
-        for (int i = 1; i <= cfg.r; i++)
+        // a) Змінні b_i_j між множиною A та множиною B
+
+        for (int v : verticesInA)
         {
-            for (int j = j_start; j < cfg.n; j++)
+            for (int u : verticesInB)
             {
-                out << "b_" << i << "_" << j << "\n";
+				if (cfg.fixVertexInBMode != FixVertexInBMode::NONE && u == vs.fixedVertexInB())
+					continue; // skip fixed vertex in B
+                out << "b_" << v << "_" << u << "\n";
             }
         }
     }
 
     // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
-    if (cfg.neighbours_of_fixed_vertex_in_B != -1)
+    if (cfg.fixVertexInBMode != FixVertexInBMode::NONE)
     {
-        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
+        const auto& neighOfFixed = vs.getNeighOfFixedInB();
+        const auto& otherInB = vs.getOtherInB();
+        for (int v : neighOfFixed)
         {
-            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
+            for (int u : otherInB)
             {
-                out << "b_" << i << "_" << j << "\n";
+                out << "b_" << v << "_" << u << "\n";
             }
         }
     }
@@ -571,7 +641,10 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 
 	writeNoTrueTwinsCond(f, cfg);
 
-	writeFixVertexInB(f, cfg);
+    if (cfg.use_split_AB)
+    {
+	    writeFixVertexInB(f, cfg);
+    }
 
 	writeAllDiffK3Degs(f, cfg);
 
@@ -583,10 +656,12 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
     }
     f << degv(cfg.n - 1) << " - 3 T = 0\n";
 
-    writeConditionsOnEdges(f, cfg);
-
-	writeLemma3_1(f, cfg);
-	writeLemma3_4(f, cfg);
+    if (cfg.use_split_AB)
+    {
+        writeConditionsOnEdges(f, cfg);
+	    writeLemma3_1(f, cfg);
+	    writeLemma3_4(f, cfg);
+    }
 
     f << "\nBounds\n";
     writeBounds(f, cfg);

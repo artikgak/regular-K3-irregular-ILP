@@ -72,6 +72,7 @@ struct VertexSets {
 	std::vector<int> verticesInA;
 	std::vector<int> verticesInB;
 	std::vector<int> neighOfFixedInB;
+	std::vector<int> otherInB;
 
 	VertexSets(const GraphConfig& cfg) : cfg(cfg) 
 	{ 
@@ -93,6 +94,11 @@ struct VertexSets {
 				{
 					neighOfFixedInB.push_back(i);
 				}
+
+				for (int i = fixedVertex + cfg.neighbours_of_fixed_vertex_in_B + 1; i < cfg.n; ++i)
+				{
+					otherInB.push_back(i);
+				}
 			}
 		}
 	}
@@ -113,6 +119,7 @@ struct VertexSets {
 	const std::vector<int>& A() const { return verticesInA; }
 	const std::vector<int>& B() const { return verticesInB; }
 	const std::vector<int>& getNeighOfFixedInB() const { return neighOfFixedInB; }
+	const std::vector<int>& getOtherInB() const { return otherInB; }
 };
 
 std::string getFileName(const GraphConfig& cfg);

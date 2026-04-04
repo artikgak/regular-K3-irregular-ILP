@@ -14,11 +14,11 @@ int main()
 		.n = 20,
 		.r = 8,
 		.min_k3 = 0,
-		.max_k3 = 22,
+		.max_k3 = 21,
 		.use_split_AB = true,
-		.anchorK3 = 22,
-		.fixVertexInBMode = FixVertexInBMode::NONE,
-		.neighbours_of_fixed_vertex_in_B = -1
+		.anchorK3 = 20,
+		.fixVertexInBMode = FixVertexInBMode::ZERO_IN_B,
+		.neighbours_of_fixed_vertex_in_B = 5
 	};
 
 	cfg.validate();
