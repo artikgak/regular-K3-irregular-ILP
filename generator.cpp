@@ -489,6 +489,7 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
     f << "\n\nBounds\n";
 
     assert(cfg.neighbours_of_fixed_vertex_in_B == -1 || cfg.min_k3 == 0);
+
     const int updminBound = cfg.splitK3 == cfg.min_k3 || cfg.neighbours_of_fixed_vertex_in_B != -1 ? cfg.min_k3 + 1 : cfg.min_k3;
     const int updmaxBound = cfg.splitK3 == cfg.max_k3 ? cfg.max_k3 - 1 : cfg.max_k3;
     // d0 is fixed to splitK3

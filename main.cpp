@@ -21,6 +21,8 @@ int main()
 		.neighbours_of_fixed_vertex_in_B = -1
 	};
 
+	cfg.validate();
+
 	const std::string filename = getFileName(cfg);
 
 	generateGraphLP(cfg, filename + "t");
