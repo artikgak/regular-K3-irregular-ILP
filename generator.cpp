@@ -25,6 +25,35 @@ string degv(int i)
     return "d" + to_string(i);
 }
 
+std::string getFileName(const GraphConfig& cfg)
+{
+    std::string res = "N" + std::to_string(cfg.n) + "_R" + std::to_string(cfg.r);
+    res += "_K3_" + std::to_string(cfg.min_k3) + "_" + std::to_string(cfg.max_k3);
+
+    if (cfg.use_split_AB)
+        res += "_split_" + std::to_string(cfg.splitK3);
+
+    if (cfg.fixVertexInBMode != FixVertexInBMode::NONE)
+    {
+        switch (cfg.fixVertexInBMode)
+        {
+        case FixVertexInBMode::ZERO_IN_B:
+            res += "_fix0B_";
+            break;
+        case FixVertexInBMode::ONE_IN_B:
+            res += "_fix1B_";
+            break;
+        default:
+            std::cerr << "Warning: Unknown FixVertexInBMode\n";
+            res += "_fix__B_";
+            break;
+        }
+    }
+
+    res += ".lp";
+    return res;
+}
+
 void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg)
 {
     // regularity
@@ -39,13 +68,10 @@ void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg)
             if (i == j)
                 continue;
 
-            int a = min(i, j);
-            int b = max(i, j);
-
             if (!first)
                 out << " + ";
 
-            out << evar(a, b);
+            out << evar(i, j);
 
             first = false;
         }
@@ -83,6 +109,8 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
         }
     }
 
+	out << "\n";
+
     // K3-degree of vertices
     for (int v = 0; v < cfg.n; v++)
     {
@@ -107,6 +135,7 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
         }
         out << " = 0\n\n";
     }
+	out << "\n";
 }
 
 void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
@@ -142,52 +171,33 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
 	out << "\n";
 }
 
-void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
+// When anchor d is high 0 vertex can't belong to A. 
+// So we can fix it in B and some edges in it's neighbourhood.
+// d0 - fixed
+// d1...d_r belong to A
+// d_r+1 .. d_n-1 belong to B
+// fix d_r+1 = 0
+// neighboursInB in B (this goes from theory).
+// Ex. d0=21 then 0 belong to B. And 0 has at max 3 edges to A and at least 5 edges to B (r=8)
+// So we can fix zero neighborhood of 0 in B (P5)
+void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
 {
-    for (int i = 0; i < cfg.n - 1; i++)
+    if (cfg.fixVertexInBMode == FixVertexInBMode::NONE)
+        return;
+
+    out << degv(cfg.r + 1) << " = 0\n";
+    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B; ++i)
     {
-        for (int j = i + 1; j < cfg.n; j++)
-        {
-            out << " " << evar(i, j) << " ";
-        }
-        out << "\n";
+        out << evar(cfg.r + 1, cfg.r + 1 + i) << " = 1\n";
     }
 
-    for (int i = 0; i < cfg.n - 2; i++)
+    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B - 1 && i < cfg.n - 1; ++i)
     {
-        for (int j = i + 1; j < cfg.n - 1; j++)
+        for (int j = i + 1; j <= cfg.neighbours_of_fixed_vertex_in_B && j < cfg.n; ++j)
         {
-            for (int k = j + 1; k < cfg.n; k++)
-            {
-                out << " " << tvar(i, j, k) << "\n";
-            }
+            out << evar(cfg.r + 1 + i, cfg.r + 1 + j) << " = 0\n";
         }
     }
-
-    // b_ vars for A neq B
-    {
-        const int j_start = (cfg.neighbours_of_fixed_vertex_in_B == -1) ? cfg.r + 1 : cfg.r + 1 + 1;
-        for (int i = 1; i <= cfg.r; i++)
-        {
-            for (int j = j_start; j < cfg.n; j++)
-            {
-                out << "b_" << i << "_" << j << "\n";
-            }
-        }
-    }
-
-    // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
-    if (cfg.neighbours_of_fixed_vertex_in_B != -1)
-    {
-        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
-        {
-            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
-            {
-                out << "b_" << i << "_" << j << "\n";
-            }
-        }
-    }
-
     out << "\n";
 }
 
@@ -287,6 +297,77 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
 	out << "\n";
 }
 
+void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
+{
+    if (!cfg.use_split_AB)
+        return;
+
+    for (int i = 1; i <= cfg.r; i++)
+    {
+        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
+    }
+    for (int i = cfg.r + 1; i < cfg.n; i++)
+    {
+        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
+    }
+
+    const int EdgesToFixedK3Deg = cfg.r;
+    const int edgesInsideA = cfg.splitK3;
+    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.splitK3;
+    const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
+
+    if (cfg.splitK3 == 0)
+    {
+        // no edges inside A
+        for (int i = 1; i <= cfg.r - 1; i++)
+        {
+            for (int j = i + 1; j <= cfg.r; j++)
+            {
+                out << "noedge_" << i << "_" << j
+                    << ": x" << i << "_" << j
+                    << " = 0\n";
+            }
+        }
+    }
+    else
+    {
+        // count edges inside A
+        out << "edges_inside_A: ";
+        for (int i = 1; i < cfg.r - 1; i++)
+        {
+            for (int j = i + 1; j <= cfg.r; j++)
+            {
+                out << evar(i, j) << " + ";
+            }
+        }
+        out << evar(cfg.r - 1, cfg.r) << " = " << to_string(edgesInsideA) << "\n";
+    }
+
+    // count edges inside B 
+    out << "edges_inside_B: ";
+    for (int i = cfg.r + 1; i < cfg.n - 1; i++)
+    {
+        for (int j = i + 1; j < cfg.n; j++)
+        {
+            if (i != cfg.n - 2 || j != cfg.n - 1)
+                out << evar(i, j) << " + ";
+        }
+    }
+    out << evar(cfg.n - 2, cfg.n - 1) << " = " << to_string(edgesInsideB) << "\n";
+
+    // count edges between AB 
+    out << "edges_between_AB: ";
+    for (int i = 1; i <= cfg.r; i++)
+    {
+        for (int j = cfg.r + 1; j < cfg.n; j++)
+        {
+            if (i != cfg.r || j != cfg.n - 1)
+                out << evar(i, j) << " + ";
+        }
+    }
+    out << evar(cfg.r, cfg.n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
+}
+
 // =========================================================================
 // ЛЕМА 3.1: Для кожної вершини a \in A, deg_{G[A]}(a) <= min{r - 2, d}
 // d=splitK3, A has 1...r vertices, B has r+1...n-1 vertices
@@ -380,134 +461,53 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg)
     out << "tbounds: " << Tmin << " <= T <= " << Tmax << "\n";
 }
 
-// When anchor d is high 0 vertex can't belong to A. 
-// So we can fix it in B and some edges in it's neighbourhood.
-// d0 - fixed
-// d1...d_r belong to A
-// d_r+1 .. d_n-1 belong to B
-// fix d_r+1 = 0
-// neighboursInB in B (this goes from theory).
-// Ex. d0=21 then 0 belong to B. And 0 has at max 3 edges to A and at least 5 edges to B (r=8)
-// So we can fix zero neighborhood of 0 in B (P5)
-void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
+void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
 {
-    if( cfg.fixVertexInBMode == FixVertexInBMode::NONE )
-		return;
-
-    out << degv(cfg.r + 1) << " = 0\n";
-    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B; ++i)
-    {
-        out << evar(cfg.r + 1, cfg.r + 1 + i) << " = 1\n";
-    }
-
-    for (int i = 1; i <= cfg.neighbours_of_fixed_vertex_in_B - 1 && i < cfg.n - 1; ++i)
-    {
-        for (int j = i + 1; j <= cfg.neighbours_of_fixed_vertex_in_B && j < cfg.n; ++j)
-        {
-            out << evar(cfg.r + 1 + i, cfg.r + 1 + j) << " = 0\n";
-        }
-    }
-	out << "\n";
-}
-
-std::string getFileName(const GraphConfig& cfg)
-{
-	std::string res = "N" + std::to_string(cfg.n) + "_R" + std::to_string(cfg.r);
-    res += "_K3_" + std::to_string(cfg.min_k3) + "_" + std::to_string(cfg.max_k3);
-    
-    if (cfg.use_split_AB)
-        res += "_split_" + std::to_string(cfg.splitK3);
-         
-    if (cfg.fixVertexInBMode != FixVertexInBMode::NONE)
-    {
-        switch (cfg.fixVertexInBMode)
-        {
-        case FixVertexInBMode::ZERO_IN_B:
-            res += "_fix0B_";
-		    break;
-        case FixVertexInBMode::ONE_IN_B:
-            res += "_fix1B_";
-		    break;
-        default:
-			std::cerr << "Warning: Unknown FixVertexInBMode\n";
-            res += "_fix__B_";
-            break;
-        }
-    }
-
-    res += ".lp";
-    return res;
-}
-
-void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
-{
-    if(!cfg.use_split_AB)
-		return;
-
-    for (int i = 1; i <= cfg.r; i++)
-    {
-        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 1\n";
-    }
-    for (int i = cfg.r + 1; i < cfg.n; i++)
-    {
-        out << "fix0_" << i << ": x" << 0 << "_" << i << " = 0\n";
-    }
-
-    const int EdgesToFixedK3Deg = cfg.r;
-    const int edgesInsideA = cfg.splitK3;
-    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.splitK3;
-    const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesToFixedK3Deg - edgesInsideA - edgesBetweenAB;
-
-    if (cfg.splitK3 == 0)
-    {
-        // no edges inside A
-        for (int i = 1; i <= cfg.r - 1; i++)
-        {
-            for (int j = i + 1; j <= cfg.r; j++)
-            {
-                out << "noedge_" << i << "_" << j
-                    << ": x" << i << "_" << j
-                    << " = 0\n";
-            }
-        }
-    }
-    else
-    {
-        // count edges inside A
-        out << "edges_inside_A: ";
-        for (int i = 1; i < cfg.r - 1; i++)
-        {
-            for (int j = i + 1; j <= cfg.r; j++)
-            {
-                out << evar(i, j) << " + ";
-            }
-        }
-        out << evar(cfg.r - 1, cfg.r) << " = " << to_string(edgesInsideA) << "\n";
-    }
-
-    // count edges inside B 
-    out << "edges_inside_B: ";
-    for (int i = cfg.r + 1; i < cfg.n - 1; i++)
+    for (int i = 0; i < cfg.n - 1; i++)
     {
         for (int j = i + 1; j < cfg.n; j++)
         {
-            if (i != cfg.n - 2 || j != cfg.n - 1)
-                out << evar(i, j) << " + ";
+            out << " " << evar(i, j) << " ";
         }
+        out << "\n";
     }
-    out << evar(cfg.n - 2, cfg.n - 1) << " = " << to_string(edgesInsideB) << "\n";
 
-    // count edges between AB 
-    out << "edges_between_AB: ";
-    for (int i = 1; i <= cfg.r; i++)
+    for (int i = 0; i < cfg.n - 2; i++)
     {
-        for (int j = cfg.r + 1; j < cfg.n; j++)
+        for (int j = i + 1; j < cfg.n - 1; j++)
         {
-            if (i != cfg.r || j != cfg.n - 1)
-                out << evar(i, j) << " + ";
+            for (int k = j + 1; k < cfg.n; k++)
+            {
+                out << " " << tvar(i, j, k) << "\n";
+            }
         }
     }
-    out << evar(cfg.r, cfg.n - 1) << " = " << to_string(edgesBetweenAB) << "\n\n";
+
+    // b_ vars for A neq B
+    {
+        const int j_start = (cfg.neighbours_of_fixed_vertex_in_B == -1) ? cfg.r + 1 : cfg.r + 1 + 1;
+        for (int i = 1; i <= cfg.r; i++)
+        {
+            for (int j = j_start; j < cfg.n; j++)
+            {
+                out << "b_" << i << "_" << j << "\n";
+            }
+        }
+    }
+
+    // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
+    if (cfg.neighbours_of_fixed_vertex_in_B != -1)
+    {
+        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
+        {
+            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
+            {
+                out << "b_" << i << "_" << j << "\n";
+            }
+        }
+    }
+
+    out << "\n";
 }
 
 // fix splitK3 - 0 index
