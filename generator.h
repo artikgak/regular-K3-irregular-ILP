@@ -24,7 +24,7 @@ struct GraphConfig
 	int anchorK3 = -1; // only used if use_split_AB
 
 	FixVertexInBMode fixVertexInBMode = FixVertexInBMode::NONE;
-	int neighbours_of_fixed_vertex_in_B = - 1; // only used if fixVertexInBMode != NONE
+	int neighbours_of_fixed_vertex_in_B = -1; // only used if fixVertexInBMode != NONE
 
 	void validate() const
 	{

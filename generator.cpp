@@ -8,27 +8,6 @@
 
 using namespace std;
 
-// rewrite with var templates
-//string evar(int i, int j)
-//{
-//    if (i > j) swap(i, j);
-//    return "x" + to_string(i) + "_" + to_string(j);
-//}
-//
-//string tvar(int a, int b, int c)
-//{
-//    // Функція tvar очікує строго відсортовані індекси a < b < c
-//    if (a > b) swap(a, b);
-//    if (b > c) swap(b, c);
-//    if (a > b) swap(a, b);
-//    return "t" + to_string(a) + "_" + to_string(b) + "_" + to_string(c);
-//}
-//
-//string degv(int i)
-//{
-//    return "d" + to_string(i);
-//}
-
 std::string getFileName(const GraphConfig& cfg)
 {
     std::string res = "N" + std::to_string(cfg.n) + "_R" + std::to_string(cfg.r);
@@ -85,7 +64,7 @@ void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg, GraphVa
 	out << "\n";
 }
 
-void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+void writeTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     // triangle definition
     for (int i = 0; i < cfg.n - 2; i++)
@@ -196,8 +175,6 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
     {
 		const int fixedVertex = vs.fixedVertexInB();
 
-        out << varRegister.k3deg(fixedVertex) << " = 0\n";
-
         const auto& fixedAdj = vs.getNeighOfFixedInB();
         for (int i : fixedAdj)
         {
@@ -256,7 +233,6 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
         // order inside neighbours 0
         // dr+1 = 0
         // r+2
-		VertexSets vs(cfg);
 
 		const auto& fixedAdj = vs.getNeighOfFixedInB();
         for (int i = 0; i < fixedAdj.size()-1; ++i)
@@ -645,7 +621,7 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 
     writeRegularityCondition(f, cfg, varRegister);
 
-    wrtiteTrianglesK3Degs(f, cfg, varRegister);
+    writeTrianglesK3Degs(f, cfg, varRegister);
 
 	writeNoTrueTwinsCond(f, cfg, varRegister);
 
@@ -674,16 +650,7 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
     f << "\nBounds\n";
     writeBounds(f, cfg, varRegister);
 
-    /*f << "\nBinary\n";
-	writeBinaryVars(f, cfg);
-
-    f << "\nGeneral\n";
-    for (int i = 0; i < cfg.n; i++)
-    {
-        f << " " << degv(i) << "\n";
-    }
-    f << " T" << "\n";*/
-
+	// write all vars at the end: binary vars, then general vars
     f << varRegister;
 
     f << "\nEnd\n";
