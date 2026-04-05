@@ -243,50 +243,54 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
                 << " <= -1\n";
         }
     }
-    //*************** TODO
-    // also fix if fixed vertex is not max min then we need pairwise check not equalit of if to other vertices
+
+    // TODO also fix if fixed vertex is not max min then we need pairwise check not equalit of if to other vertices
     // di < anchor || di > anchor
     else if (cfg.fixVertexInBMode == FixVertexInBMode::ZERO_IN_B)
     {
         // order inside neighbours 0
         // dr+1 = 0
         // r+2
-        for (int i = 1; i < cfg.neighbours_of_fixed_vertex_in_B; i++)
+		VertexSets vs(cfg);
+
+		const auto& fixedAdj = vs.getNeighOfFixedInB();
+        for (int i = 0; i < fixedAdj.size()-1; ++i)
         {
-            out << "ord" << to_string(cfg.r + 1 + i) << ": "
-                << degv(cfg.r + 1 + i) << " - " << degv(cfg.r + 1 + i + 1)
+            out << "ord" << to_string(fixedAdj[i]) << ": "
+                << degv(fixedAdj[i]) << " - " << degv(fixedAdj[i+1])
                 << " <= -1\n";
         }
         out << "\n";
 
         // order inside non-neighbours 0
-        for (int i = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; i < cfg.n - 1; i++)
+		const auto& otherInB = vs.getOtherInB();
+        for (int i = 0; i < otherInB.size() - 1; ++i)
         {
-            out << "ord" << to_string(i) << ": "
-                << degv(i) << " - " << degv(i + 1)
+            out << "ord" << to_string(otherInB[i]) << ": "
+                << degv(otherInB[i]) << " - " << degv(otherInB[i+1])
                 << " <= -1\n";
         }
         out << "\n";
 
         // order inbetween groups
         const int M = cfg.r * cfg.r; // use upper bound on max_k3_deg + epsilon
-        for (int i = cfg.r + 1 + 1; i <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; i++)
+        for (int v : fixedAdj)
         {
-            for (int j = cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B + 1; j < cfg.n; j++)
+            for (int u : otherInB)
             {
-                std::string b = "b_" + std::to_string(i) + "_" + std::to_string(j);
+                std::string b = "b_" + std::to_string(v) + "_" + std::to_string(u);
 
                 // binary variable
-                out << "bin_" << to_string(i) << "_" << to_string(j) << ": " << b << " <= 1\n";
+                out << "bin_" << to_string(v) << "_" << to_string(u) << ": " << b << " <= 1\n";
 
                 // d_i < d_j or d_j < d_i
-                out << "neq1_" << to_string(i) << "_" << to_string(j) << ": "
-                    << "d" << to_string(i) << " - d" << to_string(j)
+                out << "neq1_" << to_string(v) << "_" << to_string(u) << ": "
+                    << "d" << to_string(v) << " - d" << to_string(u)
                     << " - " << to_string(M) << " " << b
                     << " <= -1\n";
 
-                out << "neq2_" << to_string(i) << "_" << to_string(j) << ": "
-                    << "d" << to_string(j) << " - d" << to_string(i)
+                out << "neq2_" << to_string(v) << "_" << to_string(u) << ": "
+                    << "d" << to_string(u) << " - d" << to_string(v)
                     << " + " << to_string(M) << " " << b
                     << " <= " << to_string(M - 1) << "\n";
             }
@@ -410,14 +414,14 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
         // count edges between AB 
         out << "edges_between_AB: ";
         bool first = true;
-        for (int i = 0; i < verticesInA.size(); i++)
+        for (int a : verticesInA)
         {
-            for (int j = 0; j < verticesInB.size(); j++)
+            for (int b : verticesInB)
             {
                 if (!first) {
                     out << " + ";
                 }
-                out << evar(verticesInA[i], verticesInB[j]);
+                out << evar(a, b);
                 first = false;
             }
         }

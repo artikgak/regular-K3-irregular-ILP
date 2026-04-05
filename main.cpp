@@ -16,7 +16,7 @@ int main()
 		.min_k3 = 0,
 		.max_k3 = 21,
 		.use_split_AB = true,
-		.anchorK3 = 20,
+		.anchorK3 = 21,
 		.fixVertexInBMode = FixVertexInBMode::ZERO_IN_B,
 		.neighbours_of_fixed_vertex_in_B = 5
 	};
@@ -25,7 +25,7 @@ int main()
 
 	const std::string filename = getFileName(cfg);
 
-	generateGraphLP(cfg, filename + "t");
+	generateGraphLP(cfg, filename + "aft2");
 
 	return 0;
 }

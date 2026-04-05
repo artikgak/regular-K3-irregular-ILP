@@ -33,6 +33,8 @@ struct GraphConfig
 			throw std::invalid_argument("Invalid k3 bounds.");
 		if (use_split_AB && (anchorK3 < 0 || anchorK3 < min_k3 || anchorK3 > max_k3))
 			throw std::invalid_argument("Invalid anchorK3 value.");
+		if (use_split_AB && (anchorK3 != min_k3 && anchorK3 != max_k3))
+			throw std::invalid_argument("Not implemented. For now anchorK3 must be equal to min_k3 or max_k3.");
 		if (!use_split_AB && fixVertexInBMode != FixVertexInBMode::NONE)
 			throw std::invalid_argument("fixVertexInBMode can only be used with split_AB.");
 		if (fixVertexInBMode != FixVertexInBMode::NONE) {
