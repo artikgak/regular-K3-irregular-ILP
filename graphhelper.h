@@ -6,6 +6,7 @@
 #include <boost/graph/isomorphism.hpp>
 #include <boost/graph/connected_components.hpp>
 #include "TypeTraits.h"
+#include <iostream>
 
 std::vector<std::vector<int>> parseExpression(const std::string& expression) {
 	std::string input = expression;
@@ -278,4 +279,31 @@ UndirectedGraph loadGraphFromSCIPSolution(const std::string& filename, int numVe
 	std::cout << "ТестіліоГраф успішно завантажено! Кількість ребер: " << num_edges(graph) << std::endl;
 
 	return graph;
+}
+
+void solHelper() 
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	//string expression = "[[1,2,3,4,5,6,7,11,12],[0,2,3,4,5,6,7,9,10],[0,1,3,4,5,6,7,13,23],[0,1,2,4,5,7,8,19,23],[0,1,2,3,5,6,7,8,14],[0,1,2,3,4,6,7,9,23],[0,1,2,4,5,7,8,9,23],[0,1,2,3,4,5,6,10,23],[3,4,6,11,12,16,20,21,22],[1,5,6,11,12,13,20,21,22],[1,7,11,12,14,16,20,21,22],[0,8,9,10,14,15,16,17,18],[0,8,9,10,15,17,18,19,23],[2,9,14,15,16,18,20,21,22],[4,10,11,13,15,17,19,21,22],[11,12,13,14,16,18,19,20,21],[8,10,11,13,15,17,18,19,23],[11,12,14,16,18,19,20,21,22],[11,12,13,15,16,17,20,21,22],[3,12,14,15,16,17,20,21,22],[8,9,10,13,15,17,18,19,23],[8,9,10,13,14,15,17,18,19],[8,9,10,13,14,17,18,19,23],[2,3,5,6,7,12,16,20,22]]";
+	//UndirectedGraph graph9 = fromVecToGraph<UndirectedGraph>(parseExpression(expression));
+	//string presolveStr = generatePresoveSplitted(graph9, 26);
+	//ofstream f("presolve9r_split26.mst");
+	//f << presolveStr;
+	//f.flush();
+	//f.close();
+
+	UndirectedGraph graph9 = loadGraphFromSCIPSolution("testSol.txt", 24);
+	std::vector<int> k3degs = K3Irregullar(graph9);
+
+	for (int i = 0; i < k3degs.size(); ++i)
+	{
+		std::cout << k3degs[i] << ' ';
+	}
+	std::cout << "\nSorted:\n";
+	std::sort(k3degs.begin(), k3degs.end());
+	for (int i = 0; i < k3degs.size(); ++i)
+	{
+		std::cout << k3degs[i] << ' ';
+	}
 }
