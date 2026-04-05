@@ -9,21 +9,25 @@
 using namespace std;
 
 // rewrite with var templates
-string evar(int i, int j)
-{
-    if (i > j) swap(i, j);
-    return "x" + to_string(i) + "_" + to_string(j);
-}
-
-string tvar(int i, int j, int k)
-{
-    return "t" + to_string(i) + "_" + to_string(j) + "_" + to_string(k);
-}
-
-string degv(int i)
-{
-    return "d" + to_string(i);
-}
+//string evar(int i, int j)
+//{
+//    if (i > j) swap(i, j);
+//    return "x" + to_string(i) + "_" + to_string(j);
+//}
+//
+//string tvar(int a, int b, int c)
+//{
+//    // Функція tvar очікує строго відсортовані індекси a < b < c
+//    if (a > b) swap(a, b);
+//    if (b > c) swap(b, c);
+//    if (a > b) swap(a, b);
+//    return "t" + to_string(a) + "_" + to_string(b) + "_" + to_string(c);
+//}
+//
+//string degv(int i)
+//{
+//    return "d" + to_string(i);
+//}
 
 std::string getFileName(const GraphConfig& cfg)
 {
@@ -54,7 +58,7 @@ std::string getFileName(const GraphConfig& cfg)
     return res;
 }
 
-void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg)
+void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     // regularity
     for (int i = 0; i < cfg.n; i++)
@@ -71,7 +75,7 @@ void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg)
             if (!first)
                 out << " + ";
 
-            out << evar(i, j);
+            out << varRegister.edge(i, j);
 
             first = false;
         }
@@ -81,7 +85,7 @@ void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg)
 	out << "\n";
 }
 
-void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
+void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     // triangle definition
     for (int i = 0; i < cfg.n - 2; i++)
@@ -90,21 +94,22 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
         {
             for (int k = j + 1; k < cfg.n; k++)
             {
-                string t = tvar(i, j, k);
+                const string t = varRegister.triangle(i, j, k);
+				const string e_ij = varRegister.edge(i, j);
+				const string e_ik = varRegister.edge(i, k);
+				const string e_jk = varRegister.edge(j, k);
 
                 out << "tri1_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
-                    << t << " - " << evar(i, j) << " <= 0\n";
+                    << t << " - " << e_ij << " <= 0\n";
 
                 out << "tri2_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
-                    << t << " - " << evar(i, k) << " <= 0\n";
+                    << t << " - " << e_ik << " <= 0\n";
 
                 out << "tri3_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
-                    << t << " - " << evar(j, k) << " <= 0\n";
+                    << t << " - " << e_jk << " <= 0\n";
 
                 out << "tri4_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
-                    << t << " - " << evar(i, j) << " - "
-                    << evar(i, k) << " - " << evar(j, k)
-                    << " >= -2\n";
+                    << t << " - " << e_ij << " - " << e_ik << " - " << e_jk << " >= -2\n";
             }
         }
     }
@@ -114,7 +119,7 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
     // K3-degree of vertices
     for (int v = 0; v < cfg.n; v++)
     {
-        out << "k3deg" << to_string(v) << ": " << degv(v) << " - ";
+        out << "k3deg" << to_string(v) << ": " << varRegister.k3deg(v) << " - ";
 
         bool first = true;
 
@@ -127,7 +132,7 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
                     if (i == v || j == v || k == v)
                     {
                         if (!first) out << " - ";
-                        out << tvar(i, j, k);
+                        out << varRegister.triangle(i, j, k);
                         first = false;
                     }
                 }
@@ -138,7 +143,7 @@ void wrtiteTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg)
 	out << "\n";
 }
 
-void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
+void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     // Перебираємо всі можливі пари вершин (потенційні ребра)
     for (int i = 0; i < cfg.n - 1; i++)
@@ -161,7 +166,7 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
                 if (b > c) swap(b, c);
                 if (a > b) swap(a, b);
 
-                out << tvar(a, b, c);
+                out << varRegister.triangle(a, b, c);
                 first = false;
             }
             // Максимум r-2 спільних сусідів (трикутників) на будь-якому ребрі
@@ -180,7 +185,7 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg)
 // neighboursInB in B (this goes from theory).
 // Ex. d0=21 then 0 belong to B. And 0 has at max 3 edges to A and at least 5 edges to B (r=8)
 // So we can fix zero neighborhood of 0 in B (P5)
-void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
+void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
 	VertexSets vs(cfg);
     switch (cfg.fixVertexInBMode)
@@ -191,19 +196,19 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
     {
 		const int fixedVertex = vs.fixedVertexInB();
 
-        out << degv(fixedVertex) << " = 0\n";
+        out << varRegister.k3deg(fixedVertex) << " = 0\n";
 
         const auto& fixedAdj = vs.getNeighOfFixedInB();
         for (int i : fixedAdj)
         {
-            out << evar(fixedVertex, i) << " = 1\n";
+            out << varRegister.edge(fixedVertex, i) << " = 1\n";
         }
 
         for (int i = 0; i < fixedAdj.size() - 1; ++i)
         {
             for (int j = i + 1; j < fixedAdj.size(); ++j)
             {
-                out << evar(fixedAdj[i], fixedAdj[j]) << " = 0\n";
+                out << varRegister.edge(fixedAdj[i], fixedAdj[j]) << " = 0\n";
             }
         }
     }
@@ -219,7 +224,7 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg)
     out << "\n";
 }
 
-void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
+void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
 	const VertexSets vs(cfg);
     const auto& verticesInA = vs.verticesInA;
@@ -227,7 +232,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
     for (int i = 0; i < verticesInA.size() - 1; i++)
     {
         out << "ord" << to_string(verticesInA[i]) << ": "
-            << degv(verticesInA[i]) << " - " << degv(verticesInA[i + 1])
+            << varRegister.k3deg(verticesInA[i]) << " - " << varRegister.k3deg(verticesInA[i + 1])
             << " <= -1\n";
     }
     out << "\n";
@@ -239,7 +244,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
         for (int i = 0; i < verticesInB.size() - 1; i++)
         {
             out << "ord" << to_string(verticesInB[i]) << ": "
-                << degv(verticesInB[i]) << " - " << degv(verticesInB[i + 1])
+                << varRegister.k3deg(verticesInB[i]) << " - " << varRegister.k3deg(verticesInB[i + 1])
                 << " <= -1\n";
         }
     }
@@ -257,7 +262,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
         for (int i = 0; i < fixedAdj.size()-1; ++i)
         {
             out << "ord" << to_string(fixedAdj[i]) << ": "
-                << degv(fixedAdj[i]) << " - " << degv(fixedAdj[i+1])
+                << varRegister.k3deg(fixedAdj[i]) << " - " << varRegister.k3deg(fixedAdj[i+1])
                 << " <= -1\n";
         }
         out << "\n";
@@ -267,7 +272,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
         for (int i = 0; i < otherInB.size() - 1; ++i)
         {
             out << "ord" << to_string(otherInB[i]) << ": "
-                << degv(otherInB[i]) << " - " << degv(otherInB[i+1])
+                << varRegister.k3deg(otherInB[i]) << " - " << varRegister.k3deg(otherInB[i+1])
                 << " <= -1\n";
         }
         out << "\n";
@@ -278,21 +283,20 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
         {
             for (int u : otherInB)
             {
-                std::string b = "b_" + std::to_string(v) + "_" + std::to_string(u);
+                const std::string b = varRegister.binary(v, u);
+                const std::string dv = varRegister.k3deg(v);
+                const std::string du = varRegister.k3deg(u);
 
                 // binary variable
-                out << "bin_" << to_string(v) << "_" << to_string(u) << ": " << b << " <= 1\n";
+                out << "bin_" << to_string(v) << "_" << to_string(u) << ": " 
+                    << b << " <= 1\n";
 
                 // d_i < d_j or d_j < d_i
                 out << "neq1_" << to_string(v) << "_" << to_string(u) << ": "
-                    << "d" << to_string(v) << " - d" << to_string(u)
-                    << " - " << to_string(M) << " " << b
-                    << " <= -1\n";
+                    << dv << " - " << du << " - " << to_string(M) << " " << b << " <= -1\n";
 
                 out << "neq2_" << to_string(v) << "_" << to_string(u) << ": "
-                    << "d" << to_string(u) << " - d" << to_string(v)
-                    << " + " << to_string(M) << " " << b
-                    << " <= " << to_string(M - 1) << "\n";
+                    << du << " - " << dv << " + " << to_string(M) << " " << b << " <= " << to_string(M - 1) << "\n";
             }
         }
     }
@@ -316,27 +320,25 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg)
             if( cfg.fixVertexInBMode != FixVertexInBMode::NONE && u == vs.fixedVertexInB())
 				continue;
 
-            std::string b = "b_" + std::to_string(v) + "_" + std::to_string(u);
+            const std::string b = varRegister.binary(v, u);
+            const std::string dv = varRegister.k3deg(v);
+            const std::string du = varRegister.k3deg(u);
 
             // binary variable
             out << "bin_" << to_string(v) << "_" << to_string(u) << ": " << b << " <= 1\n";
 
             // d_i < d_j or d_j < d_i
             out << "neq1_" << to_string(v) << "_" << to_string(u) << ": "
-                << "d" << to_string(v) << " - d" << to_string(u)
-                << " - " << to_string(M) << " " << b
-                << " <= -1\n";
+                << dv << " - " << du << " - " << to_string(M) << " " << b << " <= -1\n";
 
             out << "neq2_" << to_string(v) << "_" << to_string(u) << ": "
-                << "d" << to_string(u) << " - d" << to_string(v)
-                << " + " << to_string(M) << " " << b
-                << " <= " << to_string(M - 1) << "\n";
+                << du << " - " << dv << " + " << to_string(M) << " " << b << " <= " << to_string(M - 1) << "\n";
         }
     }
 	out << "\n";
 }
 
-void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
+void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     if (!cfg.use_split_AB)
         return;
@@ -345,18 +347,18 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
 
     for ( int a : vertexSets.verticesInA )
     {
-        out << "fix0_" << a << ": x" << 0 << "_" << a << " = 1\n";
+        out << "fix0_" << a << ": " << varRegister.edge(0, a) << " = 1\n";
 	}
 
     for (int b : vertexSets.verticesInB)
     {
-        out << "fix0_" << b << ": x" << 0 << "_" << b << " = 0\n";
+        out << "fix0_" << b << ": " << varRegister.edge(0, b) << " = 0\n";
     }
 
-    const int EdgesForAnchor = cfg.r;
-    const int edgesInsideA = cfg.anchorK3;
-    const int edgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.anchorK3;
-    const int edgesInsideB = cfg.n * cfg.r / 2 - EdgesForAnchor - edgesInsideA - edgesBetweenAB;
+    const int countEdgesForAnchor = cfg.r;
+    const int countEdgesInsideA = cfg.anchorK3;
+    const int countEdgesBetweenAB = cfg.r * (cfg.r - 1) - 2 * cfg.anchorK3;
+    const int countEdgesInsideB = cfg.n * cfg.r / 2 - countEdgesForAnchor - countEdgesInsideA - countEdgesBetweenAB;
 
 	const auto& verticesInA = vertexSets.verticesInA;
     const auto& verticesInB = vertexSets.verticesInB;
@@ -369,7 +371,7 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
             for (int j = i + 1; j < verticesInA.size(); j++)
             {
                 out << "noedge_" << verticesInA[i] << "_" << verticesInA[j] << ": " 
-                    << evar(verticesInA[i], verticesInA[j]) << " = 0\n";
+                    << varRegister.edge(verticesInA[i], verticesInA[j]) << " = 0\n";
             }
         }
     }
@@ -385,11 +387,11 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
                 if (!first) {
                     out << " + ";
                 }
-                out << evar(verticesInA[i], verticesInA[j]);
+                out << varRegister.edge(verticesInA[i], verticesInA[j]);
                 first = false;
             }
         }
-        out << " = " << to_string(edgesInsideA) << "\n";
+        out << " = " << to_string(countEdgesInsideA) << "\n";
     }
 
     {
@@ -403,11 +405,11 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
                 if (!first) {
                     out << " + ";
                 }
-                out << evar(verticesInB[i], verticesInB[j]);
+                out << varRegister.edge(verticesInB[i], verticesInB[j]);
                 first = false;
             }
         }
-        out << " = " << to_string(edgesInsideB) << "\n";
+        out << " = " << to_string(countEdgesInsideB) << "\n";
     }
 
     {
@@ -421,11 +423,11 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
                 if (!first) {
                     out << " + ";
                 }
-                out << evar(a, b);
+                out << varRegister.edge(a, b);
                 first = false;
             }
         }
-        out << " = " << to_string(edgesBetweenAB) << "\n\n";
+        out << " = " << to_string(countEdgesBetweenAB) << "\n\n";
     }
 }
 
@@ -433,7 +435,7 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg)
 // ЛЕМА 3.1: Для кожної вершини a \in A, deg_{G[A]}(a) <= min{r - 2, d}
 // d=anchorK3, A has 1...r vertices, B has r+1...n-1 vertices
 // =========================================================================
-void writeLemma3_1(std::ostream& out, const GraphConfig& cfg)
+void writeLemma3_1(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
 	VertexSets vertexSets(cfg);
 	const auto& verticesInA = vertexSets.verticesInA;
@@ -450,7 +452,7 @@ void writeLemma3_1(std::ostream& out, const GraphConfig& cfg)
                 sum_adj_edges += " + ";
             first = false;
 
-            sum_adj_edges += evar(v, u);
+            sum_adj_edges += varRegister.edge(v, u);
         }
         out << "lemma3_1_" << to_string(v) << ": " << sum_adj_edges << " <= " << to_string(min({ cfg.r - 2, cfg.anchorK3 })) << "\n";
     }
@@ -467,7 +469,7 @@ void writeLemma3_1(std::ostream& out, const GraphConfig& cfg)
 // (L1) deg_B(b) >= 1 - yes
 // (L2) deg_B(b) >= |B| - 1 - |E(\overline{G[B]}) - yes
 // =========================================================================
-void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
+void writeLemma3_4(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     const int EdgesToFixedK3Deg = cfg.r;
     const int edgesInsideA = cfg.anchorK3;
@@ -491,7 +493,7 @@ void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
                 sum_adj_edges += " + ";
             first = false;
 
-            sum_adj_edges += evar(v, u);
+            sum_adj_edges += varRegister.edge(v, u);
         }
 
         out << "lemma3_4_r" << to_string(v) << ": " << sum_adj_edges << " <= " << to_string(std::min({ cfg.r, verticesInsideB - 1, edgesInsideB })) << "\n"; // min (R1) (R2) (R3)
@@ -500,7 +502,7 @@ void writeLemma3_4(std::ostream& out, const GraphConfig& cfg)
 	out << "\n\n";
 }
 
-void writeBounds(std::ostream& out, const GraphConfig& cfg)
+void writeBounds(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
 	VertexSets vs(cfg);
     int updminBound = cfg.min_k3;
@@ -509,7 +511,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg)
     // 1. Межі для якоря (якщо є розбиття)
     if (cfg.use_split_AB)
     {
-        out << "d0 = " << to_string(cfg.anchorK3) << "\n";
+        out << varRegister.k3deg(0) << " = " << to_string(cfg.anchorK3) << "\n";
         if (cfg.anchorK3 == cfg.min_k3)
 			updminBound = cfg.min_k3 + 1;
 		if (cfg.anchorK3 == cfg.max_k3)
@@ -521,7 +523,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg)
     {
         const int fixedVertex = vs.fixedVertexInB();
 
-        out << degv(fixedVertex) << " = 0\n";
+        out << varRegister.k3deg(fixedVertex) << " = 0\n";
 
         if (updminBound == 0)
             updminBound = 1;
@@ -530,7 +532,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg)
     {
         const int fixedVertex = vs.fixedVertexInB();
 
-        out << degv(fixedVertex) << " = 1\n";
+        out << varRegister.k3deg(fixedVertex) << " = 1\n";
 
         if (updminBound == 1)
             updminBound = 2;
@@ -551,7 +553,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg)
             continue;
 		}
         
-        out << to_string(updminBound) << " <= " << degv(i) << " <= " << to_string(updmaxBound) << "\n";
+        out << to_string(updminBound) << " <= " << varRegister.k3deg(i) << " <= " << to_string(updmaxBound) << "\n";
     }
 
 	// write bounds for T using sum of k3 degrees
@@ -562,10 +564,10 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg)
     int Tmin = ceil(static_cast<float>(sum_min) / 3.f);
     int Tmax = floor(static_cast<float>(sum_max) / 3.f);
 
-    out << "tbounds: " << Tmin << " <= T <= " << Tmax << "\n";
+    out << "tbounds: " << Tmin << " <= " << varRegister.intvar("T") << " <= " << Tmax << "\n";
 }
 
-void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
+void writeBinaryVars(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
 	VertexSets vs(cfg);
 
@@ -574,7 +576,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
     {
         for (int j = i + 1; j < cfg.n; j++)
         {
-            out << " " << evar(i, j) << " ";
+            out << " " << varRegister.edge(i, j) << " ";
         }
         out << "\n";
     }
@@ -586,7 +588,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
         {
             for (int k = j + 1; k < cfg.n; k++)
             {
-                out << " " << tvar(i, j, k) << "\n";
+                out << " " << varRegister.triangle(i, j, k) << "\n";
             }
         }
     }
@@ -605,7 +607,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
             {
 				if (cfg.fixVertexInBMode != FixVertexInBMode::NONE && u == vs.fixedVertexInB())
 					continue; // skip fixed vertex in B
-                out << "b_" << v << "_" << u << "\n";
+				out << varRegister.binary(v, u) << "\n";
             }
         }
     }
@@ -619,7 +621,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
         {
             for (int u : otherInB)
             {
-                out << "b_" << v << "_" << u << "\n";
+                out << varRegister.binary(v, u) << "\n";
             }
         }
     }
@@ -632,6 +634,8 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg)
 // r+1..n-1 not neighbors
 void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 {
+	GraphVarRegister varRegister;
+
     ofstream f(filename);
 
     f << "Minimize\n";
@@ -639,38 +643,38 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 
     f << "Subject To\n\n";
 
-    writeRegularityCondition(f, cfg);
+    writeRegularityCondition(f, cfg, varRegister);
 
-    wrtiteTrianglesK3Degs(f, cfg);
+    wrtiteTrianglesK3Degs(f, cfg, varRegister);
 
-	writeNoTrueTwinsCond(f, cfg);
+	writeNoTrueTwinsCond(f, cfg, varRegister);
 
     if (cfg.use_split_AB)
     {
-	    writeFixVertexInB(f, cfg);
+	    writeFixVertexInB(f, cfg, varRegister);
     }
 
-	writeAllDiffK3Degs(f, cfg);
+	writeAllDiffK3Degs(f, cfg, varRegister);
 
     // sum k3 = 3T
     f << "sum_k3: ";
     for (int i = 0; i < cfg.n - 1; i++)
     {
-        f << degv(i) << " + ";
+        f << varRegister.k3deg(i) << " + ";
     }
-    f << degv(cfg.n - 1) << " - 3 T = 0\n";
+    f << varRegister.k3deg(cfg.n - 1) << " - 3 " << varRegister.intvar("T") << " = 0\n";
 
     if (cfg.use_split_AB)
     {
-        writeConditionsOnEdges(f, cfg);
-	    writeLemma3_1(f, cfg);
-	    writeLemma3_4(f, cfg);
+        writeConditionsOnEdges(f, cfg, varRegister);
+	    writeLemma3_1(f, cfg, varRegister);
+	    writeLemma3_4(f, cfg, varRegister);
     }
 
     f << "\nBounds\n";
-    writeBounds(f, cfg);
+    writeBounds(f, cfg, varRegister);
 
-    f << "\nBinary\n";
+    /*f << "\nBinary\n";
 	writeBinaryVars(f, cfg);
 
     f << "\nGeneral\n";
@@ -678,7 +682,9 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
     {
         f << " " << degv(i) << "\n";
     }
-    f << " T" << "\n";
+    f << " T" << "\n";*/
+
+    f << varRegister;
 
     f << "\nEnd\n";
 

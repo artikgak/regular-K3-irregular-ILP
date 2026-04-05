@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <vector>
+#include "register.h"
 
 enum class FixVertexInBMode
 {

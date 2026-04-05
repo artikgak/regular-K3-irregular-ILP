@@ -25,7 +25,7 @@ int main()
 
 	const std::string filename = getFileName(cfg);
 
-	generateGraphLP(cfg, filename + "aft2");
+	generateGraphLP(cfg, filename + "reg");
 
 	return 0;
 }
