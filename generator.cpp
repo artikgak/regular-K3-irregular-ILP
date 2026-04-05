@@ -16,21 +16,9 @@ std::string getFileName(const GraphConfig& cfg)
     if (cfg.use_split_AB)
         res += "_split_" + std::to_string(cfg.anchorK3);
 
-    if (cfg.fixVertexInBMode != FixVertexInBMode::NONE)
+    if (cfg.fixVertexInB)
     {
-        switch (cfg.fixVertexInBMode)
-        {
-        case FixVertexInBMode::ZERO_IN_B:
-            res += "_fix0B";
-            break;
-        case FixVertexInBMode::ONE_IN_B:
-            res += "_fix1B";
-            break;
-        default:
-            std::cerr << "Warning: Unknown FixVertexInBMode\n";
-            res += "_fix__B_";
-            break;
-        }
+        res += "_fix" + std::to_string(cfg.k3degFixedInB) + "B";
     }
 
     res += ".lp";
@@ -166,21 +154,22 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg, GraphVarReg
 // So we can fix zero neighborhood of 0 in B (P5)
 void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
+    if(cfg.fixVertexInB == false)
+		return;
+
 	VertexSets vs(cfg);
-    switch (cfg.fixVertexInBMode)
-    {
-    case FixVertexInBMode::NONE:
-        return;
-    case FixVertexInBMode::ZERO_IN_B:
-    {
-		const int fixedVertex = vs.fixedVertexInB();
+	const int fixedVertex = vs.fixedVertexInB();
+    const auto& fixedAdj = vs.getNeighOfFixedInB();
 
-        const auto& fixedAdj = vs.getNeighOfFixedInB();
-        for (int i : fixedAdj)
-        {
-            out << varRegister.edge(fixedVertex, i) << " = 1\n";
-        }
+	// fix vertex in B adjacency neighbourhood in B
+    for (int i : fixedAdj)
+    {
+        out << varRegister.edge(fixedVertex, i) << " = 1\n";
+    }
 
+	// empty neighbourhood of fixed vertex in B in B
+    if (cfg.k3degFixedInB == 0)
+    {
         for (int i = 0; i < fixedAdj.size() - 1; ++i)
         {
             for (int j = i + 1; j < fixedAdj.size(); ++j)
@@ -189,13 +178,13 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
             }
         }
     }
-		break;
-    case FixVertexInBMode::ONE_IN_B:
-        throw "not implemented yet";
-		break;
-    default:
-        throw "not implemented yet";
-        break;
+    else if (cfg.k3degFixedInB == 1)
+    {
+		throw "not implemented yet";
+    }
+    else
+    {
+		std::cout << "Warning: no constraints added for fixed vertex neighbourhood in B with k3deg > 1\n";
     }
 
     out << "\n";
@@ -215,7 +204,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
     out << "\n";
 
     const auto& verticesInB = vs.verticesInB;
-    if (cfg.fixVertexInBMode == FixVertexInBMode::NONE)
+    if (cfg.fixVertexInB == false)
     {
         // ordering of K3-degrees inside B
         for (int i = 0; i < verticesInB.size() - 1; i++)
@@ -228,7 +217,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
 
     // TODO also fix if fixed vertex is not max min then we need pairwise check not equalit of if to other vertices
     // di < anchor || di > anchor
-    else if (cfg.fixVertexInBMode == FixVertexInBMode::ZERO_IN_B)
+    else if (cfg.k3degFixedInB == 0)
     {
         // order inside neighbours 0
         // dr+1 = 0
@@ -276,13 +265,13 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
             }
         }
     }
-    else if (cfg.fixVertexInBMode == FixVertexInBMode::ONE_IN_B)
+    else if (cfg.k3degFixedInB == 1)
     {
-        throw "not implemented yet";
+        std::cout << "Warning: not implemented yet, need pairwise check not equality of fixedInB to other k3 degs\n";
     }
     else 
     {
-        throw "not implemented yet";
+        std::cout << "Warning: not implemented yet, need pairwise check not equality of fixedInB to other k3 degs\n";
     }
     
 
@@ -293,7 +282,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
     {
         for (int u : verticesInB)
         {
-            if( cfg.fixVertexInBMode != FixVertexInBMode::NONE && u == vs.fixedVertexInB())
+            if( cfg.fixVertexInB && u == vs.fixedVertexInB())
 				continue;
 
             const std::string b = varRegister.binary(v, u);
@@ -495,23 +484,16 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& va
     }
 
     // 2. Межі для фіксованої вершини в B (якщо є)
-    if (cfg.fixVertexInBMode == FixVertexInBMode::ZERO_IN_B)
+    if (cfg.fixVertexInB)
     {
         const int fixedVertex = vs.fixedVertexInB();
 
-        out << varRegister.k3deg(fixedVertex) << " = 0\n";
+        out << varRegister.k3deg(fixedVertex) << " = " << std::to_string(cfg.k3degFixedInB) << "\n";
 
-        if (updminBound == 0)
-            updminBound = 1;
-	}
-    else if (cfg.fixVertexInBMode == FixVertexInBMode::ONE_IN_B)
-    {
-        const int fixedVertex = vs.fixedVertexInB();
-
-        out << varRegister.k3deg(fixedVertex) << " = 1\n";
-
-        if (updminBound == 1)
-            updminBound = 2;
+        if (updminBound == cfg.k3degFixedInB)
+            updminBound++;
+        else if (updmaxBound == cfg.k3degFixedInB)
+            updmaxBound--;
 	}
 
     // 3. Записуємо межі для всіх інших вершин
@@ -523,7 +505,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& va
             continue;
 		}
 
-        if (cfg.fixVertexInBMode != FixVertexInBMode::NONE && i == vs.fixedVertexInB())
+        if (cfg.fixVertexInB && i == vs.fixedVertexInB())
         {
             // already handled fixed vertex in B
             continue;
@@ -581,7 +563,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg, GraphVarRegister
         {
             for (int u : verticesInB)
             {
-				if (cfg.fixVertexInBMode != FixVertexInBMode::NONE && u == vs.fixedVertexInB())
+				if (cfg.fixVertexInB && u == vs.fixedVertexInB())
 					continue; // skip fixed vertex in B
 				out << varRegister.binary(v, u) << "\n";
             }
@@ -589,7 +571,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg, GraphVarRegister
     }
 
     // binary vars for ordering between neighbour/non-neighbour groups of zero vertex
-    if (cfg.fixVertexInBMode != FixVertexInBMode::NONE)
+    if (cfg.fixVertexInB)
     {
         const auto& neighOfFixed = vs.getNeighOfFixedInB();
         const auto& otherInB = vs.getOtherInB();

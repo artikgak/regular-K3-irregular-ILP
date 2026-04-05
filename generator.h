@@ -5,13 +5,6 @@
 #include <vector>
 #include "register.h"
 
-enum class FixVertexInBMode
-{
-	NONE,
-	ZERO_IN_B,
-	ONE_IN_B
-};
-
 struct GraphConfig
 {
 	int n;
@@ -23,8 +16,9 @@ struct GraphConfig
 	bool use_split_AB = false;
 	int anchorK3 = -1; // only used if use_split_AB
 
-	FixVertexInBMode fixVertexInBMode = FixVertexInBMode::NONE;
-	int neighbours_of_fixed_vertex_in_B = -1; // only used if fixVertexInBMode != NONE
+	bool fixVertexInB = false;
+	int k3degFixedInB = -1;
+	int neighbours_of_fixed_vertex_in_B = -1; // only used if fixVertexInB
 
 	void validate() const
 	{
@@ -36,22 +30,24 @@ struct GraphConfig
 			throw std::invalid_argument("Invalid anchorK3 value.");
 		if (use_split_AB && (anchorK3 != min_k3 && anchorK3 != max_k3))
 			throw std::invalid_argument("Not implemented. For now anchorK3 must be equal to min_k3 or max_k3.");
-		if (!use_split_AB && fixVertexInBMode != FixVertexInBMode::NONE)
+		if (!use_split_AB && fixVertexInB)
 			throw std::invalid_argument("fixVertexInBMode can only be used with split_AB.");
-		if (fixVertexInBMode != FixVertexInBMode::NONE) {
+		if(fixVertexInB && k3degFixedInB < 0)
+			throw std::invalid_argument("Invalid k3degFixedInB value when fixVertexInB true.");
+		if (!fixVertexInB && k3degFixedInB >= 0)
+			std::cout << "WARNING: k3degFixedInB value set, while fixVertexInB is false.";
+		if (fixVertexInB) {
 			if (neighbours_of_fixed_vertex_in_B < 0 || neighbours_of_fixed_vertex_in_B >= r)
 			{
 				throw std::invalid_argument("Invalid neighbours_of_fixed_vertex_in_B value.");
 			}
-			switch (fixVertexInBMode)
+			switch (k3degFixedInB)
 			{
-			case FixVertexInBMode::NONE:
-				break;
-			case FixVertexInBMode::ZERO_IN_B:
+			case 0:
 				if(min_k3 > 0 || anchorK3 == 0)
 					throw std::invalid_argument("Invalid config: can't fix zero in B if min_k3 > 0 or anchorK3 == 0.");
 				break;
-			case FixVertexInBMode::ONE_IN_B:
+			case 1:
 				if (min_k3 > 1 || anchorK3 == 1)
 					throw std::invalid_argument("Invalid config: can't fix one in B if min_k3 > 1 or anchorK3 == 1.");
 				break;
@@ -59,7 +55,9 @@ struct GraphConfig
 				break;
 			}
 		}
+		#ifndef NDEBUG
 		std::cout << "GraphConfig validated successfully.\n";
+		#endif // !NDEBUG
 	}
 };
 
@@ -89,7 +87,7 @@ struct VertexSets {
 			for (int i = cfg.r + 1; i < cfg.n; i++)
 				verticesInB.push_back(i);
 
-			if(cfg.fixVertexInBMode != FixVertexInBMode::NONE )
+			if(cfg.fixVertexInB)
 			{
 				int fixedVertex = fixedVertexInB();
 				neighOfFixedInB.reserve(cfg.neighbours_of_fixed_vertex_in_B);
@@ -114,10 +112,10 @@ struct VertexSets {
 
 	bool isVertexInA(int v) const { return v >= 1 && v <= cfg.r; }
 	bool isVertexInB(int v) const { return v >= cfg.r + 1 && v < cfg.n; }
-	bool isVertexInFixedB(int v) const { return cfg.fixVertexInBMode != FixVertexInBMode::NONE && v == cfg.r + 1; }
-	bool isNeighbourOfFixedB(int v) const { return cfg.fixVertexInBMode != FixVertexInBMode::NONE && v > cfg.r + 1 && v <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; }
+	bool isVertexInFixedB(int v) const { return cfg.fixVertexInB && v == cfg.r + 1; }
+	bool isNeighbourOfFixedB(int v) const { return cfg.fixVertexInB && v > cfg.r + 1 && v <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; }
 
-	int fixedVertexInB() const { return cfg.fixVertexInBMode != FixVertexInBMode::NONE ? cfg.r + 1 : throw "There is no fixed vertex in B."; }
+	int fixedVertexInB() const { return cfg.fixVertexInB ? cfg.r + 1 : throw "There is no fixed vertex in B."; }
 
 	const std::vector<int>& A() const { return verticesInA; }
 	const std::vector<int>& B() const { return verticesInB; }
