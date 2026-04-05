@@ -29,7 +29,7 @@ struct GraphConfig
 		if (use_split_AB && (anchorK3 < 0 || anchorK3 < min_k3 || anchorK3 > max_k3))
 			throw std::invalid_argument("Invalid anchorK3 value.");
 		if (use_split_AB && (anchorK3 != min_k3 && anchorK3 != max_k3))
-			throw std::invalid_argument("Not implemented. For now anchorK3 must be equal to min_k3 or max_k3.");
+			std::cout << "WARNING: For now anchorK3 must be equal to min_k3 or max_k3. Can cause wrong graph to be found.";
 		if (!use_split_AB && fixVertexInB)
 			throw std::invalid_argument("fixVertexInBMode can only be used with split_AB.");
 		if(fixVertexInB && k3degFixedInB < 0)

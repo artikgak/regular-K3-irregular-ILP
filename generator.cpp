@@ -18,7 +18,7 @@ std::string getFileName(const GraphConfig& cfg)
 
     if (cfg.fixVertexInB)
     {
-        res += "_fix" + std::to_string(cfg.k3degFixedInB) + "B";
+        res += "_fix" + std::to_string(cfg.k3degFixedInB) + "B_" + std::to_string(cfg.neighbours_of_fixed_vertex_in_B);
     }
 
     res += ".lp";
@@ -180,7 +180,19 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
     }
     else if (cfg.k3degFixedInB == 1)
     {
-		throw "not implemented yet";
+		// exatly 1 triangle: sum of edges between neighbours of fixed vertex in B is 1
+        out << "fix1B_tri: ";
+        bool first = true;
+        for (int i = 0; i < fixedAdj.size() - 1; ++i)
+        {
+            for (int j = i + 1; j < fixedAdj.size(); ++j)
+            {
+                if (!first) out << " + ";
+                out << varRegister.edge(fixedAdj[i], fixedAdj[j]);
+                first = false;
+            }
+        }
+		out << " = 1\n";
     }
     else
     {
@@ -217,7 +229,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
 
     // TODO also fix if fixed vertex is not max min then we need pairwise check not equalit of if to other vertices
     // di < anchor || di > anchor
-    else if (cfg.k3degFixedInB == 0)
+    else if (cfg.k3degFixedInB == 0 || cfg.k3degFixedInB == 1)
     {
         // order inside neighbours 0
         // dr+1 = 0
