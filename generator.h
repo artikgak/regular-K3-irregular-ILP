@@ -37,7 +37,7 @@ struct GraphConfig
 		if (!fixVertexInB && k3degFixedInB >= 0)
 			std::cout << "WARNING: k3degFixedInB value set, while fixVertexInB is false.";
 		if (fixVertexInB) {
-			if (neighbours_of_fixed_vertex_in_B < 0 || neighbours_of_fixed_vertex_in_B >= r)
+			if (neighbours_of_fixed_vertex_in_B < 0 || neighbours_of_fixed_vertex_in_B > r)
 			{
 				throw std::invalid_argument("Invalid neighbours_of_fixed_vertex_in_B value.");
 			}

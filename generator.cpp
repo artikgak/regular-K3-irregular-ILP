@@ -181,7 +181,7 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
     else if (cfg.k3degFixedInB == 1)
     {
 		// exatly 1 triangle: sum of edges between neighbours of fixed vertex in B is 1
-        out << "fix1B_tri: ";
+        out << "fix" << std::to_string(cfg.k3degFixedInB) << "B_tri: ";
         bool first = true;
         for (int i = 0; i < fixedAdj.size() - 1; ++i)
         {
@@ -192,7 +192,7 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
                 first = false;
             }
         }
-		out << " = 1\n";
+		out << " <= 1\n";
     }
     else
     {
@@ -204,6 +204,16 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
 
 void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
+    if (!cfg.use_split_AB)
+    {
+        for (int i = 0; i < cfg.n-1; i++)
+        {
+            out << "ord" << to_string(i) << ": " 
+                << varRegister.k3deg(i) << " - " << varRegister.k3deg(i + 1) << " <= -1\n";
+        }
+        return;
+    }
+
 	const VertexSets vs(cfg);
     const auto& verticesInA = vs.verticesInA;
     // ordering of K3-degrees inside A
@@ -619,7 +629,7 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 
 	writeNoTrueTwinsCond(f, cfg, varRegister);
 
-    if (cfg.use_split_AB)
+    if (cfg.use_split_AB && cfg.fixVertexInB)
     {
 	    writeFixVertexInB(f, cfg, varRegister);
     }
