@@ -19,6 +19,9 @@ struct GraphConfig
 	bool fixVertexInB = false;
 	int k3degFixedInB = -1;
 	int neighbours_of_fixed_vertex_in_B = -1; // only used if fixVertexInB
+	bool fixExactNumberOfNeighboursOfFixedInB = false; // if false, then neighbours_of_fixed_vertex_in_B is an upper bound, not exact
+
+	bool useLemmas = false;
 
 	void validate() const
 	{

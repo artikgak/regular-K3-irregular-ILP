@@ -21,6 +21,16 @@ std::string getFileName(const GraphConfig& cfg)
         res += "_fix" + std::to_string(cfg.k3degFixedInB) + "B_" + std::to_string(cfg.neighbours_of_fixed_vertex_in_B);
     }
 
+    if (cfg.fixExactNumberOfNeighboursOfFixedInB)
+    {
+		res += "exact";
+    }
+
+    if (cfg.useLemmas == false)
+    {
+		res += "_wo_lem";
+    }
+
     res += ".lp";
     return res;
 }
@@ -178,9 +188,9 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
             }
         }
     }
-    else if (cfg.k3degFixedInB == 1)
+    else
     {
-		// exatly 1 triangle: sum of edges between neighbours of fixed vertex in B is 1
+		// sum of edges between neighbours of fixed vertex in B is <= k3degFixedInB
         out << "fix" << std::to_string(cfg.k3degFixedInB) << "B_tri: ";
         bool first = true;
         for (int i = 0; i < fixedAdj.size() - 1; ++i)
@@ -192,11 +202,7 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
                 first = false;
             }
         }
-		out << " <= 1\n";
-    }
-    else
-    {
-		std::cout << "Warning: no constraints added for fixed vertex neighbourhood in B with k3deg > 1\n";
+		out << " <= " << cfg.k3degFixedInB << "\n";
     }
 
     out << "\n";
@@ -647,8 +653,11 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
     if (cfg.use_split_AB)
     {
         writeConditionsOnEdges(f, cfg, varRegister);
-	    writeLemma3_1(f, cfg, varRegister);
-	    writeLemma3_4(f, cfg, varRegister);
+        if (cfg.useLemmas)
+        {
+	        writeLemma3_1(f, cfg, varRegister);
+	        writeLemma3_4(f, cfg, varRegister);
+        }
     }
 
     f << "\nBounds\n";
