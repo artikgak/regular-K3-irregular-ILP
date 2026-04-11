@@ -347,8 +347,8 @@ UndirectedGraph loadGraphFromSCIPSolution(const std::string& filename, int numVe
 
 void solHelper() 
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+	//SetConsoleCP(1251);
+	//SetConsoleOutputCP(1251);
 	//std::string expression = "[[1,2,3,4,5,6,7,11,12],[0,2,3,4,5,6,7,9,10],[0,1,3,4,5,6,7,13,23],[0,1,2,4,5,7,8,19,23],[0,1,2,3,5,6,7,8,14],[0,1,2,3,4,6,7,9,23],[0,1,2,4,5,7,8,9,23],[0,1,2,3,4,5,6,10,23],[3,4,6,11,12,16,20,21,22],[1,5,6,11,12,13,20,21,22],[1,7,11,12,14,16,20,21,22],[0,8,9,10,14,15,16,17,18],[0,8,9,10,15,17,18,19,23],[2,9,14,15,16,18,20,21,22],[4,10,11,13,15,17,19,21,22],[11,12,13,14,16,18,19,20,21],[8,10,11,13,15,17,18,19,23],[11,12,14,16,18,19,20,21,22],[11,12,13,15,16,17,20,21,22],[3,12,14,15,16,17,20,21,22],[8,9,10,13,15,17,18,19,23],[8,9,10,13,14,15,17,18,19],[8,9,10,13,14,17,18,19,23],[2,3,5,6,7,12,16,20,22]]";
 	//UndirectedGraph graph9 = fromVecToGraph<UndirectedGraph>(parseExpression(expression));
 	//	GraphConfig cfg = {
@@ -357,14 +357,14 @@ void solHelper()
 	//	.min_k3 = 3,
 	//	.max_k3 = 26,
 	//	.use_split_AB = true,
-	//	.anchorK3 = 3,
+	//	.anchorK3 = 26,
 	//	.fixVertexInB = true,
-	//	.k3degFixedInB = 26,
+	//	.k3degFixedInB = 3,
 	//	.neighbours_of_fixed_vertex_in_B = 6
 	//};
 	//cfg.validate();
 	//std::string presolveStr = generatePresoveSplitted(graph9, cfg);
-	//std::ofstream f("rv2_presolve9r_split26_B3.mst");
+	//std::ofstream f("rv2_presolve9r_split26_B3_6.mst");
 	//f << presolveStr;
 	//f.flush();
 	//f.close();

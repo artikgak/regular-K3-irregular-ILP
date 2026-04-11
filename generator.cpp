@@ -23,7 +23,7 @@ std::string getFileName(const GraphConfig& cfg)
 
     if (cfg.fixExactNumberOfNeighboursOfFixedInB)
     {
-		res += "exact";
+		res += "_exact";
     }
 
     if (cfg.useLemmas == false)
@@ -170,11 +170,22 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
 	VertexSets vs(cfg);
 	const int fixedVertex = vs.fixedVertexInB();
     const auto& fixedAdj = vs.getNeighOfFixedInB();
+    const auto& otherInB = vs.getOtherInB();
 
 	// fix vertex in B adjacency neighbourhood in B
     for (int i : fixedAdj)
     {
         out << varRegister.edge(fixedVertex, i) << " = 1\n";
+    }
+
+    // if we want to fix exact number of neighbours of fixed vertex in B, 
+    // then we can also fix non-edges between vertex and non-neighbours in B
+    if (cfg.fixExactNumberOfNeighboursOfFixedInB)
+    {
+        for (int v : otherInB)
+        {
+            out << varRegister.edge(fixedVertex, v) << " = 0\n";
+		}
     }
 
 	// empty neighbourhood of fixed vertex in B in B
