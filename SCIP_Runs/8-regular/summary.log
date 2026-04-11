@@ -1,0 +1,114 @@
+Vertices	E	min K3 deg	max K3 deg
+18	        72	    2	        20
+19	        76	    0	        22
+20	        80	    0	        22
+21	        84	    0	        22
+22	        88	    0	        22
+
+
+
+N18 [2..20]
+exclude 2  from [2..20] to [3..20] = 112225.00 sec ~ 31h 
+exclude 20 from [2..20] to [2..19] =
+exclude 19 from [2..19] to [2..18] = 3955 sec ~ 66m
+
+
+
+N18 [2..20]
+exclude 20 from [2..20] to [2..19] with lemmas 3.1 and 3.4 = 25028 sec ~ 7h
+exclude 19 from [2..19] to [2..18] with lemmas 3.1 and 3.4 = 2851 sec ~ 47m
+
+N18 [2..20]
+exclude 20 from [2..20] to [2..19] without lemmas 3.1 and 3.4 = 1458 sec ~ 24m
+exclude 19 from [2..19] to [2..18] without lemmas 3.1 and 3.4 = 3179 sec ~ 53m
+
+N19 [0..22]
+(without lemmas)
+try to exclude 22 (fix 22): 90 sec
+try to exclude 21 from [0 .. 21] (fix 21): 631 sec = 10.5 m
+try to exclude 20 from [0 .. 20] (fix 20): 681 sec = 11 m
+try to exclude 19 from [0 .. 19] (fix 19): hard ??? >>> 16262 sec = 4.5 h (stopped) unknown
+try to exclude 0 from [0 .. 19] (fix 0): 2400 sec = 40 m THE END, 1-19 not divisible by 3
+test last once more: with settings some updates:
+
+Sanity checks after refactor
+TEST1 : try to exclude 20 from [0 .. 20] (fix 20): 
+
+without lemmas + settings for infeasible middle
+SCIP Status        : problem is solved [infeasible]
+Solving Time (sec) : 715.00
+Solving Nodes      : 24016 (total of 33562 nodes in 2 runs)
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+Dual Bound         : +1.00000000000000e+20
+Gap                : 0.00 %
+
+without lemmas + settings for infeasible max
+1035s| 27200 |   794 |  8534k| 250.0 |   399M |  40 |1068 |1237 |2646 | 135k|  2 |9035 |  54 | 0.000000e+00 |      --      |    Inf |   9.00%
+
+with lemmas no settings:
+ 2577s|107300 |  6832 | 29070k| 264.9 |   425M |  52 |1067 |4733 |3213 | 638k|  2 | 102k|  35 | 0.000000e+00 |      --      |    Inf |  36.72%
+
+with lemmas middle settings:
+ 2442s|176900 |  7042 | 25631k| 144.9 |   527M |  37 |1068 |3902 |2221 | 516k|  0 | 151k|  20 | 0.000000e+00 |      --      |    Inf |  22.17%
+
+with lemmas max settings:
+ 2503s|176800 |  1609 | 25564k| 143.0 |   425M |  38 |1068 |1295 |2746 | 353k|  1 | 115k|  40 | 0.000000e+00 |      --      |    Inf |  39.56%
+
+TEST2: R=9, N=24 presolve (1) split 3 = ALL GOOD; (2) split 26 = ALL GOOD.
+TEST3: test additional fix vertex in B: split 26 + fix 3 in B = 
+
+N20 [0..22]
+(without lemmas)
+try to exclude 22 (fix 22): ??? stopped 12737 sec
+try to exclude 0 (fix 0): ??? seems hard stopped 755 sec
+
+Add lemmas back!!! there was a mistake in code!
+try to exclude 22 from [0 .. 22] (fix 22): 5896 sec = 98 m
+try to exclude 21 from [0 .. 21] (fix 21): 
+experimental fix0inB (21, 20 and 0 are not compatible): YES so remove 0
+[1 .. 21] (fix 21) and fix 1 in B with 4 neighbours: Solving Time (sec) : 142.00
+[1 .. 20] (fix 20) and fix 1 in B with 4 neighbours: Solving Time (sec) : 8714.00 = 145 m
+
+another mistake in code:
+[0 .. 21] - 2 steps
+[0 .. 21] : 21 and 0 are not compatible fix0inB4: 46 sec
+[0 .. 21] : 20 and 0 are not compatible fix0inB5: 52 sec
+[1 .. 21] (fix 21) and fix 1 in B with 4 neighbours: Solving Time (sec) : 148 sec
+[1 .. 20] (fix 20) and fix 1 in B with 4 neighbours: Solving Time (sec) : 408m
+
+set heuristics completesol maxunknownrate 1.0
+
+usual command
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N20_R8_K3_1_21_split_21_fix1B.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > N20_R8_K3_1_21_split_21_fix1B.log
+boost command
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N20_R8_K3_1_21_split_21_fix1B.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set presolving maxrestarts 1 set conflict restartnum 750 set conflict preferbinary TRUE set conflict conflictweight 1.0 set conflict usegenres TRUE set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > N20_R8_K3_1_21_split_21_fix1B_boost.log
+
+boost v2
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_2_22_split_22_fix2B_4_exact_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b set separating clique freq 5 set separating zerohalf freq 10 set misc usesymmetry 3 set conflict useprop TRUE optimize display solution" > N21_R8_K3_2_22_split_22_fix2B_4_exact_wo_lem_tgu.log
+
+boost v3
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_2_22_split_22_fix2B_6_exact_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set conflict preferbinary TRUE set conflict conflictweight 1.0 set conflict usegenres TRUE set nodeselection restartdfs stdpriority 100000 set conflict useinflp b set separating clique freq 5 set separating zerohalf freq 10 set misc usesymmetry 3 set conflict useprop TRUE optimize display solution" > N21_R8_K3_2_22_split_22_fix2B_6_exact_wo_lem_boost3.log
+
+v4
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_2_22_split_22_fix2B_4_exact_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set conflict preferbinary TRUE set conflict conflictweight 1.0 set conflict usegenres TRUE set nodeselection restartdfs stdpriority 100000 set conflict useinflp b set separating clique freq 5 set separating zerohalf freq 5 set misc usesymmetry 3 set conflict useprop TRUE optimize display solution" > N21_R8_K3_2_22_split_22_fix2B_4_exact_wo_lem_v4.log
+v5
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set load scip_v5.set read N21_R8_K3_2_22_split_22_fix2B_4_wo_lem.lp optimize display solution" > N21_R8_K3_2_22_split_22_fix2B_4_wo_lem_v5.log
+
+
+N21 [0..22]
+Step 1:
+[0..22] - 0 and 22 are not compatible: 92 sec
+Step 2:
+[1..22] - 22 and 1 are not compatible: 6351 sec = 106 m
+[0..21] - 0 and 21 are not compatible: 1856 sec = 31 m
+Step 3:
+[2..22] - 22 and 2 cannot coexist (4 in B): running...
+[1..21] - 21 and 1 cannot coexist (4 in B): TODO
+[0..20] - 20 and 0 cannot coexist (4 in B): TODO
+
+N22[0..22]
+Step 1:
+[0..22] - 22 and 0 cannot coexist (5 in B): TODO
+Step 2:
+[1..22] - not div 3
+[1..21] - 21 and 1 cannot coexist (4 in B): TODO
