@@ -36,7 +36,7 @@ std::string getFileName(const GraphConfig& cfg)
 		res += "_wo_lem";
     }
 
-    res += ".lp";
+    res += "_str1.lp";
     return res;
 }
 
@@ -180,7 +180,7 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
 	// fix vertex in B adjacency neighbourhood in B
     for (int i : fixedAdj)
     {
-        out << varRegister.edge(fixedVertex, i) << " = 1\n";
+        out << "fix" << fixedVertex << "_" << i << ": " << varRegister.edge(fixedVertex, i) << " = 1\n";
     }
 
     // if we want to fix exact number of neighbours of fixed vertex in B, 
@@ -189,7 +189,7 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
     {
         for (int v : otherInB)
         {
-            out << varRegister.edge(fixedVertex, v) << " = 0\n";
+            out << "fix" << fixedVertex << "_" << v << ": " << varRegister.edge(fixedVertex, v) << " = 0\n";
 		}
     }
 
@@ -199,14 +199,14 @@ void writeFixVertexInB(std::ostream& out, const GraphConfig& cfg, GraphVarRegist
         // fix neighbours of fixed vertex in B in A
         for (int v : neighOfFixedInBinA)
         {
-            out << varRegister.edge(fixedVertex, v) << " = 1\n";
+            out << "fix" << fixedVertex << "_" << v << ": " << varRegister.edge(fixedVertex, v) << " = 1\n";
         }
 
         // fix non-neighbours of fixed vertex in B in A
         const auto& notNeigOfFixedInBinA = vs.getNotNeigOfFixedInBinA();
         for (int v : notNeigOfFixedInBinA)
         {
-            out << varRegister.edge(fixedVertex, v) << " = 0\n";
+            out << "fix" << fixedVertex << "_" << v << ": " << varRegister.edge(fixedVertex, v) << " = 0\n";
         }
 
         out << "\n";
@@ -661,11 +661,7 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 
     f << "Subject To\n\n";
 
-    writeRegularityCondition(f, cfg, varRegister);
-
-    writeTrianglesK3Degs(f, cfg, varRegister);
-
-	writeNoTrueTwinsCond(f, cfg, varRegister);
+    writeAllDiffK3Degs(f, cfg, varRegister);
 
     if (cfg.use_split_AB && cfg.fixVertexInB)
     {
@@ -673,7 +669,21 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 		writeConditionOnNeighOfVertexInB(f, cfg, varRegister);
     }
 
-	writeAllDiffK3Degs(f, cfg, varRegister);
+    if (cfg.use_split_AB)
+    {
+        writeConditionsOnEdges(f, cfg, varRegister);
+        if (cfg.useLemmas)
+        {
+            writeLemma3_1(f, cfg, varRegister);
+            writeLemma3_4(f, cfg, varRegister);
+        }
+    }
+
+    writeRegularityCondition(f, cfg, varRegister);
+
+    writeTrianglesK3Degs(f, cfg, varRegister);
+
+    writeNoTrueTwinsCond(f, cfg, varRegister);
 
     // sum k3 = 3T
     f << "sum_k3: ";
@@ -682,16 +692,6 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
         f << varRegister.k3deg(i) << " + ";
     }
     f << varRegister.k3deg(cfg.n - 1) << " - 3 " << varRegister.intvar("T") << " = 0\n";
-
-    if (cfg.use_split_AB)
-    {
-        writeConditionsOnEdges(f, cfg, varRegister);
-        if (cfg.useLemmas)
-        {
-	        writeLemma3_1(f, cfg, varRegister);
-	        writeLemma3_4(f, cfg, varRegister);
-        }
-    }
 
     f << "\nBounds\n";
     writeBounds(f, cfg, varRegister);
