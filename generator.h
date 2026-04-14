@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "register.h"
+#include <cassert>
 
 struct GraphConfig
 {
@@ -20,6 +21,7 @@ struct GraphConfig
 	int k3degFixedInB = -1;
 	int neighbours_of_fixed_vertex_in_B = -1; // only used if fixVertexInB
 	bool fixExactNumberOfNeighboursOfFixedInB = false; // if false, then neighbours_of_fixed_vertex_in_B is an upper bound, not exact
+	bool fixRestNumberOfVerticesInA = false; // if true, fix neighbours of fixed in B in A is r - fixExactNumberOfNeighboursOfFixedInB
 
 	bool useLemmas = false;
 
@@ -58,6 +60,10 @@ struct GraphConfig
 				break;
 			}
 		}
+		if (fixExactNumberOfNeighboursOfFixedInB != fixRestNumberOfVerticesInA)
+		{
+			std::cout << "WARNING: fixExactNumberOfNeighboursOfFixedInB and fixRestNumberOfVerticesInA are not the same.";
+		}
 		#ifndef NDEBUG
 		std::cout << "GraphConfig validated successfully.\n";
 		#endif // !NDEBUG
@@ -73,14 +79,23 @@ struct GraphConfig
 // So it can't be in A and can't be the anchor vertex.
 struct VertexSets {
 	const GraphConfig& cfg;
+	std::vector<int> allVertices;
 	std::vector<int> verticesInA;
 	std::vector<int> verticesInB;
 	std::vector<int> neighOfFixedInB;
 	std::vector<int> otherInB;
+	std::vector<int> neigOfFixedInBinA;
+	std::vector<int> notNeigOfFixedInBinA;
+	std::vector<int> allNeighOfFixedInB;
 
 	VertexSets(const GraphConfig& cfg) : cfg(cfg) 
 	{ 
 		cfg.validate(); 
+
+		for (int i = 0; i < cfg.n; i++)
+		{
+			allVertices.push_back(i);
+		}
 
 		if (cfg.use_split_AB)
 		{
@@ -103,6 +118,26 @@ struct VertexSets {
 				{
 					otherInB.push_back(i);
 				}
+
+				if (cfg.fixRestNumberOfVerticesInA)
+				{
+					const int numNeigInA = cfg.r - cfg.neighbours_of_fixed_vertex_in_B;
+					assert(numNeigInA >= 0);
+					for (int i = 1; i <= numNeigInA; ++i)
+					{
+						neigOfFixedInBinA.push_back(i);
+					}
+					for (int i = numNeigInA + 1; i <= cfg.r; ++i)
+					{
+						notNeigOfFixedInBinA.push_back(i);
+					}
+				}
+
+				allNeighOfFixedInB.insert(allNeighOfFixedInB.end(), neighOfFixedInB.begin(), neighOfFixedInB.end());
+				if (cfg.fixRestNumberOfVerticesInA)
+				{
+					allNeighOfFixedInB.insert(allNeighOfFixedInB.end(), neigOfFixedInBinA.begin(), neigOfFixedInBinA.end());
+				}
 			}
 		}
 	}
@@ -124,6 +159,10 @@ struct VertexSets {
 	const std::vector<int>& B() const { return verticesInB; }
 	const std::vector<int>& getNeighOfFixedInB() const { return neighOfFixedInB; }
 	const std::vector<int>& getOtherInB() const { return otherInB; }
+	const std::vector<int>& getNeigOfFixedInBinA() const { return neigOfFixedInBinA; }
+	const std::vector<int>& getNotNeigOfFixedInBinA() const { return notNeigOfFixedInBinA; }
+	const std::vector<int>& getAllNeighOfFixedInB() const { return allNeighOfFixedInB; }
+	const std::vector<int>& getAllVertices() const { return allVertices; }
 };
 
 std::string getFileName(const GraphConfig& cfg);

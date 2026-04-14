@@ -153,8 +153,8 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 	}
 
 	// 2. Розбиваємо решту вершин на Окіл (A) та Не-окіл (B)
-	std::vector<std::pair<int, int>> neighborhood;
-	std::vector<std::pair<int, int>> non_neighborhood;
+	std::vector<std::pair<int, int>> A_raw;
+	std::vector<std::pair<int, int>> B_raw;
 
 	for (int i = 0; i < n; ++i) 
 	{
@@ -165,84 +165,117 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 		auto e = edge(v_anchor_orig, i, graph);
 		if (e.second) 
 		{
-			neighborhood.push_back({ k3_degs[i], i });
+			A_raw.push_back({ k3_degs[i], i });
 		}
 		else 
 		{
-			non_neighborhood.push_back({ k3_degs[i], i });
+			B_raw.push_back({ k3_degs[i], i });
 		}
 	}
 
-	// 3. Сортуємо A групи незалежно за їхнім K3-степенем
-	std::sort(neighborhood.begin(), neighborhood.end());
-
-	// 4. Будуємо фінальний мапінг: MILP-індекс -> Оригінальний індекс C++
 	std::vector<int> milp_to_orig(n);
 	milp_to_orig[0] = v_anchor_orig;
-
 	int current_milp_idx = 1;
-	// Спочатку записуємо відсортованих сусідів (індекси 1..R)
-	for (auto& p : neighborhood) 
-	{
-		milp_to_orig[current_milp_idx++] = p.second;
-	}
 
-	// Обробка B із урахуванням фіксації вершини в B (якщо потрібно)
+	// 3. Знаходимо фіксовану вершину в B (вона нам потрібна для сортування A)
+	int fixed_B_orig = -1;
 	if (cfg.fixVertexInB)
 	{
-		// find fixed vertex in B (k3 deg = cfg.k3degFixedInB)
-		int fixed_vertex_in_B_orig = -1;
-		int fixed_idx_in_non_neighborhood = -1;
-
-		for (int i = 0; i < non_neighborhood.size(); ++i) 
+		for (auto& p : B_raw)
 		{
-			if (non_neighborhood[i].first == cfg.k3degFixedInB) 
+			if (p.first == cfg.k3degFixedInB)
 			{
-				fixed_vertex_in_B_orig = non_neighborhood[i].second;
-				fixed_idx_in_non_neighborhood = i;
+				fixed_B_orig = p.second;
 				break;
 			}
 		}
+	}
 
-		if (fixed_vertex_in_B_orig == -1) 
+	if (fixed_B_orig == -1)
+	{
+		std::cerr << "Помилка: Вершину в B з K3-степенем " << cfg.k3degFixedInB << " не знайдено!" << std::endl;
+		return "";
+	}
+
+	// 4. Обробка множини А (індекси 1..R) із урахуванням фіксації вершини в B (якщо потрібно)
+	if (cfg.fixVertexInB && cfg.fixRestNumberOfVerticesInA )
+	{
+		std::vector<std::pair<int, int>> A_adj_to_fixed;
+		std::vector<std::pair<int, int>> A_not_adj_to_fixed;
+
+		for(auto& p : A_raw) 
 		{
-			std::cerr << "Error: vertex in B with K3-deg " << cfg.k3degFixedInB << " not found" << std::endl;
-			return "";
-		}
-
-		// remove fixed vertex from non_neighborhood and put it in the correct MILP position (R+1)
-		non_neighborhood.erase(non_neighborhood.begin() + fixed_idx_in_non_neighborhood);
-		milp_to_orig[current_milp_idx++] = fixed_vertex_in_B_orig;
-
-		// split rest of B into neighbours and non-neighbours of fixed vertex in B
-		std::vector<std::pair<int, int>> neigh_of_fixed;
-		std::vector<std::pair<int, int>> other_in_B;
-
-		for (auto& p : non_neighborhood) 
-		{
-			auto e = edge(fixed_vertex_in_B_orig, p.second, graph);
+			auto e = edge(fixed_B_orig, p.second, graph);
 			if (e.second) 
 			{
-				neigh_of_fixed.push_back(p);
+				A_adj_to_fixed.push_back(p);
 			}
 			else 
 			{
-				other_in_B.push_back(p);
+				A_not_adj_to_fixed.push_back(p);
 			}
 		}
 
 		// Сортуємо окремо сусідів та не-сусідів фіксованої вершини в B
-		std::sort(neigh_of_fixed.begin(), neigh_of_fixed.end());
-		std::sort(other_in_B.begin(), other_in_B.end());
+		std::sort(A_adj_to_fixed.begin(), A_adj_to_fixed.end());
+		std::sort(A_not_adj_to_fixed.begin(), A_not_adj_to_fixed.end());
+
+		for (auto& p : A_adj_to_fixed) 
+		{
+			milp_to_orig[current_milp_idx++] = p.second;
+		}
+
+		for (auto& p : A_not_adj_to_fixed) 
+		{
+			milp_to_orig[current_milp_idx++] = p.second;
+		}
+
+	}
+	else
+	{
+		// Спочатку записуємо відсортованих сусідів (індекси 1..R)
+		std::sort(A_raw.begin(), A_raw.end());
+		for (auto& p : A_raw) 
+		{
+			milp_to_orig[current_milp_idx++] = p.second;
+		}
+	}
+
+	// 5. Обробка B із урахуванням фіксації вершини в B
+	if (cfg.fixVertexInB)
+	{
+		milp_to_orig[current_milp_idx++] = fixed_B_orig;
+
+		std::vector<std::pair<int, int>> B_adj_to_fixed;
+		std::vector<std::pair<int, int>> B_not_adj_to_fixed;
+
+		for (auto& p : B_raw)
+		{
+			if(p.second == fixed_B_orig)
+				continue;
+
+			auto e = edge(fixed_B_orig, p.second, graph);
+			if (e.second)
+			{
+				B_adj_to_fixed.push_back(p);
+			}
+			else
+			{
+				B_not_adj_to_fixed.push_back(p);
+			}
+		}
+
+		std::sort(B_adj_to_fixed.begin(), B_adj_to_fixed.end());
+		std::sort(B_not_adj_to_fixed.begin(), B_not_adj_to_fixed.end());
 
 		// MIPL R+2..R+1+neighbours_of_fixed_vertex_in_B - сусіди фіксованої вершини в B
-		for (auto& p : neigh_of_fixed) 
+		for (auto& p : B_adj_to_fixed)
 		{
 			milp_to_orig[current_milp_idx++] = p.second;
 		}
 
 		// MIPL R+1+neighbours_of_fixed_vertex_in_B..N-1 - не-сусіди фіксованої вершини в B
-		for (auto& p : other_in_B) 
+		for (auto& p : B_not_adj_to_fixed)
 		{
 			milp_to_orig[current_milp_idx++] = p.second;
 		}
@@ -250,19 +283,19 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 	else
 	{
 		// Потім відсортованих не-сусідів (індекси R+1..N-1)
-		std::sort(non_neighborhood.begin(), non_neighborhood.end());
-		for (auto& p : non_neighborhood) 
+		std::sort(B_raw.begin(), B_raw.end());
+		for (auto& p : B_raw)
 		{
 			milp_to_orig[current_milp_idx++] = p.second;
 		}
 	}
 
 	// Виводимо K3-степені (змінні d_i)
-	for (int milp_idx = 0; milp_idx < n; ++milp_idx) 
+	for (int i = 0; i < n; ++i) 
 	{
-		int orig_idx = milp_to_orig[milp_idx];
-		res += "d" + std::to_string(milp_idx)
-			+ " " + std::to_string(k3_degs[orig_idx]) + "\n";
+		int orig = milp_to_orig[i];
+		res += "d" + std::to_string(i)
+			+ " " + std::to_string(k3_degs[orig]) + "\n";
 	}
 
 	// виводимо ребра
@@ -345,33 +378,37 @@ UndirectedGraph loadGraphFromSCIPSolution(const std::string& filename, int numVe
 	return graph;
 }
 
-void solHelper() 
+void GeneratePresolve()
 {
-	//SetConsoleCP(1251);
-	//SetConsoleOutputCP(1251);
-	//std::string expression = "[[1,2,3,4,5,6,7,11,12],[0,2,3,4,5,6,7,9,10],[0,1,3,4,5,6,7,13,23],[0,1,2,4,5,7,8,19,23],[0,1,2,3,5,6,7,8,14],[0,1,2,3,4,6,7,9,23],[0,1,2,4,5,7,8,9,23],[0,1,2,3,4,5,6,10,23],[3,4,6,11,12,16,20,21,22],[1,5,6,11,12,13,20,21,22],[1,7,11,12,14,16,20,21,22],[0,8,9,10,14,15,16,17,18],[0,8,9,10,15,17,18,19,23],[2,9,14,15,16,18,20,21,22],[4,10,11,13,15,17,19,21,22],[11,12,13,14,16,18,19,20,21],[8,10,11,13,15,17,18,19,23],[11,12,14,16,18,19,20,21,22],[11,12,13,15,16,17,20,21,22],[3,12,14,15,16,17,20,21,22],[8,9,10,13,15,17,18,19,23],[8,9,10,13,14,15,17,18,19],[8,9,10,13,14,17,18,19,23],[2,3,5,6,7,12,16,20,22]]";
-	//UndirectedGraph graph9 = fromVecToGraph<UndirectedGraph>(parseExpression(expression));
-	//	GraphConfig cfg = {
-	//	.n = 24,
-	//	.r = 9,
-	//	.min_k3 = 3,
-	//	.max_k3 = 26,
-	//	.use_split_AB = true,
-	//	.anchorK3 = 26,
-	//	.fixVertexInB = true,
-	//	.k3degFixedInB = 3,
-	//	.neighbours_of_fixed_vertex_in_B = 6
-	//};
-	//cfg.validate();
-	//std::string presolveStr = generatePresoveSplitted(graph9, cfg);
-	//std::ofstream f("rv2_presolve9r_split26_B3_6.mst");
-	//f << presolveStr;
-	//f.flush();
-	//f.close();
+	std::string expression = "[[1,2,3,4,5,6,7,11,12],[0,2,3,4,5,6,7,9,10],[0,1,3,4,5,6,7,13,23],[0,1,2,4,5,7,8,19,23],[0,1,2,3,5,6,7,8,14],[0,1,2,3,4,6,7,9,23],[0,1,2,4,5,7,8,9,23],[0,1,2,3,4,5,6,10,23],[3,4,6,11,12,16,20,21,22],[1,5,6,11,12,13,20,21,22],[1,7,11,12,14,16,20,21,22],[0,8,9,10,14,15,16,17,18],[0,8,9,10,15,17,18,19,23],[2,9,14,15,16,18,20,21,22],[4,10,11,13,15,17,19,21,22],[11,12,13,14,16,18,19,20,21],[8,10,11,13,15,17,18,19,23],[11,12,14,16,18,19,20,21,22],[11,12,13,15,16,17,20,21,22],[3,12,14,15,16,17,20,21,22],[8,9,10,13,15,17,18,19,23],[8,9,10,13,14,15,17,18,19],[8,9,10,13,14,17,18,19,23],[2,3,5,6,7,12,16,20,22]]";
+	UndirectedGraph graph9 = fromVecToGraph<UndirectedGraph>(parseExpression(expression));
+	GraphConfig cfg = {
+		.n = 24,
+		.r = 9,
+		.min_k3 = 3,
+		.max_k3 = 26,
+		.use_split_AB = true,
+		.anchorK3 = 26,
+		.fixVertexInB = true,
+		.k3degFixedInB = 3,
+		.neighbours_of_fixed_vertex_in_B = 6,
+		.fixExactNumberOfNeighboursOfFixedInB = true,
+		.fixRestNumberOfVerticesInA = true,
+		.useLemmas = false
+	};
+	cfg.validate();
+	std::string presolveStr = generatePresoveSplitted(graph9, cfg);
+	std::ofstream f("rv2_presolve9r_split26_B3_6_FixRestA.mst");
+	f << presolveStr;
+	f.flush();
+	f.close();
+}
 
+void LoadSolutionFromFile()
+{
 	UndirectedGraph graph9 = loadGraphFromSCIPSolution("testSol.txt", 24);
 	std::vector<int> k3degs = K3Irregullar(graph9);
-
+	
 	for (int i = 0; i < k3degs.size(); ++i)
 	{
 		std::cout << k3degs[i] << ' ';
@@ -382,4 +419,35 @@ void solHelper()
 	{
 		std::cout << k3degs[i] << ' ';
 	}
+	std::cout << "\n";
+
+	// presorting required
+	// Перевірка на попарну відмінність (всі K3-степені мають бути різними)
+	bool all_different = true;
+	for (size_t i = 1; i < k3degs.size(); ++i)
+	{
+		if (k3degs[i] == k3degs[i - 1])
+		{
+			std::cout << "WARNING: Знайдено однаковий K3-степінь! Вершини мають дублікат: " << k3degs[i] << "\n";
+			all_different = false;
+		}
+	}
+
+	if (all_different)
+	{
+		std::cout << "SUCCESS: Всі K3-степені різні! Це дійсно K3-нерегулярний граф!\n";
+	}
+	else
+	{
+		std::cout << "FAILED: Граф має однакові K3-степені і НЕ є K3-нерегулярним.\n";
+	}
+}
+
+void solHelper() 
+{
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	
+	//GeneratePresolve();
+	LoadSolutionFromFile();
 }

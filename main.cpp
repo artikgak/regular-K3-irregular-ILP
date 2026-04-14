@@ -13,14 +13,15 @@ int main()
 	GraphConfig cfg = {
 		.n = 21,
 		.r = 8,
-		.min_k3 = 2,
-		.max_k3 = 22,
+		.min_k3 = 1,
+		.max_k3 = 21,
 		.use_split_AB = true,
-		.anchorK3 = 22,
+		.anchorK3 = 21,
 		.fixVertexInB = true,
-		.k3degFixedInB = 2,
-		.neighbours_of_fixed_vertex_in_B = 4,
-		.fixExactNumberOfNeighboursOfFixedInB = false,
+		.k3degFixedInB = 1,
+		.neighbours_of_fixed_vertex_in_B = 5,
+		.fixExactNumberOfNeighboursOfFixedInB = true,
+		.fixRestNumberOfVerticesInA = true,
 		.useLemmas = false
 	};
 
