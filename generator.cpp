@@ -36,7 +36,7 @@ std::string getFileName(const GraphConfig& cfg)
 		res += "_wo_lem";
     }
 
-    res += "_str1.lp";
+    res += "_str4.lp";
     return res;
 }
 
@@ -262,6 +262,8 @@ void writeConditionOnNeighOfVertexInB(std::ostream& out, const GraphConfig& cfg,
 
 void writeOrderTotalK3degCondition(std::ostream& out, const std::vector<int>& array, GraphVarRegister& varRegister)
 {
+    if(array.size() <= 1)
+		return;
     for (int i = 0; i < array.size() - 1; i++)
     {
         out << "ord" << to_string(array[i]) << "_" << to_string(array[i+1]) << ": "
@@ -445,6 +447,57 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarR
         }
         out << " = " << to_string(countEdgesBetweenAB) << "\n\n";
     }
+
+    if(cfg.k3degFixedInB==0 && cfg.fixExactNumberOfNeighboursOfFixedInB && cfg.fixRestNumberOfVerticesInA)
+    {
+        //we can calculate exact number of edges in non zero neighbourhood
+        const auto& neighOfFixedInBInA = vertexSets.getNeigOfFixedInBinA();
+        const auto& notNeighOfFixedInBinA = vertexSets.getNotNeigOfFixedInBinA();
+        const auto& neighOfFixedInBInB = vertexSets.getNeighOfFixedInB();
+        const auto& notNeighOfFixedInBInB = vertexSets.getOtherInB();
+
+        // calculate 
+        const int nTotalVertices = notNeighOfFixedInBinA.size() + notNeighOfFixedInBInB.size();
+        const int requiredTotalDegree = nTotalVertices * cfg.r;
+        //2 * (ребра_всередині)+(ребра_назовні) = requiredTotalDegree
+        // ребра назовні
+        //1. $v_0$(якор) - рівно notNeighOfFixedInBinA.size()
+        const int out1 = notNeighOfFixedInBinA.size();
+        //2. $v_9$(вершина з K3 = 0) - 0 ребер
+        //3. $W = { 10, 11, 12, 13, 14 }$(сусіди $v_9$ в $B$)
+		const int totalDegreeNeighFixedInB = neighOfFixedInBInB.size() * cfg.r;
+        const int edgestoFixed = neighOfFixedInBInB.size(); // back to v9
+        // inbetween 0, because K3 deg(v9) = 0, also 0 to neighInA
+        const int out3 = totalDegreeNeighFixedInB - edgestoFixed;
+        //4. $X = { 1, 2, 3 }$(сусіди $v_9$ в $A$)
+        const int totalDegreeNeighFixedInA = neighOfFixedInBInA.size() * cfg.r;
+        const int edgestoAnchor = neighOfFixedInBInA.size(); // back to v0
+        const int edgestoFixedInB = neighOfFixedInBInA.size(); // back to v9
+        // inbetween 0, because K3 deg(v9) = 0, also 0 to neighInB
+        const int out4 = totalDegreeNeighFixedInA - edgestoAnchor - edgestoFixedInB;
+
+        assert((requiredTotalDegree - out1 - out3 - out4) % 2 == 0);
+        const int edgesInside = (requiredTotalDegree - out1 - out3 - out4) / 2;
+
+        std::vector<int> allNotNeighOfFixedInB;
+        allNotNeighOfFixedInB.insert(allNotNeighOfFixedInB.end(), notNeighOfFixedInBinA.begin(), notNeighOfFixedInBinA.end());
+        allNotNeighOfFixedInB.insert(allNotNeighOfFixedInB.end(), notNeighOfFixedInBInB.begin(), notNeighOfFixedInBInB.end());
+        out << "edgesInside_YZ: ";
+        bool first = true;
+        for (int i = 0; i < allNotNeighOfFixedInB.size() - 1; i++)
+        {
+            for (int j = i + 1; j < allNotNeighOfFixedInB.size(); j++)
+            {
+                if (!first) {
+                    out << " + ";
+                }
+                out << varRegister.edge(allNotNeighOfFixedInB[i], allNotNeighOfFixedInB[j]);
+                first = false;
+            }
+        }
+        out << " = " << edgesInside << "\n";
+    }
+    out << "\n";
 }
 
 // =========================================================================

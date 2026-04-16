@@ -11,14 +11,14 @@ int main()
 	//solHelper();
 
 	GraphConfig cfg = {
-		.n = 21,
+		.n = 22,
 		.r = 8,
-		.min_k3 = 1,
-		.max_k3 = 21,
+		.min_k3 = 0,
+		.max_k3 = 22,
 		.use_split_AB = true,
-		.anchorK3 = 21,
+		.anchorK3 = 22,
 		.fixVertexInB = true,
-		.k3degFixedInB = 1,
+		.k3degFixedInB = 0,
 		.neighbours_of_fixed_vertex_in_B = 5,
 		.fixExactNumberOfNeighboursOfFixedInB = true,
 		.fixRestNumberOfVerticesInA = true,
