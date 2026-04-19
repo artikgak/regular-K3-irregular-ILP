@@ -394,7 +394,8 @@ void GeneratePresolve()
 		.neighbours_of_fixed_vertex_in_B = 6,
 		.fixExactNumberOfNeighboursOfFixedInB = true,
 		.fixRestNumberOfVerticesInA = true,
-		.useLemmas = false
+		.useLemmas = false,
+		.usePolytopeMatrix = true
 	};
 	cfg.validate();
 	std::string presolveStr = generatePresoveSplitted(graph9, cfg);

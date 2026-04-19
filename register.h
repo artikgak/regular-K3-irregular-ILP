@@ -43,6 +43,13 @@ public:
 		return var;
 	}
 
+	std::string polytopeBin(int i, int j)
+	{
+		const std::string var = "z_" + std::to_string(i) + "_" + std::to_string(j);
+		polytope_bin[{i, j}] = var;
+		return var;
+	}
+
 	std::string k3deg(int k3deg)
 	{
 		const std::string var = "d" + std::to_string(k3deg);
@@ -82,6 +89,13 @@ public:
 		{
 			out << var_name << "\n";
 		}
+
+		out << "\n";
+
+		for (const auto& [bin_pair, var_name] : polytope_bin)
+		{
+			out << var_name << "\n";
+		}
 	}
 
 	void printIntVars(std::ostream& out) const
@@ -103,6 +117,7 @@ private:
 	std::map<std::pair<int, int>, std::string> edges_bin;
 	std::map<std::tuple<int, int, int>, std::string> triangles_bin;
 	std::map<std::pair<int, int>, std::string> other_bin;
+	std::map<std::pair<int, int>, std::string> polytope_bin;
 
 	// general integer variables:
 	std::map<int, std::string> k3_deg_vars;

@@ -25,6 +25,8 @@ struct GraphConfig
 
 	bool useLemmas = false;
 
+	bool usePolytopeMatrix = false;
+
 	void validate() const
 	{
 		if ( n <= 0 || r <= 0 || r >= n )
@@ -41,6 +43,8 @@ struct GraphConfig
 			throw std::invalid_argument("Invalid k3degFixedInB value when fixVertexInB true.");
 		if (!fixVertexInB && k3degFixedInB >= 0)
 			std::cout << "WARNING: k3degFixedInB value set, while fixVertexInB is false.";
+		if (anchorK3 == k3degFixedInB)
+			throw std::invalid_argument("Invalid config: anchorK3 and k3degFixedInB can't be the same.");
 		if (fixVertexInB) {
 			if (neighbours_of_fixed_vertex_in_B < 0 || neighbours_of_fixed_vertex_in_B > r)
 			{
