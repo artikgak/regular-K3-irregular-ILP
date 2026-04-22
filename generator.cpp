@@ -41,7 +41,7 @@ std::string getFileName(const GraphConfig& cfg)
         res += "_mat";
     }
 
-    res += "_str4_v4.lp";
+    res += "_str4_v7.lp";
     return res;
 }
 
@@ -419,6 +419,36 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
     }
 }
 
+// if anchor >=21, r=8 then every vertex in A has at least degree 3 inside A as subgraph
+void writeLemmaNeighborsInA(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+    if (cfg.anchorK3 < 21)
+		return;
+
+    if (cfg.r != 8)
+        return;
+
+    if(cfg.use_split_AB == false)
+		return;
+
+    // ¬важаЇмо, що множина A Ч це вершини в≥д 1 до r (де r=8 дл€ 8-регул€рного графа)
+    for (int i = 1; i <= cfg.r; i++) 
+    {
+        out << "lemmaA_deg_" << i << ": ";
+        bool first = true;
+        for (int j = 1; j <= cfg.r; j++) 
+        {
+            if (i == j) continue;
+
+            if (!first) out << " + ";
+            out << varRegister.edge(i, j); // або €к у тебе рахуЇтьс€ ребро
+            first = false;
+        }
+        out << " >= 3\n";
+    }
+    out << "\n";
+}
+
 void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     if (!cfg.use_split_AB)
@@ -561,6 +591,8 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarR
         out << " = " << edgesInside << "\n";
     }
     out << "\n";
+
+	writeLemmaNeighborsInA(out, cfg, varRegister);
 }
 
 // =========================================================================
@@ -698,7 +730,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& va
     int Tmin = ceil(static_cast<float>(sum_min) / 3.f);
     int Tmax = floor(static_cast<float>(sum_max) / 3.f);
 
-    out << "tbounds: " << Tmin << " <= " << varRegister.intvar("T") << " <= " << Tmax << "\n";
+    out << Tmin << " <= " << varRegister.intvar("T") << " <= " << Tmax << "\n";
 }
 
 void writeBinaryVars(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)

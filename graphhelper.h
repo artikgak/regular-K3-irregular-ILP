@@ -407,7 +407,7 @@ void GeneratePresolve()
 
 void LoadSolutionFromFile()
 {
-	UndirectedGraph graph9 = loadGraphFromSCIPSolution("testSol.txt", 24);
+	UndirectedGraph graph9 = loadGraphFromSCIPSolution("rv2_presolve9r.sol", 24);
 	std::vector<int> k3degs = K3Irregullar(graph9);
 	
 	for (int i = 0; i < k3degs.size(); ++i)
