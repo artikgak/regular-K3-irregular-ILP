@@ -1,0 +1,106 @@
+Problem: N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+N=21, R=8, 0 <= K3 <= 21. Anchor = 21, And fix 0 in B with 5 neighbours in B. 
+(note: other 3 neighbours of 0 are not fixed, they can belong either to A or to B. So, it's "at least 5 neighbours in B")
+
+
+SCIP:
+Solving Time (sec) : 1856.00
+Solving Nodes      : 52061 (total of 53424 nodes in 2 runs)
+
+
+Експеримент 0:
+Стандартні налаштування
+Default:
+gurobi_cl ResultFile=test1.sol LogFile=test1.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Explored 337187, Open 39522, It\N 354, Time 1860 s, then
+Exploring 500000 nodes in MinRel heuristic
+Interrupted
+
+
+Стандартні налаштування + вимкнені евристики
+Default + Heuristics 0:
+gurobi_cl Heuristics=0 ResultFile=testH0.sol LogFile=testH0.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+- 717 секунд простою (ноут заснув випадково)
+Explored 1708174 Open 10562 It\N 335 Time 6563 s - Interrupted
+
+
+Експеримент 1: Агресивна боротьба із симетрією (Symmetry)
+Ваша задача (графи) має гігантську кількість симетрій (перестановки вершин). 
+Gurobi вміє автоматично їх знаходити і відсікати цілі гілки дерева, які є просто віддзеркаленням вже перевірених.
+Параметр: Symmetry=2 (Агресивний пошук симетрій).
+Команда: gurobi_cl Heuristics=0 Symmetry=2 ваш_файл.lp
+gurobi_cl Heuristics=0 Symmetry=2 ResultFile=test_sym.sol LogFile=test_sym.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+-- follows previous settings H0 (interrupted on 671 s)
+
+
+Експеримент 2: Специфічні відсічення (Cuts)
+З графіка ми бачили, що LP-релаксація залишає багато дробових змінних (IntInf ~ 150-200). 
+Агресивні відсічення можуть звузити цей простір і сильно зменшити дерево.
+Параметри: Cuts=2 (агресивні генератори всіх відсічень) або акцент на специфічні. 
+Для задач на графах з обмеженнями на степені (регулярність) і кліки (K3) особливо добре працюють Zero-Half cuts та Clique cuts.
+Команда: gurobi_cl Heuristics=0 Cuts=2 ZeroHalfCuts=2 CliqueCuts=2 ваш_файл.lp
+gurobi_cl Heuristics=0 Cuts=2 ZeroHalfCuts=2 CliqueCuts=2 ResultFile=test_cuts.sol LogFile=test_cuts.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Explored 645512 Open 6370 It\N 384 Time 4232 s - Interrupted
+
+
+Експеримент 3: Зсув фокусу солвера (MIPFocus)
+За замовчуванням Gurobi намагається збалансувати пошук рішень і підняття нижньої межі (bound). 
+Оскільки рішень немає, нам треба змістити фокус виключно на відсікання дерева (proving the bound).
+Параметр: MIPFocus=3 (Фокус на доведення межі / максимальне відсікання дерева). 
+Цей режим змушує Gurobi витрачати більше зусиль у кожному вузлі (генерувати більше катів), щоб зменшити загальний розмір дерева.
+Команда: gurobi_cl Heuristics=0 MIPFocus=3 ваш_файл.lp
+gurobi_cl Heuristics=0 MIPFocus=3 ResultFile=test_MIP.sol LogFile=test_MIP.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Interrupt request received
+Explored 270922 Open 5603 It\N 432 Time 2524 s
+
+
+Експеримент 4: Стратегія розгалуження (Branching)
+Наразі Gurobi обробляє ~280 вузлів/сек. Це означає, що вузли обчислюються дуже швидко. 
+Можливо, варто змусити солвер думати довше над тим, яку змінну обрати для розгалуження, щоб гілки відсікалися швидше (Strong Branching).
+Параметр: VarBranch=3 (Strong branching). Кількість вузлів/сек сильно впаде, але загальна кількість вузлів у дереві може впасти у десятки разів.
+Команда: gurobi_cl Heuristics=0 VarBranch=3 ваш_файл.lp
+gurobi_cl Heuristics=0 VarBranch=3 ResultFile=test_VAR.sol LogFile=test_VAR.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Interrupt request received
+Explored 124314 Open 10973 It\N 409 Time 2741 s
+
+
+Експеримент 5: Максимальний Presolve
+Presolve спрощує модель ще до початку Branch & Bound. Іноді агресивний пресолвінг може знайти додаткові фіксування змінних.
+Параметр: Presolve=2 (Агресивний пресолв).
+Команда: gurobi_cl Heuristics=0 Presolve=2 ваш_файл.lp
+gurobi_cl Heuristics=0 Presolve=2 ResultFile=test_PRE.sol LogFile=test_PRE.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Interrupt request received
+Explored 804626 Open 10572 It\N 345 Time 2050 s
+
+
+Експеримент комбо:
+gurobi_cl Heuristics=0 Presolve=2 VarBranch=3 MIPFocus=3 Cuts=2 ZeroHalfCuts=2 CliqueCuts=2 ResultFile=test_combo1.sol LogFile=test_combo1.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Interrupt request received
+Explored 61353 Open 10953 It\N 437 Time 2208 s
+
+Next test 1:
+gurobi_cl Heuristics=0 Symmetry=0 Presolve=2 PrePasses=20 Cuts=3 CutPasses=50 ImpliedCuts=2 ZeroHalfCuts=2 BranchDir=1 MIPFocus=3 LogFile=test_combo2.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Interrupt request received
+ 295584  7809    0.00000   96  201          -    0.00000      -   417 2942s
+
+Next test 2:
+gurobi_cl Heuristics=0.05 Symmetry=2 Presolve=2 Cuts=2 CliqueCuts=2 CoverCuts=2 FlowCoverCuts=2 Threads=-1 MIPFocus=1 LogFile=test_combo3.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Interrupt request received
+ 111609  6456    0.00000   47  208          -    0.00000      -   347 2285s
+
+Experiment close to scip:
+gurobi_cl Heuristics=0 Symmetry=0 Presolve=2 PrePasses=20 Cuts=3 CutPasses=50 GomoryPasses=15 ZeroHalfCuts=2 CliqueCuts=2 MIRCuts=2 CoverCuts=2 StrongCGCuts=2 RLTCuts=2 ImpliedCuts=2 ConflictCuts=2 NodeSelect=1 BranchDir=1 MIPFocus=3 ResultFile=test_scip_mirror.sol LogFile=test_scip_mirror.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Interrupt request received
+ 183408  8398    0.00000   62  206          -    0.00000      -   410 1766s
+
+
+Next try combo4:
+gurobi_cl Heuristics=0 Presolve=2 MIPFocus=3 Cuts=3 ZeroHalfCuts=2 CliqueCuts=2 MIRCuts=2 CoverCuts=2 ImpliedCuts=2 ConflictCuts=2 BranchDir=1 NodeSelect=1 LogFile=test_combo4.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+
+
+Next try:
+gurobi_cl Heuristics=0 Presolve=2 MIPFocus=3 VarBranch=3 Cuts=3 CliqueCuts=2 CoverCuts=2 ImpliedCuts=2 MIRCuts=2 ZeroHalfCuts=2 ConflictCuts=2 BranchDir=1 NodeSelect=1 ResultFile=test_combo5.sol LogFile=test_combo5.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+ 208018  4264 infeasible   73               -    0.00000      -   386 2305s
+
+Next try:
+gurobi_cl Heuristics=0 Presolve=2 MIPFocus=3 VarBranch=3 Cuts=3 CliqueCuts=2 CoverCuts=2 ImpliedCuts=2 MIRCuts=2 ZeroHalfCuts=2 ConflictCuts=2 BranchDir=1 NodeSelect=1 ResultFile=test_combo5.sol LogFile=test_combo5.log N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp

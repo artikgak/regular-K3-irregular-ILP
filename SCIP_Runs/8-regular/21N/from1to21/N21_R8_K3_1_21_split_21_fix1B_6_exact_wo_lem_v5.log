@@ -1,0 +1,1141 @@
+SCIP version 10.0.1 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: SoPlex 8.0.1] [GitHash: 76a50c97d6]
+Copyright (c) 2002-2026 Zuse Institute Berlin (ZIB)
+
+External libraries: 
+  SoPlex 8.0.1         Linear programming solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: c69290aa]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.3.1           General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  MPFR 4.2.2           GNU Multiple Precision Floating-Point Reliable Library (mpfr.org)
+  Boost 1.89.0         Boost C++ Libraries (boost.org)
+  TinyCThread 1.2      small portable implementation of the C11 threads API (tinycthread.github.io)
+  GMP 6.3.0            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.7.0          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4.0.4        AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 3.0.0         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) (built with TBB) [GitHash: 4cbdc327]
+  Nauty 2.8.8          Computing Graph Automorphism Groups by Brendan D. McKay (users.cecs.anu.edu.au/~bdm/nauty)
+  sassy 2.0            Symmetry preprocessor by Markus Anders (github.com/markusa4/sassy)
+  Ipopt 3.14.19        Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+user parameter file <scip.set> not found - using default parameters
+
+heuristics/padm/freq = -1
+heuristics/ofins/freq = -1
+heuristics/reoptsols/freq = -1
+heuristics/trivialnegation/freq = -1
+heuristics/trivial/freq = -1
+heuristics/clique/freq = -1
+heuristics/locks/freq = -1
+heuristics/vbounds/freq = -1
+heuristics/shiftandpropagate/freq = -1
+heuristics/completesol/freq = -1
+heuristics/simplerounding/freq = -1
+heuristics/randrounding/freq = -1
+heuristics/zirounding/freq = -1
+heuristics/rounding/freq = -1
+heuristics/shifting/freq = -1
+heuristics/intshifting/freq = -1
+heuristics/oneopt/freq = -1
+heuristics/indicator/freq = -1
+heuristics/adaptivediving/freq = -1
+heuristics/indicatordiving/freq = -1
+heuristics/farkasdiving/freq = -1
+heuristics/feaspump/freq = -1
+heuristics/conflictdiving/freq = -1
+heuristics/pscostdiving/freq = -1
+heuristics/fracdiving/freq = -1
+heuristics/nlpdiving/freq = -1
+heuristics/veclendiving/freq = -1
+heuristics/distributiondiving/freq = -1
+heuristics/objpscostdiving/freq = -1
+heuristics/rootsoldiving/freq = -1
+heuristics/linesearchdiving/freq = -1
+heuristics/guideddiving/freq = -1
+heuristics/rens/freq = -1
+heuristics/alns/freq = -1
+heuristics/rins/freq = -1
+heuristics/gins/freq = -1
+heuristics/crossover/freq = -1
+heuristics/lpface/freq = -1
+heuristics/undercover/freq = -1
+heuristics/subnlp/freq = -1
+heuristics/mpec/freq = -1
+heuristics/multistart/freq = -1
+heuristics/trysol/freq = -1
+presolving/restartfac = 0.0125
+presolving/restartminred = 0.06
+constraints/setppc/cliquelifting = TRUE
+presolving/boundshift/maxrounds = -1
+presolving/qpkktref/maxrounds = -1
+presolving/stuffing/maxrounds = -1
+presolving/tworowbnd/maxrounds = -1
+presolving/dualinfer/maxrounds = -1
+presolving/dualagg/maxrounds = -1
+presolving/implint/maxrounds = -1
+presolving/redvub/maxrounds = -1
+propagating/probing/maxuseless = 1500
+propagating/probing/maxtotaluseless = 75
+separating/closecuts/freq = 0
+separating/rlt/freq = 20
+separating/rlt/maxroundsroot = 15
+separating/disjunctive/freq = 20
+separating/disjunctive/maxroundsroot = 150
+separating/gauge/freq = 0
+separating/interminor/freq = 0
+separating/convexproj/freq = 0
+separating/gomory/maxroundsroot = 15
+separating/gomory/maxsepacutsroot = 400
+separating/aggregation/maxsepacutsroot = 1000
+separating/clique/freq = 20
+separating/zerohalf/maxroundsroot = 30
+separating/zerohalf/maxsepacutsroot = 200
+separating/lagromory/freq = 0
+separating/mcf/freq = 20
+separating/mcf/maxsepacutsroot = 400
+separating/eccuts/freq = 0
+separating/eccuts/maxroundsroot = 375
+separating/eccuts/maxsepacutsroot = 100
+separating/oddcycle/freq = 0
+separating/oddcycle/maxroundsroot = 15
+separating/oddcycle/maxsepacutsroot = 10000
+constraints/benderslp/sepafreq = 0
+constraints/integral/sepafreq = 0
+constraints/SOS2/sepafreq = 10
+constraints/varbound/sepafreq = 10
+constraints/knapsack/sepafreq = 10
+constraints/knapsack/maxsepacutsroot = 500
+constraints/setppc/sepafreq = 10
+constraints/or/sepafreq = 10
+constraints/xor/sepafreq = 10
+constraints/conjunction/sepafreq = 0
+constraints/disjunction/sepafreq = 0
+constraints/exactsol/sepafreq = 0
+constraints/linear/sepafreq = 10
+constraints/linear/maxsepacutsroot = 500
+constraints/exactlinear/sepafreq = 10
+constraints/exactlinear/maxsepacutsroot = 500
+constraints/orbitope_full/sepafreq = 0
+constraints/orbitope_pp/sepafreq = 0
+constraints/logicor/sepafreq = 10
+constraints/bounddisjunction/sepafreq = 0
+constraints/pseudoboolean/sepafreq = 0
+constraints/superindicator/sepafreq = 0
+constraints/benders/sepafreq = 0
+constraints/fixedvar/sepafreq = 0
+constraints/countsols/sepafreq = 0
+constraints/components/sepafreq = 0
+cutselection/hybrid/minorthoroot = 0.1
+separating/maxroundsrootsubrun = 5
+separating/maxaddrounds = 5
+separating/maxcutsroot = 5000
+constraints/linear/separateall = TRUE
+separating/aggregation/maxfailsroot = 200
+separating/mcf/maxtestdelta = -1
+separating/mcf/trynegscaling = TRUE
+loaded parameter file <scip_v5.set>
+
+read problem <N21_R8_K3_1_21_split_21_fix1B_6_exact_wo_lem.lp>
+============
+
+original problem has 1682 variables (1658 bin, 22 int, 2 cont) and 5978 constraints
+
+presolving:
+(round 1, fast)       297 del vars, 149 del conss, 0 add conss, 63 chg bounds, 118 chg sides, 236 chg coeffs, 0 upgd conss, 0 impls, 3132 clqs, 0 implints
+(round 2, fast)       555 del vars, 1269 del conss, 0 add conss, 76 chg bounds, 190 chg sides, 390 chg coeffs, 0 upgd conss, 0 impls, 3175 clqs, 0 implints
+(round 3, fast)       555 del vars, 1269 del conss, 0 add conss, 86 chg bounds, 238 chg sides, 503 chg coeffs, 0 upgd conss, 0 impls, 3175 clqs, 0 implints
+(round 4, fast)       555 del vars, 1269 del conss, 0 add conss, 93 chg bounds, 272 chg sides, 597 chg coeffs, 0 upgd conss, 0 impls, 3175 clqs, 0 implints
+(round 5, fast)       555 del vars, 1269 del conss, 0 add conss, 97 chg bounds, 281 chg sides, 647 chg coeffs, 0 upgd conss, 0 impls, 3175 clqs, 0 implints
+   (0.0s) running MILP presolver
+   (0.0s) MILP presolver (3 rounds): 43 aggregations, 0 fixings, 1 bound changes
+(round 6, medium)     600 del vars, 1269 del conss, 0 add conss, 100 chg bounds, 282 chg sides, 670 chg coeffs, 0 upgd conss, 0 impls, 3083 clqs, 0 implints
+(round 7, fast)       600 del vars, 1361 del conss, 0 add conss, 100 chg bounds, 282 chg sides, 681 chg coeffs, 0 upgd conss, 0 impls, 3083 clqs, 0 implints
+(round 8, exhaustive) 600 del vars, 1368 del conss, 0 add conss, 100 chg bounds, 282 chg sides, 681 chg coeffs, 0 upgd conss, 0 impls, 3083 clqs, 0 implints
+(round 9, exhaustive) 600 del vars, 1368 del conss, 0 add conss, 100 chg bounds, 282 chg sides, 681 chg coeffs, 4337 upgd conss, 0 impls, 3083 clqs, 0 implints
+(round 10, medium)     600 del vars, 1382 del conss, 14 add conss, 100 chg bounds, 296 chg sides, 863 chg coeffs, 4337 upgd conss, 0 impls, 3096 clqs, 0 implints
+(round 11, exhaustive) 600 del vars, 5506 del conss, 1057 add conss, 100 chg bounds, 296 chg sides, 863 chg coeffs, 4337 upgd conss, 0 impls, 3096 clqs, 0 implints
+(round 12, exhaustive) 600 del vars, 5506 del conss, 1057 add conss, 100 chg bounds, 296 chg sides, 1034 chg coeffs, 4337 upgd conss, 0 impls, 3096 clqs, 0 implints
+(round 13, exhaustive) 600 del vars, 5521 del conss, 1057 add conss, 100 chg bounds, 296 chg sides, 1034 chg coeffs, 4337 upgd conss, 0 impls, 3096 clqs, 0 implints
+(round 14, exhaustive) 618 del vars, 5539 del conss, 1075 add conss, 100 chg bounds, 296 chg sides, 1034 chg coeffs, 4337 upgd conss, 0 impls, 3042 clqs, 0 implints
+(round 15, exhaustive) 618 del vars, 5557 del conss, 1075 add conss, 100 chg bounds, 296 chg sides, 1034 chg coeffs, 4337 upgd conss, 0 impls, 3059 clqs, 0 implints
+   (1.0s) probing: 1000/1322 (75.6%) - 0 fixings, 0 aggregations, 59594 implications, 0 bound changes
+   (1.0s) probing: 1234/1322 (93.3%) - 0 fixings, 0 aggregations, 66068 implications, 0 bound changes
+   (1.0s) probing aborted: 75/75 successive totally useless probings
+   (1.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (1.0s) no symmetry present (symcode time: 0.00)
+presolving (16 rounds: 16 fast, 10 medium, 8 exhaustive):
+ 618 deleted vars, 5557 deleted constraints, 1075 added constraints, 100 tightened bounds, 0 added holes, 296 changed sides, 1034 changed coefficients
+ 1380 implications, 22714 cliques, 0 implied integral variables (0 bin, 0 int, 0 cont)
+presolved problem has 1341 variables (1322 bin, 19 int, 0 cont) and 1496 constraints
+     16 constraints of type <varbound>
+    171 constraints of type <knapsack>
+      1 constraints of type <setppc>
+   1025 constraints of type <and>
+    273 constraints of type <linear>
+     10 constraints of type <logicor>
+transformed objective value is always integral (scale: 1)
+Presolving Time: 1.00
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  1.0s|     1 |     0 |  2271 |     - |    32M |   0 |1341 |1496 |2521 |   0 |  0 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+Computing relative interior point (time limit: 1e+20, iter limit: 22710) ...
+  1.0s|     1 |     0 |  2577 |     - |    38M |   0 |1341 |1496 |2563 |  42 |  1 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  1.0s|     1 |     0 |  2665 |     - |    38M |   0 |1341 |1496 |2595 |  74 |  2 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  2802 |     - |    39M |   0 |1341 |1496 |2634 | 113 |  3 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  2890 |     - |    39M |   0 |1341 |1496 |2655 | 134 |  4 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3001 |     - |    39M |   0 |1341 |1496 |2670 | 149 |  5 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3050 |     - |    40M |   0 |1341 |1496 |2676 | 155 |  6 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3151 |     - |    40M |   0 |1341 |1496 |2689 | 168 |  7 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3214 |     - |    40M |   0 |1341 |1496 |2707 | 186 |  8 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3246 |     - |    41M |   0 |1341 |1496 |2717 | 196 |  9 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3309 |     - |    41M |   0 |1341 |1496 |2722 | 201 | 10 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3432 |     - |    41M |   0 |1341 |1496 |2773 | 252 | 11 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  2.0s|     1 |     0 |  3472 |     - |    42M |   0 |1341 |1496 |2780 | 259 | 12 |   0 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+  3.0s|     1 |     2 |  3596 |     - |    42M |   0 |1341 |1496 |2780 | 259 | 12 |   0 |  31 | 0.000000e+00 |      --      |    Inf | unknown
+  6.0s|   100 |    91 | 25984 | 227.4 |    46M |  23 |1341 |1507 |2641 |1407 |  2 |  11 |  31 | 0.000000e+00 |      --      |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  8.0s|   200 |   157 | 42906 | 198.2 |    50M |  26 |1341 |1556 |2790 |2457 |  0 |  60 |  31 | 0.000000e+00 |      --      |    Inf | unknown
+ 10.0s|   300 |   212 | 63600 | 201.1 |    53M |  26 |1341 |1603 |2790 |3691 |  2 | 107 |  31 | 0.000000e+00 |      --      |    Inf | unknown
+ 13.0s|   400 |   268 | 87240 | 209.9 |    59M |  26 |1341 |1658 |2843 |5143 |  3 | 162 |  31 | 0.000000e+00 |      --      |    Inf |   0.87%
+ 15.0s|   500 |   331 |107576 | 208.6 |    62M |  26 |1341 |1688 |2729 |6565 |  2 | 193 |  31 | 0.000000e+00 |      --      |    Inf |   1.23%
+ 18.0s|   600 |   380 |128877 | 209.4 |    66M |  26 |1341 |1744 |2804 |7924 |  2 | 249 |  31 | 0.000000e+00 |      --      |    Inf |   1.25%
+ 20.0s|   700 |   406 |149735 | 209.2 |    70M |  30 |1341 |1789 |2903 |8879 |  2 | 294 |  31 | 0.000000e+00 |      --      |    Inf |   1.26%
+ 22.0s|   800 |   436 |170526 | 209.1 |    72M |  30 |1341 |1861 |2792 |9940 |  0 | 368 |  31 | 0.000000e+00 |      --      |    Inf |   1.28%
+ 25.0s|   900 |   470 |193731 | 211.6 |    75M |  30 |1341 |1920 |3165 |  10k|  2 | 428 |  31 | 0.000000e+00 |      --      |    Inf |   1.29%
+ 27.0s|  1000 |   520 |213910 | 210.6 |    78M |  30 |1341 |1963 |2758 |  11k|  2 | 472 |  31 | 0.000000e+00 |      --      |    Inf |   1.31%
+ 29.0s|  1100 |   553 |238490 | 213.8 |    80M |  30 |1341 |2041 |2783 |  12k|  2 | 550 |  31 | 0.000000e+00 |      --      |    Inf |   1.33%
+ 31.0s|  1200 |   607 |259314 | 213.4 |    82M |  30 |1341 |2077 |2879 |  13k|  2 | 587 |  31 | 0.000000e+00 |      --      |    Inf |   1.39%
+ 33.0s|  1300 |   655 |282106 | 214.5 |    84M |  30 |1341 |2106 |3110 |  14k|  2 | 620 |  31 | 0.000000e+00 |      --      |    Inf |   1.41%
+ 36.0s|  1400 |   710 |304416 | 215.1 |    89M |  30 |1341 |2160 |2822 |  16k|  0 | 674 |  31 | 0.000000e+00 |      --      |    Inf |   1.46%
+ 38.0s|  1500 |   759 |324125 | 213.9 |    90M |  34 |1341 |2208 |2841 |  17k|  0 | 723 |  31 | 0.000000e+00 |      --      |    Inf |   1.47%
+ 41.0s|  1600 |   784 |354994 | 219.8 |    95M |  34 |1341 |2270 |3073 |  18k|  0 | 785 |  31 | 0.000000e+00 |      --      |    Inf |   1.47%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 43.0s|  1700 |   795 |379534 | 221.3 |    96M |  34 |1341 |2349 |3140 |  18k|  2 | 864 |  31 | 0.000000e+00 |      --      |    Inf |   1.49%
+ 45.0s|  1800 |   851 |403065 | 222.1 |    98M |  35 |1341 |2408 |2888 |  19k|  2 | 924 |  31 | 0.000000e+00 |      --      |    Inf |   1.53%
+ 48.0s|  1900 |   876 |428470 | 223.8 |   100M |  35 |1341 |2452 |2939 |  20k|  0 | 969 |  31 | 0.000000e+00 |      --      |    Inf |   1.53%
+ 50.0s|  2000 |   891 |452378 | 224.6 |   103M |  35 |1341 |2533 |2895 |  21k|  2 |1051 |  31 | 0.000000e+00 |      --      |    Inf |   1.74%
+ 52.0s|  2100 |   910 |472428 | 223.4 |   105M |  35 |1341 |2653 |3031 |  21k|  0 |1171 |  31 | 0.000000e+00 |      --      |    Inf |   1.76%
+ 55.0s|  2200 |   933 |494879 | 223.5 |   107M |  35 |1341 |2695 |2849 |  22k|  2 |1219 |  31 | 0.000000e+00 |      --      |    Inf |   1.80%
+ 57.0s|  2300 |   957 |516220 | 223.0 |   108M |  35 |1341 |2743 |2925 |  23k|  0 |1275 |  31 | 0.000000e+00 |      --      |    Inf |   1.82%
+ 59.0s|  2400 |   995 |540170 | 223.7 |   109M |  35 |1341 |2807 |2807 |  24k|  2 |1342 |  31 | 0.000000e+00 |      --      |    Inf |   1.83%
+ 61.0s|  2500 |  1051 |557024 | 221.5 |   110M |  35 |1341 |2841 |2729 |  25k|  0 |1386 |  31 | 0.000000e+00 |      --      |    Inf |   1.83%
+ 64.0s|  2600 |  1078 |582665 | 222.9 |   113M |  35 |1341 |2880 |2762 |  26k|  2 |1446 |  31 | 0.000000e+00 |      --      |    Inf |   1.87%
+ 66.0s|  2700 |  1100 |607501 | 223.8 |   114M |  35 |1341 |2933 |3476 |  27k|  2 |1515 |  31 | 0.000000e+00 |      --      |    Inf |   1.88%
+ 68.0s|  2800 |  1121 |624552 | 221.9 |   115M |  35 |1341 |2978 |2879 |  28k|  0 |1580 |  31 | 0.000000e+00 |      --      |    Inf |   1.89%
+ 70.0s|  2900 |  1133 |646386 | 221.8 |   117M |  35 |1341 |3021 |2864 |  28k|  2 |1641 |  31 | 0.000000e+00 |      --      |    Inf |   2.28%
+ 71.0s|  3000 |  1163 |660916 | 219.2 |   118M |  35 |1341 |3062 |2862 |  29k|  2 |1691 |  31 | 0.000000e+00 |      --      |    Inf |   2.29%
+ 73.0s|  3100 |  1193 |677434 | 217.5 |   120M |  35 |1341 |3090 |3026 |  30k|  0 |1738 |  31 | 0.000000e+00 |      --      |    Inf |   2.29%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 75.0s|  3200 |  1221 |693803 | 215.8 |   124M |  35 |1341 |3120 |2911 |  30k|  0 |1797 |  31 | 0.000000e+00 |      --      |    Inf |   2.30%
+ 76.0s|  3300 |  1258 |712892 | 215.0 |   124M |  36 |1341 |3167 |3287 |  31k|  2 |1863 |  31 | 0.000000e+00 |      --      |    Inf |   2.53%
+ 79.0s|  3400 |  1286 |730361 | 213.9 |   125M |  36 |1341 |3205 |2781 |  31k|  1 |1940 |  31 | 0.000000e+00 |      --      |    Inf |   2.84%
+ 80.0s|  3500 |  1316 |747106 | 212.5 |   127M |  36 |1341 |3242 |3028 |  32k|  0 |1989 |  31 | 0.000000e+00 |      --      |    Inf |   2.85%
+ 82.0s|  3600 |  1344 |766504 | 212.0 |   129M |  36 |1341 |3278 |2869 |  32k|  0 |2065 |  31 | 0.000000e+00 |      --      |    Inf |   2.86%
+ 84.0s|  3700 |  1354 |786084 | 211.6 |   131M |  36 |1341 |3316 |3322 |  33k|  0 |2126 |  31 | 0.000000e+00 |      --      |    Inf |   3.22%
+ 86.0s|  3800 |  1386 |803292 | 210.5 |   133M |  36 |1341 |3334 |3420 |  34k|  2 |2164 |  31 | 0.000000e+00 |      --      |    Inf |   3.25%
+ 88.0s|  3900 |  1409 |819363 | 209.3 |   136M |  36 |1341 |3354 |3135 |  34k|  2 |2214 |  31 | 0.000000e+00 |      --      |    Inf |   3.34%
+ 90.0s|  4000 |  1462 |833793 | 207.6 |   137M |  36 |1341 |3388 |2867 |  35k|  2 |2262 |  31 | 0.000000e+00 |      --      |    Inf |   3.34%
+ 92.0s|  4100 |  1503 |855403 | 207.8 |   140M |  36 |1341 |3409 |3055 |  35k|  2 |2313 |  31 | 0.000000e+00 |      --      |    Inf |   3.36%
+ 93.0s|  4200 |  1528 |872892 | 207.1 |   142M |  36 |1341 |3443 |2751 |  36k|  1 |2381 |  31 | 0.000000e+00 |      --      |    Inf |   3.37%
+ 95.0s|  4300 |  1547 |890421 | 206.3 |   144M |  36 |1341 |3520 |3390 |  37k|  2 |2486 |  31 | 0.000000e+00 |      --      |    Inf |   3.39%
+ 98.0s|  4400 |  1571 |916808 | 207.6 |   144M |  38 |1341 |3567 |2851 |  37k|  0 |2572 |  31 | 0.000000e+00 |      --      |    Inf |   3.46%
+  100s|  4500 |  1586 |938289 | 207.8 |   145M |  38 |1341 |3575 |3293 |  38k|  2 |2638 |  31 | 0.000000e+00 |      --      |    Inf |   3.66%
+  102s|  4600 |  1610 |959244 | 207.8 |   148M |  38 |1341 |3584 |3645 |  39k|  1 |2684 |  31 | 0.000000e+00 |      --      |    Inf |   3.69%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  104s|  4700 |  1627 |974884 | 206.7 |   150M |  38 |1341 |3632 |3214 |  39k|  0 |2756 |  31 | 0.000000e+00 |      --      |    Inf |   3.69%
+  105s|  4800 |  1635 |990953 | 205.8 |   152M |  38 |1341 |3633 |3389 |  39k|  0 |2808 |  31 | 0.000000e+00 |      --      |    Inf |   3.70%
+  107s|  4900 |  1661 |  1009k| 205.4 |   155M |  38 |1341 |3617 |2764 |  40k|  2 |2848 |  31 | 0.000000e+00 |      --      |    Inf |   3.70%
+  108s|  5000 |  1698 |  1024k| 204.2 |   155M |  38 |1341 |3644 |3326 |  40k|  0 |2916 |  31 | 0.000000e+00 |      --      |    Inf |   3.72%
+  111s|  5100 |  1726 |  1045k| 204.3 |   156M |  38 |1341 |3655 |3114 |  41k|  0 |2966 |  31 | 0.000000e+00 |      --      |    Inf |   3.72%
+  112s|  5200 |  1741 |  1061k| 203.5 |   157M |  38 |1341 |3662 |3124 |  42k|  2 |3022 |  31 | 0.000000e+00 |      --      |    Inf |   3.73%
+  114s|  5300 |  1753 |  1080k| 203.2 |   159M |  38 |1341 |3686 |3157 |  42k|  0 |3070 |  31 | 0.000000e+00 |      --      |    Inf |   3.74%
+  117s|  5400 |  1780 |  1106k| 204.3 |   162M |  39 |1341 |3727 |3304 |  43k|  0 |3142 |  31 | 0.000000e+00 |      --      |    Inf |   3.74%
+  120s|  5500 |  1790 |  1138k| 206.3 |   168M |  39 |1341 |3756 |3433 |  43k|  2 |3230 |  31 | 0.000000e+00 |      --      |    Inf |   3.85%
+  122s|  5600 |  1810 |  1156k| 206.0 |   170M |  39 |1341 |3787 |3200 |  44k|  2 |3309 |  31 | 0.000000e+00 |      --      |    Inf |   3.91%
+  124s|  5700 |  1840 |  1178k| 206.1 |   172M |  39 |1341 |3785 |3673 |  44k|  2 |3368 |  31 | 0.000000e+00 |      --      |    Inf |   3.93%
+  126s|  5800 |  1837 |  1198k| 206.1 |   173M |  39 |1341 |3800 |3420 |  45k|  0 |3450 |  31 | 0.000000e+00 |      --      |    Inf |   3.93%
+  129s|  5900 |  1841 |  1223k| 206.8 |   174M |  39 |1341 |3849 |3116 |  45k|  2 |3554 |  31 | 0.000000e+00 |      --      |    Inf |   3.94%
+  130s|  6000 |  1857 |  1241k| 206.4 |   175M |  39 |1341 |3872 |2916 |  46k|  0 |3628 |  31 | 0.000000e+00 |      --      |    Inf |   3.94%
+  133s|  6100 |  1885 |  1264k| 206.7 |   176M |  39 |1341 |3855 |3368 |  47k|  2 |3694 |  31 | 0.000000e+00 |      --      |    Inf |   4.01%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  135s|  6200 |  1906 |  1282k| 206.4 |   176M |  39 |1341 |3874 |3499 |  47k|  0 |3760 |  31 | 0.000000e+00 |      --      |    Inf |   4.04%
+  137s|  6300 |  1913 |  1301k| 206.1 |   176M |  40 |1341 |3877 |3219 |  47k|  1 |3833 |  31 | 0.000000e+00 |      --      |    Inf |   4.06%
+  139s|  6400 |  1922 |  1322k| 206.1 |   177M |  40 |1341 |3875 |2776 |  48k|  0 |3899 |  31 | 0.000000e+00 |      --      |    Inf |   4.07%
+  141s|  6500 |  1941 |  1347k| 206.8 |   179M |  40 |1341 |3903 |3012 |  48k|  2 |3989 |  31 | 0.000000e+00 |      --      |    Inf |   4.07%
+  144s|  6600 |  1959 |  1371k| 207.2 |   180M |  40 |1341 |3949 |3217 |  49k|  2 |4063 |  31 | 0.000000e+00 |      --      |    Inf |   4.17%
+  148s|  6700 |  1991 |  1422k| 211.9 |   181M |  40 |1341 |3934 |3201 |  50k|  2 |4121 |  31 | 0.000000e+00 |      --      |    Inf |   4.25%
+  152s|  6800 |  1985 |  1463k| 214.7 |   182M |  40 |1341 |3946 |2920 |  51k|  2 |4190 |  31 | 0.000000e+00 |      --      |    Inf |   4.31%
+  157s|  6900 |  1998 |  1518k| 219.6 |   183M |  40 |1341 |3981 |3039 |  53k|  2 |4277 |  31 | 0.000000e+00 |      --      |    Inf |   4.57%
+  161s|  7000 |  1997 |  1569k| 223.7 |   184M |  40 |1341 |3979 |3328 |  53k|  0 |4368 |  31 | 0.000000e+00 |      --      |    Inf |   4.63%
+  165s|  7100 |  2011 |  1611k| 226.5 |   185M |  40 |1341 |3973 |2873 |  55k|  0 |4427 |  31 | 0.000000e+00 |      --      |    Inf |   4.70%
+  168s|  7200 |  2017 |  1646k| 228.2 |   187M |  40 |1341 |3987 |2855 |  55k|  2 |4486 |  31 | 0.000000e+00 |      --      |    Inf |   4.71%
+  170s|  7300 |  2023 |  1666k| 227.9 |   187M |  40 |1341 |3963 |2882 |  56k|  2 |4570 |  31 | 0.000000e+00 |      --      |    Inf |   4.74%
+  172s|  7400 |  2034 |  1691k| 228.1 |   189M |  40 |1341 |4001 |2835 |  57k|  0 |4661 |  31 | 0.000000e+00 |      --      |    Inf |   4.74%
+  174s|  7500 |  2044 |  1710k| 227.6 |   190M |  40 |1341 |4007 |3577 |  57k|  2 |4743 |  31 | 0.000000e+00 |      --      |    Inf |   4.76%
+  176s|  7600 |  2044 |  1731k| 227.4 |   190M |  40 |1341 |3996 |3205 |  57k|  2 |4810 |  31 | 0.000000e+00 |      --      |    Inf |   5.06%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  178s|  7700 |  2076 |  1750k| 226.9 |   191M |  40 |1341 |4009 |2982 |  58k|  0 |4867 |  31 | 0.000000e+00 |      --      |    Inf |   5.06%
+  179s|  7800 |  2095 |  1764k| 225.8 |   192M |  40 |1341 |4003 |3147 |  58k|  0 |4938 |  31 | 0.000000e+00 |      --      |    Inf |   5.19%
+  181s|  7900 |  2113 |  1785k| 225.6 |   193M |  40 |1341 |3972 |3639 |  59k|  0 |5005 |  31 | 0.000000e+00 |      --      |    Inf |   5.59%
+  184s|  8000 |  2117 |  1811k| 226.0 |   193M |  40 |1341 |3961 |2876 |  60k|  0 |5081 |  31 | 0.000000e+00 |      --      |    Inf |   5.64%
+  185s|  8100 |  2113 |  1829k| 225.5 |   193M |  40 |1341 |3980 |3094 |  60k|  2 |5161 |  31 | 0.000000e+00 |      --      |    Inf |   5.67%
+  187s|  8200 |  2139 |  1851k| 225.4 |   195M |  40 |1341 |3996 |3152 |  61k|  2 |5222 |  31 | 0.000000e+00 |      --      |    Inf |   5.69%
+  189s|  8300 |  2170 |  1870k| 225.0 |   196M |  40 |1341 |3962 |2885 |  62k|  2 |5282 |  31 | 0.000000e+00 |      --      |    Inf |   5.98%
+  191s|  8400 |  2192 |  1889k| 224.5 |   198M |  40 |1341 |3963 |2946 |  62k|  2 |5345 |  31 | 0.000000e+00 |      --      |    Inf |   5.99%
+  193s|  8500 |  2214 |  1903k| 223.6 |   198M |  40 |1341 |3975 |2876 |  62k|  2 |5399 |  31 | 0.000000e+00 |      --      |    Inf |   6.01%
+  194s|  8600 |  2245 |  1919k| 222.8 |   199M |  40 |1341 |3924 |2821 |  63k|  2 |5438 |  31 | 0.000000e+00 |      --      |    Inf |   6.11%
+  197s|  8700 |  2256 |  1948k| 223.6 |   200M |  40 |1341 |3920 |3046 |  64k|  2 |5507 |  31 | 0.000000e+00 |      --      |    Inf |   6.15%
+  201s|  8800 |  2280 |  1993k| 226.2 |   201M |  40 |1341 |3888 |3012 |  65k|  2 |5578 |  31 | 0.000000e+00 |      --      |    Inf |   6.35%
+  205s|  8900 |  2283 |  2034k| 228.3 |   204M |  40 |1341 |3899 |3163 |  65k|  1 |5638 |  31 | 0.000000e+00 |      --      |    Inf |   6.36%
+  209s|  9000 |  2297 |  2074k| 230.2 |   207M |  40 |1341 |3825 |2845 |  66k|  2 |5699 |  31 | 0.000000e+00 |      --      |    Inf |   6.50%
+  211s|  9100 |  2314 |  2092k| 229.5 |   209M |  40 |1341 |3824 |3072 |  66k|  2 |5776 |  31 | 0.000000e+00 |      --      |    Inf |   6.54%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  212s|  9200 |  2348 |  2109k| 228.9 |   212M |  40 |1341 |3818 |3419 |  67k|  2 |5824 |  31 | 0.000000e+00 |      --      |    Inf |   6.95%
+  215s|  9300 |  2377 |  2130k| 228.8 |   217M |  40 |1341 |3799 |3470 |  68k|  1 |5872 |  31 | 0.000000e+00 |      --      |    Inf |   7.45%
+  217s|  9400 |  2394 |  2150k| 228.4 |   219M |  40 |1341 |3703 |2928 |  68k|  2 |5933 |  31 | 0.000000e+00 |      --      |    Inf |   7.66%
+  219s|  9500 |  2404 |  2170k| 228.1 |   219M |  40 |1341 |3701 |3050 |  69k|  2 |6019 |  31 | 0.000000e+00 |      --      |    Inf |   7.67%
+  221s|  9600 |  2426 |  2195k| 228.4 |   220M |  40 |1341 |3714 |2913 |  70k|  2 |6081 |  31 | 0.000000e+00 |      --      |    Inf |   7.69%
+  224s|  9700 |  2443 |  2236k| 230.2 |   220M |  40 |1341 |3745 |3713 |  70k|  2 |6178 |  31 | 0.000000e+00 |      --      |    Inf |   7.71%
+  237s|  9800 |  2461 |  2297k| 234.1 |   222M |  40 |1341 |3726 |3727 |  72k|  3 |6261 |  31 | 0.000000e+00 |      --      |    Inf |   7.89%
+  247s|  9900 |  2488 |  2346k| 236.7 |   224M |  40 |1341 |3718 |3124 |  73k|  2 |6320 |  31 | 0.000000e+00 |      --      |    Inf |   8.02%
+  255s| 10000 |  2505 |  2389k| 238.6 |   225M |  40 |1341 |3739 |3789 |  74k|  0 |6401 |  31 | 0.000000e+00 |      --      |    Inf |   8.03%
+  263s| 10100 |  2523 |  2430k| 240.3 |   227M |  40 |1341 |3754 |3348 |  75k|  0 |6461 |  31 | 0.000000e+00 |      --      |    Inf |   8.04%
+  273s| 10200 |  2533 |  2480k| 242.8 |   228M |  40 |1341 |3691 |3889 |  76k|  0 |6544 |  31 | 0.000000e+00 |      --      |    Inf |   8.06%
+  282s| 10300 |  2543 |  2524k| 244.8 |   229M |  40 |1341 |3678 |2956 |  77k|  2 |6638 |  31 | 0.000000e+00 |      --      |    Inf |   8.09%
+  291s| 10400 |  2558 |  2573k| 247.1 |   229M |  40 |1341 |3678 |3111 |  78k|  2 |6716 |  31 | 0.000000e+00 |      --      |    Inf |   8.09%
+  298s| 10500 |  2589 |  2610k| 248.3 |   229M |  40 |1341 |3696 |3131 |  79k|  0 |6780 |  31 | 0.000000e+00 |      --      |    Inf |   8.12%
+  305s| 10600 |  2615 |  2651k| 249.8 |   229M |  40 |1341 |3718 |3033 |  80k|  0 |6834 |  31 | 0.000000e+00 |      --      |    Inf |   8.13%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  315s| 10700 |  2635 |  2703k| 252.3 |   230M |  40 |1341 |3672 |2804 |  82k|  2 |6919 |  31 | 0.000000e+00 |      --      |    Inf |   8.94%
+  324s| 10800 |  2679 |  2748k| 254.2 |   232M |  40 |1341 |3649 |2945 |  83k|  2 |6981 |  31 | 0.000000e+00 |      --      |    Inf |   8.97%
+  334s| 10900 |  2700 |  2800k| 256.6 |   233M |  40 |1341 |3628 |2891 |  85k|  0 |7057 |  31 | 0.000000e+00 |      --      |    Inf |   8.98%
+  340s| 11000 |  2713 |  2831k| 257.1 |   234M |  40 |1341 |3638 |3034 |  85k|  0 |7149 |  31 | 0.000000e+00 |      --      |    Inf |   8.99%
+  344s| 11100 |  2724 |  2851k| 256.6 |   235M |  40 |1341 |3659 |3114 |  86k|  0 |7255 |  31 | 0.000000e+00 |      --      |    Inf |   9.02%
+  349s| 11200 |  2723 |  2873k| 256.3 |   237M |  40 |1341 |3636 |3838 |  86k|  2 |7335 |  31 | 0.000000e+00 |      --      |    Inf |   9.19%
+  353s| 11300 |  2740 |  2892k| 255.7 |   237M |  40 |1341 |3661 |3158 |  87k|  1 |7453 |  31 | 0.000000e+00 |      --      |    Inf |   9.22%
+  356s| 11400 |  2749 |  2908k| 254.8 |   238M |  40 |1341 |3713 |3275 |  87k|  2 |7520 |  31 | 0.000000e+00 |      --      |    Inf |   9.22%
+  359s| 11500 |  2771 |  2924k| 254.0 |   239M |  40 |1341 |3727 |3648 |  87k|  2 |7571 |  31 | 0.000000e+00 |      --      |    Inf |   9.24%
+  364s| 11600 |  2797 |  2942k| 253.4 |   240M |  40 |1341 |3683 |3116 |  88k|  2 |7646 |  31 | 0.000000e+00 |      --      |    Inf |   9.28%
+  367s| 11700 |  2802 |  2956k| 252.4 |   241M |  40 |1341 |3782 |3539 |  88k|  1 |7757 |  31 | 0.000000e+00 |      --      |    Inf |   9.28%
+  370s| 11800 |  2828 |  2971k| 251.5 |   243M |  40 |1341 |3675 |2851 |  89k|  2 |7803 |  31 | 0.000000e+00 |      --      |    Inf |   9.40%
+  376s| 11900 |  2841 |  2998k| 251.7 |   244M |  40 |1341 |3720 |2990 |  89k|  2 |7924 |  31 | 0.000000e+00 |      --      |    Inf |   9.41%
+  385s| 12000 |  2846 |  3045k| 253.6 |   247M |  40 |1341 |3772 |3024 |  91k|  0 |8029 |  31 | 0.000000e+00 |      --      |    Inf |   9.47%
+  392s| 12100 |  2888 |  3083k| 254.6 |   247M |  40 |1341 |3777 |3218 |  92k|  0 |8101 |  31 | 0.000000e+00 |      --      |    Inf |   9.47%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  399s| 12200 |  2914 |  3119k| 255.4 |   248M |  40 |1341 |3734 |2954 |  93k|  2 |8163 |  31 | 0.000000e+00 |      --      |    Inf |   9.56%
+  406s| 12300 |  2941 |  3156k| 256.4 |   248M |  40 |1341 |3738 |3228 |  94k|  2 |8246 |  31 | 0.000000e+00 |      --      |    Inf |   9.58%
+  413s| 12400 |  2966 |  3187k| 256.8 |   250M |  40 |1341 |3706 |2953 |  95k|  2 |8328 |  31 | 0.000000e+00 |      --      |    Inf |   9.75%
+  417s| 12500 |  2999 |  3204k| 256.1 |   251M |  40 |1341 |3735 |2876 |  96k|  0 |8400 |  31 | 0.000000e+00 |      --      |    Inf |   9.75%
+  420s| 12600 |  3019 |  3217k| 255.1 |   251M |  40 |1341 |3761 |2943 |  96k|  2 |8502 |  31 | 0.000000e+00 |      --      |    Inf |   9.84%
+  424s| 12700 |  3022 |  3237k| 254.7 |   253M |  40 |1341 |3805 |3658 |  97k|  0 |8615 |  31 | 0.000000e+00 |      --      |    Inf |   9.89%
+  428s| 12800 |  3026 |  3256k| 254.2 |   254M |  40 |1341 |3786 |3617 |  97k|  0 |8703 |  31 | 0.000000e+00 |      --      |    Inf |   9.89%
+  431s| 12900 |  3055 |  3271k| 253.3 |   254M |  40 |1341 |3824 |3814 |  97k|  2 |8774 |  31 | 0.000000e+00 |      --      |    Inf |   9.94%
+  436s| 13000 |  3066 |  3289k| 252.8 |   254M |  40 |1341 |3867 |3128 |  98k|  1 |8880 |  31 | 0.000000e+00 |      --      |    Inf |  10.04%
+  440s| 13100 |  3073 |  3310k| 252.4 |   256M |  40 |1341 |3858 |3093 |  98k|  2 |8950 |  31 | 0.000000e+00 |      --      |    Inf |  10.04%
+  445s| 13200 |  3069 |  3333k| 252.3 |   256M |  40 |1341 |3850 |3743 |  99k|  0 |9041 |  31 | 0.000000e+00 |      --      |    Inf |  10.05%
+  447s| 13300 |  3085 |  3354k| 252.0 |   257M |  40 |1341 |3767 |2934 |  99k|  2 |9146 |  31 | 0.000000e+00 |      --      |    Inf |  10.18%
+  450s| 13400 |  3075 |  3379k| 251.9 |   258M |  40 |1341 |3759 |3127 | 100k|  2 |9270 |  31 | 0.000000e+00 |      --      |    Inf |  10.26%
+  452s| 13500 |  3091 |  3397k| 251.4 |   259M |  40 |1341 |3778 |3620 | 100k|  1 |9372 |  31 | 0.000000e+00 |      --      |    Inf |  10.42%
+  454s| 13600 |  3103 |  3417k| 251.1 |   260M |  40 |1341 |3749 |3078 | 101k|  0 |9457 |  31 | 0.000000e+00 |      --      |    Inf |  10.52%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  457s| 13700 |  3120 |  3443k| 251.1 |   261M |  40 |1341 |3735 |2935 | 101k|  2 |9551 |  31 | 0.000000e+00 |      --      |    Inf |  10.59%
+  459s| 13800 |  3118 |  3464k| 250.8 |   263M |  40 |1341 |3720 |2723 | 102k|  0 |9637 |  31 | 0.000000e+00 |      --      |    Inf |  10.71%
+  461s| 13900 |  3135 |  3482k| 250.3 |   263M |  40 |1341 |3713 |2961 | 102k|  1 |9716 |  31 | 0.000000e+00 |      --      |    Inf |  10.79%
+  464s| 14000 |  3147 |  3525k| 251.6 |   264M |  40 |1341 |3680 |2851 | 103k|  0 |9826 |  31 | 0.000000e+00 |      --      |    Inf |  10.87%
+  469s| 14100 |  3175 |  3572k| 253.2 |   264M |  40 |1341 |3636 |3190 | 105k|  2 |9894 |  31 | 0.000000e+00 |      --      |    Inf |  11.69%
+  472s| 14200 |  3170 |  3613k| 254.2 |   265M |  40 |1341 |3652 |2903 | 105k|  2 |9999 |  31 | 0.000000e+00 |      --      |    Inf |  11.70%
+  476s| 14300 |  3194 |  3656k| 255.5 |   265M |  40 |1341 |3641 |3312 | 106k|  2 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  11.79%
+  481s| 14400 |  3213 |  3706k| 257.2 |   266M |  40 |1341 |3686 |3660 | 107k|  2 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  11.80%
+  485s| 14500 |  3226 |  3750k| 258.5 |   266M |  40 |1341 |3666 |3749 | 108k|  0 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  12.06%
+  489s| 14600 |  3231 |  3795k| 259.7 |   268M |  40 |1341 |3650 |3292 | 109k|  0 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  12.09%
+  492s| 14700 |  3254 |  3826k| 260.1 |   268M |  40 |1341 |3697 |3113 | 110k|  2 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  12.10%
+  495s| 14800 |  3270 |  3857k| 260.5 |   269M |  40 |1341 |3737 |2875 | 111k|  2 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  12.11%
+  498s| 14900 |  3275 |  3894k| 261.2 |   269M |  40 |1341 |3744 |3329 | 112k|  1 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  12.33%
+  506s| 15000 |  3283 |  3937k| 262.3 |   271M |  40 |1341 |3756 |3138 | 112k|  2 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  12.94%
+  514s| 15100 |  3300 |  3979k| 263.3 |   271M |  40 |1341 |3794 |3288 | 113k|  0 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  12.95%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  523s| 15200 |  3299 |  4020k| 264.3 |   271M |  40 |1341 |3790 |3423 | 114k|  2 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  13.01%
+  531s| 15300 |  3315 |  4061k| 265.3 |   271M |  40 |1341 |3828 |2857 | 115k|  2 |  10k|  31 | 0.000000e+00 |      --      |    Inf |  13.04%
+  538s| 15400 |  3297 |  4100k| 266.0 |   272M |  40 |1341 |3907 |3610 | 116k|  0 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.11%
+  549s| 15500 |  3297 |  4154k| 267.8 |   273M |  40 |1341 |3862 |3734 | 116k|  2 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.18%
+  559s| 15600 |  3302 |  4206k| 269.4 |   274M |  40 |1341 |3909 |3271 | 117k|  2 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.29%
+  567s| 15700 |  3315 |  4249k| 270.5 |   274M |  40 |1341 |3876 |3439 | 119k|  0 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.44%
+  575s| 15800 |  3343 |  4289k| 271.3 |   275M |  40 |1341 |3786 |3196 | 120k|  0 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.58%
+  584s| 15900 |  3342 |  4339k| 272.7 |   276M |  40 |1341 |3770 |3751 | 120k|  0 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.63%
+  592s| 16000 |  3371 |  4378k| 273.5 |   276M |  40 |1341 |3771 |3638 | 121k|  2 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.67%
+  601s| 16100 |  3390 |  4422k| 274.5 |   277M |  40 |1341 |3795 |3207 | 122k|  2 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.68%
+  608s| 16200 |  3383 |  4462k| 275.2 |   278M |  40 |1341 |3819 |3194 | 123k|  2 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.72%
+  618s| 16300 |  3409 |  4508k| 276.4 |   279M |  40 |1341 |3765 |3083 | 124k|  2 |  11k|  31 | 0.000000e+00 |      --      |    Inf |  13.72%
+  626s| 16400 |  3430 |  4552k| 277.4 |   279M |  40 |1341 |3820 |3201 | 126k|  1 |  12k|  31 | 0.000000e+00 |      --      |    Inf |  13.74%
+  633s| 16500 |  3436 |  4588k| 277.9 |   280M |  40 |1341 |3893 |3243 | 126k|  0 |  12k|  31 | 0.000000e+00 |      --      |    Inf |  13.75%
+  639s| 16600 |  3432 |  4623k| 278.4 |   280M |  40 |1341 |3958 |3713 | 127k|  2 |  12k|  31 | 0.000000e+00 |      --      |    Inf |  13.76%
+Restart triggered after 50 consecutive estimations that the remaining tree will be large
+(run 1, node 16662) performing user restart
+
+(restart) converted 37 cuts from the global cut pool into linear constraints
+
+presolving:
+(round 1, fast)       58 del vars, 37 del conss, 0 add conss, 0 chg bounds, 0 chg sides, 45 chg coeffs, 0 upgd conss, 1380 impls, 6087 clqs, 0 implints
+(round 2, medium)     60 del vars, 37 del conss, 0 add conss, 0 chg bounds, 0 chg sides, 45 chg coeffs, 0 upgd conss, 1380 impls, 6005 clqs, 0 implints
+(round 3, fast)       77 del vars, 58 del conss, 1 add conss, 0 chg bounds, 0 chg sides, 3312 chg coeffs, 18 upgd conss, 1380 impls, 6005 clqs, 2 implints
+(round 4, exhaustive) 77 del vars, 60 del conss, 3 add conss, 0 chg bounds, 0 chg sides, 3316 chg coeffs, 18 upgd conss, 1380 impls, 6014 clqs, 2 implints
+(round 5, exhaustive) 77 del vars, 60 del conss, 3 add conss, 0 chg bounds, 0 chg sides, 3320 chg coeffs, 29 upgd conss, 1380 impls, 6015 clqs, 2 implints
+(round 6, exhaustive) 77 del vars, 374 del conss, 3 add conss, 0 chg bounds, 0 chg sides, 4683 chg coeffs, 29 upgd conss, 1380 impls, 6015 clqs, 2 implints
+(round 7, exhaustive) 77 del vars, 398 del conss, 3 add conss, 0 chg bounds, 0 chg sides, 4686 chg coeffs, 29 upgd conss, 1380 impls, 6015 clqs, 2 implints
+(round 8, exhaustive) 77 del vars, 398 del conss, 3 add conss, 0 chg bounds, 0 chg sides, 8453 chg coeffs, 29 upgd conss, 1380 impls, 6015 clqs, 2 implints
+(round 9, exhaustive) 77 del vars, 465 del conss, 3 add conss, 0 chg bounds, 0 chg sides, 8517 chg coeffs, 29 upgd conss, 1380 impls, 6015 clqs, 2 implints
+(round 10, exhaustive) 77 del vars, 470 del conss, 3 add conss, 0 chg bounds, 0 chg sides, 8517 chg coeffs, 29 upgd conss, 1380 impls, 6015 clqs, 2 implints
+presolving (11 rounds: 11 fast, 9 medium, 8 exhaustive):
+ 77 deleted vars, 470 deleted constraints, 3 added constraints, 0 tightened bounds, 0 added holes, 0 changed sides, 8517 changed coefficients
+ 1380 implications, 6015 cliques, 2 implied integral variables (0 bin, 2 int, 0 cont)
+presolved problem has 1264 variables (1245 bin, 19 int, 0 cont) and 3566 constraints
+     17 constraints of type <varbound>
+    178 constraints of type <knapsack>
+     58 constraints of type <setppc>
+    948 constraints of type <and>
+    302 constraints of type <linear>
+   2063 constraints of type <logicor>
+transformed objective value is always integral (scale: 1)
+Presolving Time: 2.00
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  645s|     1 |     0 |  4652k|     - |   282M |   0 |1264 |3566 |2482 |   0 |  0 |  12k|  31 | 0.000000e+00 |      --      |    Inf | unknown
+Computing relative interior point (time limit: 1e+20, iter limit: 46523480) ...
+  646s|     1 |     0 |  4653k|     - |   283M |   0 |1264 |3566 |2534 |  52 |  1 |  12k|  31 | 0.000000e+00 |      --      |    Inf | unknown
+  646s|     1 |     0 |  4653k|     - |   283M |   0 |1264 |3566 |2579 |  97 |  2 |  12k|  31 | 0.000000e+00 |      --      |    Inf | unknown
+  647s|     1 |     0 |  4654k|     - |   283M |   0 |1264 |3566 |2608 | 126 |  3 |  12k|  31 | 0.000000e+00 |      --      |    Inf | unknown
+  647s|     1 |     0 |  4654k|     - |   283M |   0 |1264 |3566 |2637 | 155 |  4 |  12k|  31 | 0.000000e+00 |      --      |    Inf | unknown
+  647s|     1 |     0 |  4655k|     - |   284M |   0 |1264 |3566 |2668 | 186 |  5 |  12k|  31 | 0.000000e+00 |      --      |    Inf | unknown
+  648s|     1 |     2 |  4655k|     - |   284M |   0 |1264 |3566 |2668 | 186 |  5 |  12k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  653s|   100 |    45 |  4707k| 280.3 |   285M |  32 |1264 |3659 |3426 |2128 |  0 |  12k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  655s|   200 |    52 |  4723k| 279.6 |   287M |  32 |1264 |3795 |3252 |2340 |  2 |  12k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  656s|   300 |    49 |  4741k| 279.0 |   288M |  32 |1264 |3919 |3474 |2579 |  0 |  12k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  659s|   400 |    80 |  4761k| 278.5 |   288M |  32 |1264 |4026 |3148 |2965 |  2 |  12k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  661s|   500 |    97 |  4783k| 278.2 |   289M |  32 |1264 |4153 |3180 |3491 |  2 |  12k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  663s|   600 |   104 |  4798k| 277.5 |   291M |  32 |1264 |4271 |3169 |3793 |  0 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  664s|   700 |    99 |  4816k| 276.9 |   292M |  32 |1264 |4399 |3203 |4008 |  1 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  666s|   800 |   100 |  4836k| 276.5 |   294M |  32 |1264 |4480 |3412 |4327 |  2 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  668s|   900 |   114 |  4854k| 275.9 |   297M |  32 |1264 |4541 |3178 |4748 |  0 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  670s|  1000 |   106 |  4870k| 275.3 |   298M |  32 |1264 |4671 |3405 |4954 |  0 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  671s|  1100 |   106 |  4884k| 274.5 |   298M |  32 |1264 |4794 |3462 |5071 |  0 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  673s|  1200 |   107 |  4899k| 273.8 |   301M |  32 |1264 |4917 |3485 |5257 |  0 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  675s|  1300 |   107 |  4917k| 273.3 |   302M |  32 |1264 |5020 |3209 |5502 |  1 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  676s|  1400 |   133 |  4932k| 272.6 |   304M |  32 |1264 |5103 |3229 |5911 |  2 |  13k|  50 | 0.000000e+00 |      --      |    Inf | unknown
+  678s|  1500 |   113 |  4948k| 272.0 |   307M |  32 |1264 |5221 |3503 |6076 |  2 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.50%
+  680s|  1600 |   108 |  4965k| 271.4 |   308M |  32 |1264 |5362 |3277 |6218 |  2 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.51%
+  682s|  1700 |   112 |  4983k| 270.9 |   309M |  32 |1264 |5464 |3257 |6415 |  0 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.51%
+  683s|  1800 |   110 |  4998k| 270.2 |   310M |  32 |1264 |5573 |3328 |6636 |  0 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.51%
+  685s|  1900 |   112 |  5015k| 269.7 |   311M |  32 |1264 |5689 |3237 |7080 |  0 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.52%
+  687s|  2000 |   102 |  5035k| 269.3 |   312M |  32 |1264 |5776 |3173 |7592 |  0 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.54%
+  689s|  2100 |   105 |  5056k| 269.0 |   313M |  32 |1264 |5852 |3275 |8027 |  2 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.55%
+  691s|  2200 |   108 |  5077k| 268.7 |   314M |  32 |1264 |5936 |3154 |8580 |  2 |  14k|  50 | 0.000000e+00 |      --      |    Inf |   0.56%
+  693s|  2300 |   105 |  5095k| 268.3 |   315M |  32 |1264 |6032 |3188 |9046 |  1 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.57%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  695s|  2400 |   103 |  5111k| 267.7 |   315M |  32 |1264 |6084 |3307 |9307 |  0 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.58%
+  697s|  2500 |   119 |  5127k| 267.1 |   316M |  32 |1264 |6184 |3308 |9561 |  2 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.59%
+  699s|  2600 |   136 |  5142k| 266.5 |   316M |  32 |1264 |6228 |3223 |9894 |  2 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.60%
+  702s|  2700 |   178 |  5163k| 266.2 |   316M |  32 |1264 |6201 |3186 |  10k|  2 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.62%
+  704s|  2800 |   168 |  5185k| 266.0 |   317M |  32 |1264 |6324 |3381 |  10k|  0 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.62%
+  705s|  2900 |   160 |  5201k| 265.5 |   317M |  32 |1264 |6466 |3299 |  11k|  0 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.63%
+  708s|  3000 |   178 |  5222k| 265.1 |   318M |  32 |1264 |6560 |3445 |  11k|  1 |  15k|  50 | 0.000000e+00 |      --      |    Inf |   0.63%
+  710s|  3100 |   182 |  5241k| 264.8 |   319M |  32 |1264 |6713 |3311 |  11k|  1 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   0.63%
+  711s|  3200 |   158 |  5257k| 264.3 |   320M |  32 |1264 |6814 |3507 |  11k|  0 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   0.64%
+  713s|  3300 |   197 |  5274k| 263.8 |   320M |  32 |1264 |6744 |2998 |  12k|  0 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   0.94%
+  715s|  3400 |   217 |  5292k| 263.4 |   321M |  32 |1264 |6807 |3023 |  12k|  1 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   1.05%
+  717s|  3500 |   207 |  5313k| 263.1 |   324M |  32 |1264 |6833 |3052 |  13k|  2 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   1.23%
+  719s|  3600 |   226 |  5331k| 262.7 |   324M |  32 |1264 |6839 |2993 |  13k|  0 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   1.42%
+  721s|  3700 |   219 |  5352k| 262.5 |   324M |  32 |1264 |6869 |3015 |  14k|  2 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   1.73%
+  723s|  3800 |   202 |  5371k| 262.1 |   324M |  32 |1264 |6930 |3025 |  14k|  2 |  16k|  50 | 0.000000e+00 |      --      |    Inf |   1.95%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  725s|  3900 |   196 |  5391k| 261.8 |   325M |  32 |1264 |7006 |3101 |  14k|  2 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   2.03%
+  728s|  4000 |   215 |  5409k| 261.4 |   325M |  32 |1264 |6851 |3146 |  14k|  2 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   3.05%
+  730s|  4100 |   225 |  5425k| 260.9 |   325M |  32 |1264 |6864 |3264 |  15k|  0 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   3.09%
+  732s|  4200 |   244 |  5440k| 260.4 |   326M |  32 |1264 |6895 |3160 |  15k|  2 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   3.11%
+  734s|  4300 |   265 |  5456k| 259.9 |   328M |  32 |1264 |6886 |3222 |  15k|  0 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   3.12%
+  736s|  4400 |   278 |  5473k| 259.5 |   328M |  32 |1264 |6939 |3307 |  16k|  2 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   3.15%
+  738s|  4500 |   268 |  5489k| 259.0 |   329M |  32 |1264 |7080 |3287 |  16k|  1 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   3.16%
+  740s|  4600 |   265 |  5508k| 258.7 |   329M |  32 |1264 |7059 |2851 |  16k|  0 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   3.18%
+  742s|  4700 |   285 |  5522k| 258.1 |   330M |  32 |1264 |6904 |3387 |  17k|  2 |  17k|  50 | 0.000000e+00 |      --      |    Inf |   4.78%
+  744s|  4800 |   305 |  5537k| 257.6 |   331M |  32 |1264 |6962 |3303 |  17k|  2 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   4.79%
+  745s|  4900 |   303 |  5557k| 257.3 |   332M |  32 |1264 |6953 |3204 |  17k|  2 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   4.81%
+  747s|  5000 |   315 |  5575k| 257.0 |   332M |  32 |1264 |6962 |3326 |  17k|  1 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   4.83%
+  751s|  5100 |   315 |  5612k| 257.5 |   334M |  32 |1264 |7047 |3396 |  18k|  0 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   4.84%
+  755s|  5200 |   313 |  5658k| 258.4 |   335M |  32 |1264 |7131 |3324 |  19k|  1 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   4.84%
+  760s|  5300 |   335 |  5699k| 259.1 |   336M |  32 |1264 |7086 |3340 |  20k|  2 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   5.01%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  762s|  5400 |   354 |  5725k| 259.1 |   336M |  32 |1264 |7164 |3265 |  20k|  0 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   5.03%
+  764s|  5500 |   339 |  5746k| 258.9 |   337M |  32 |1264 |7290 |3315 |  21k|  1 |  18k|  50 | 0.000000e+00 |      --      |    Inf |   5.11%
+  766s|  5600 |   336 |  5766k| 258.7 |   338M |  32 |1264 |7391 |3597 |  21k|  1 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   5.14%
+  769s|  5700 |   336 |  5785k| 258.3 |   339M |  32 |1264 |7403 |3682 |  21k|  2 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   5.20%
+  771s|  5800 |   342 |  5806k| 258.1 |   339M |  32 |1264 |6961 |3328 |  21k|  1 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   5.29%
+  774s|  5900 |   347 |  5825k| 257.8 |   339M |  32 |1264 |6654 |3325 |  22k|  2 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   5.66%
+  776s|  6000 |   354 |  5843k| 257.5 |   341M |  32 |1264 |6306 |3311 |  22k|  0 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   6.03%
+  778s|  6100 |   347 |  5861k| 257.1 |   342M |  32 |1264 |6081 |3471 |  22k|  0 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   6.27%
+  780s|  6200 |   346 |  5880k| 256.8 |   342M |  32 |1264 |5728 |3585 |  23k|  0 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   6.30%
+  782s|  6300 |   359 |  5896k| 256.4 |   342M |  32 |1264 |5556 |3119 |  23k|  2 |  19k|  50 | 0.000000e+00 |      --      |    Inf |   6.61%
+  784s|  6400 |   373 |  5912k| 256.0 |   343M |  32 |1264 |5640 |3237 |  23k|  2 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   6.98%
+  786s|  6500 |   366 |  5929k| 255.6 |   344M |  32 |1264 |5726 |3519 |  24k|  1 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.00%
+  788s|  6600 |   368 |  5947k| 255.3 |   347M |  32 |1264 |5766 |3183 |  24k|  2 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.04%
+  790s|  6700 |   367 |  5968k| 255.1 |   347M |  32 |1264 |5825 |3228 |  24k|  0 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.09%
+  792s|  6800 |   378 |  5988k| 254.9 |   347M |  32 |1264 |5902 |3157 |  25k|  0 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.15%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  794s|  6900 |   364 |  6009k| 254.7 |   347M |  32 |1264 |5988 |3256 |  25k|  1 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.25%
+  796s|  7000 |   366 |  6028k| 254.4 |   348M |  32 |1264 |6061 |3275 |  25k|  0 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.29%
+  798s|  7100 |   367 |  6049k| 254.2 |   348M |  32 |1264 |6135 |3259 |  26k|  0 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.31%
+  800s|  7200 |   373 |  6065k| 253.8 |   349M |  32 |1264 |6198 |3209 |  26k|  2 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.34%
+  801s|  7300 |   384 |  6085k| 253.6 |   349M |  32 |1264 |6272 |3288 |  26k|  2 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.42%
+  803s|  7400 |   380 |  6102k| 253.3 |   349M |  32 |1264 |6353 |3230 |  26k|  2 |  20k|  50 | 0.000000e+00 |      --      |    Inf |   7.47%
+  805s|  7500 |   372 |  6122k| 253.0 |   349M |  32 |1264 |6401 |3178 |  27k|  2 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   7.54%
+  807s|  7600 |   375 |  6141k| 252.8 |   349M |  32 |1264 |6505 |3247 |  27k|  2 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   7.68%
+  809s|  7700 |   378 |  6156k| 252.4 |   349M |  32 |1264 |6594 |3255 |  27k|  2 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   7.77%
+  811s|  7800 |   384 |  6173k| 252.0 |   349M |  32 |1264 |6641 |3336 |  27k|  0 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   7.91%
+  812s|  7900 |   379 |  6191k| 251.7 |   350M |  32 |1264 |6718 |3328 |  28k|  0 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   8.01%
+  814s|  8000 |   391 |  6210k| 251.5 |   350M |  32 |1264 |6753 |3194 |  28k|  1 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   8.39%
+  816s|  8100 |   380 |  6229k| 251.2 |   350M |  32 |1264 |6849 |3198 |  28k|  1 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   8.78%
+  819s|  8200 |   401 |  6248k| 251.0 |   350M |  32 |1264 |6877 |3165 |  29k|  3 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   8.89%
+  821s|  8300 |   406 |  6268k| 250.8 |   350M |  32 |1264 |6982 |3209 |  29k|  0 |  21k|  50 | 0.000000e+00 |      --      |    Inf |   8.97%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  822s|  8400 |   402 |  6283k| 250.4 |   350M |  32 |1264 |7114 |3200 |  29k|  0 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.00%
+  824s|  8500 |   411 |  6303k| 250.2 |   350M |  32 |1264 |7208 |3220 |  29k|  2 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.02%
+  825s|  8600 |   415 |  6320k| 249.9 |   350M |  32 |1264 |7286 |3185 |  30k|  0 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.05%
+  827s|  8700 |   410 |  6337k| 249.6 |   350M |  32 |1264 |7388 |3143 |  30k|  2 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.07%
+  829s|  8800 |   418 |  6356k| 249.3 |   350M |  32 |1264 |7475 |3149 |  31k|  0 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.17%
+  831s|  8900 |   411 |  6372k| 248.9 |   350M |  32 |1264 |7564 |3232 |  31k|  2 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.27%
+  833s|  9000 |   407 |  6396k| 248.9 |   350M |  32 |1264 |7653 |3103 |  31k|  0 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.30%
+  834s|  9100 |   410 |  6414k| 248.7 |   350M |  32 |1264 |7715 |3172 |  32k|  0 |  22k|  50 | 0.000000e+00 |      --      |    Inf |   9.41%
+  836s|  9200 |   410 |  6428k| 248.2 |   350M |  32 |1264 |7784 |3300 |  32k|  2 |  23k|  50 | 0.000000e+00 |      --      |    Inf |   9.78%
+  837s|  9300 |   406 |  6444k| 247.9 |   350M |  32 |1264 |7890 |3355 |  32k|  2 |  23k|  50 | 0.000000e+00 |      --      |    Inf |   9.86%
+  839s|  9400 |   404 |  6463k| 247.7 |   350M |  32 |1264 |7999 |3272 |  32k|  0 |  23k|  50 | 0.000000e+00 |      --      |    Inf |   9.90%
+  841s|  9500 |   398 |  6482k| 247.4 |   351M |  32 |1264 |8085 |3224 |  32k|  0 |  23k|  50 | 0.000000e+00 |      --      |    Inf |   9.95%
+  843s|  9600 |   398 |  6501k| 247.2 |   351M |  32 |1264 |8122 |3459 |  33k|  0 |  23k|  50 | 0.000000e+00 |      --      |    Inf |   9.97%
+  845s|  9700 |   398 |  6518k| 246.9 |   351M |  32 |1264 |8219 |3467 |  33k|  0 |  23k|  50 | 0.000000e+00 |      --      |    Inf |  10.04%
+  847s|  9800 |   393 |  6534k| 246.6 |   351M |  32 |1264 |8316 |3452 |  33k|  1 |  23k|  50 | 0.000000e+00 |      --      |    Inf |  10.16%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  849s|  9900 |   389 |  6556k| 246.5 |   353M |  32 |1264 |8283 |3650 |  33k|  0 |  23k|  50 | 0.000000e+00 |      --      |    Inf |  10.20%
+  851s| 10000 |   399 |  6578k| 246.4 |   355M |  32 |1264 |8318 |3109 |  34k|  2 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.26%
+  853s| 10100 |   399 |  6590k| 245.9 |   355M |  32 |1264 |8355 |3130 |  34k|  0 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.36%
+  855s| 10200 |   404 |  6609k| 245.7 |   355M |  32 |1264 |8125 |3572 |  34k|  0 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.42%
+  857s| 10300 |   422 |  6625k| 245.4 |   356M |  32 |1264 |8103 |3471 |  34k|  1 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.46%
+  858s| 10400 |   415 |  6638k| 245.0 |   356M |  32 |1264 |8206 |3513 |  34k|  0 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.49%
+  860s| 10500 |   419 |  6651k| 244.6 |   357M |  32 |1264 |8273 |3545 |  35k|  0 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.50%
+  861s| 10600 |   417 |  6665k| 244.2 |   359M |  32 |1264 |8345 |3478 |  35k|  2 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.51%
+  863s| 10700 |   418 |  6683k| 243.9 |   359M |  32 |1264 |8308 |3168 |  35k|  0 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.53%
+  865s| 10800 |   424 |  6700k| 243.7 |   360M |  32 |1264 |8372 |3264 |  35k|  1 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.53%
+  867s| 10900 |   438 |  6720k| 243.5 |   362M |  32 |1264 |8394 |3557 |  36k|  2 |  24k|  50 | 0.000000e+00 |      --      |    Inf |  10.54%
+  869s| 11000 |   437 |  6737k| 243.2 |   365M |  32 |1264 |8494 |3598 |  36k|  1 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.54%
+  871s| 11100 |   432 |  6754k| 243.0 |   369M |  32 |1264 |8604 |3619 |  36k|  2 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.54%
+  873s| 11200 |   422 |  6768k| 242.6 |   371M |  32 |1264 |8693 |3644 |  36k|  1 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.55%
+  875s| 11300 |   417 |  6785k| 242.4 |   371M |  32 |1264 |8711 |3602 |  37k|  1 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.55%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  878s| 11400 |   432 |  6821k| 242.8 |   374M |  32 |1264 |8645 |3628 |  37k|  4 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.55%
+  880s| 11500 |   430 |  6841k| 242.6 |   377M |  32 |1264 |8769 |3683 |  37k|  0 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.55%
+  882s| 11600 |   437 |  6858k| 242.4 |   378M |  32 |1264 |8862 |3644 |  37k|  1 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.55%
+  884s| 11700 |   432 |  6878k| 242.2 |   380M |  32 |1264 |8952 |3360 |  38k|  0 |  25k|  50 | 0.000000e+00 |      --      |    Inf |  10.56%
+  887s| 11800 |   445 |  6898k| 242.1 |   381M |  33 |1264 |8901 |3224 |  38k|  2 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.58%
+  888s| 11900 |   454 |  6920k| 242.0 |   381M |  33 |1264 |8924 |3238 |  39k|  3 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.60%
+  891s| 12000 |   449 |  6941k| 241.9 |   381M |  33 |1264 |9023 |3309 |  39k|  0 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.61%
+  892s| 12100 |   447 |  6957k| 241.6 |   381M |  33 |1264 |9063 |3213 |  39k|  1 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.62%
+  894s| 12200 |   454 |  6975k| 241.4 |   381M |  33 |1264 |9115 |3063 |  39k|  2 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.64%
+  896s| 12300 |   468 |  6990k| 241.1 |   382M |  33 |1264 |9217 |3130 |  39k|  2 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.64%
+  897s| 12400 |   475 |  7005k| 240.7 |   382M |  33 |1264 |9322 |3176 |  40k|  1 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.65%
+  899s| 12500 |   475 |  7019k| 240.4 |   382M |  33 |1264 |9402 |3134 |  40k|  0 |  26k|  50 | 0.000000e+00 |      --      |    Inf |  10.67%
+  900s| 12600 |   462 |  7035k| 240.1 |   382M |  33 |1264 |9500 |3229 |  40k|  0 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.67%
+  902s| 12700 |   474 |  7049k| 239.8 |   382M |  33 |1264 |9606 |3135 |  40k|  2 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.68%
+  903s| 12800 |   471 |  7062k| 239.4 |   382M |  33 |1264 |9673 |3186 |  41k|  1 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.68%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  904s| 12900 |   468 |  7077k| 239.1 |   382M |  33 |1264 |9729 |3104 |  41k|  2 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.68%
+  906s| 13000 |   482 |  7092k| 238.8 |   383M |  33 |1264 |9846 |3101 |  41k|  0 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.69%
+  908s| 13100 |   479 |  7107k| 238.5 |   383M |  33 |1264 |9970 |3159 |  42k|  1 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.69%
+  909s| 13200 |   477 |  7123k| 238.3 |   383M |  33 |1264 |  10k|3188 |  42k|  2 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.69%
+  911s| 13300 |   473 |  7139k| 238.0 |   383M |  33 |1264 |  10k|3134 |  42k|  2 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.69%
+  912s| 13400 |   484 |  7151k| 237.6 |   384M |  33 |1264 |  10k|3223 |  42k|  2 |  27k|  50 | 0.000000e+00 |      --      |    Inf |  10.70%
+  913s| 13500 |   489 |  7164k| 237.2 |   384M |  33 |1264 |  10k|3255 |  42k|  2 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.70%
+  915s| 13600 |   468 |  7180k| 237.0 |   384M |  33 |1264 |  10k|3128 |  43k|  2 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.70%
+  916s| 13700 |   481 |  7194k| 236.7 |   384M |  33 |1264 |  10k|3166 |  43k|  0 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.71%
+  918s| 13800 |   469 |  7211k| 236.5 |   384M |  33 |1264 |  10k|3288 |  43k|  0 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.73%
+  919s| 13900 |   471 |  7226k| 236.2 |   384M |  33 |1264 |  10k|3166 |  43k|  0 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.73%
+  921s| 14000 |   470 |  7237k| 235.8 |   384M |  33 |1264 |  10k|3279 |  44k|  0 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.73%
+  922s| 14100 |   472 |  7252k| 235.5 |   384M |  33 |1264 |  10k|3293 |  44k|  1 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.74%
+  924s| 14200 |   456 |  7268k| 235.2 |   384M |  33 |1264 |  10k|3240 |  44k|  2 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.75%
+  926s| 14300 |   480 |  7282k| 234.9 |   384M |  33 |1264 |  10k|3258 |  44k|  2 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.76%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  927s| 14400 |   503 |  7297k| 234.6 |   384M |  33 |1264 |  10k|3253 |  45k|  2 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.76%
+  929s| 14500 |   491 |  7314k| 234.5 |   384M |  33 |1264 |  10k|3268 |  45k|  0 |  28k|  50 | 0.000000e+00 |      --      |    Inf |  10.77%
+  931s| 14600 |   478 |  7334k| 234.3 |   385M |  33 |1264 |  10k|3227 |  45k|  0 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  10.78%
+  933s| 14700 |   482 |  7355k| 234.3 |   387M |  33 |1264 |  10k|3674 |  45k|  1 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  10.87%
+  935s| 14800 |   493 |  7369k| 234.0 |   387M |  33 |1264 |  10k|3147 |  45k|  1 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  10.88%
+  936s| 14900 |   488 |  7384k| 233.7 |   387M |  33 |1264 |  10k|3137 |  46k|  1 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  10.88%
+  938s| 15000 |   488 |  7399k| 233.4 |   388M |  33 |1264 |  10k|3499 |  46k|  0 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  10.94%
+  940s| 15100 |   488 |  7417k| 233.2 |   389M |  33 |1264 |  10k|3820 |  46k|  0 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  11.14%
+  941s| 15200 |   500 |  7427k| 232.9 |   390M |  33 |1264 |  10k|3835 |  46k|  1 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  11.16%
+  942s| 15300 |   494 |  7439k| 232.5 |   393M |  33 |1264 |  10k|3842 |  46k|  0 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  11.18%
+  943s| 15400 |   490 |  7451k| 232.1 |   394M |  33 |1264 |  10k|3862 |  47k|  0 |  29k|  50 | 0.000000e+00 |      --      |    Inf |  11.19%
+  946s| 15500 |   491 |  7467k| 231.9 |   394M |  33 |1264 |  10k|3064 |  47k|  0 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  11.32%
+  948s| 15600 |   511 |  7487k| 231.8 |   394M |  33 |1264 |  10k|3155 |  47k|  0 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  11.41%
+  951s| 15700 |   520 |  7510k| 231.8 |   394M |  33 |1264 |  10k|3192 |  48k|  2 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  11.73%
+  952s| 15800 |   525 |  7530k| 231.7 |   396M |  33 |1264 |9878 |3311 |  48k|  1 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  11.82%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  955s| 15900 |   512 |  7552k| 231.7 |   396M |  33 |1264 |9200 |3088 |  48k|  1 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  12.08%
+  957s| 16000 |   526 |  7568k| 231.5 |   397M |  33 |1264 |9012 |2968 |  49k|  0 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  12.49%
+  958s| 16100 |   530 |  7578k| 231.0 |   397M |  33 |1264 |9085 |2974 |  49k|  1 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  12.58%
+  959s| 16200 |   534 |  7589k| 230.7 |   398M |  33 |1264 |9221 |3010 |  49k|  0 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  12.61%
+  961s| 16300 |   533 |  7601k| 230.3 |   398M |  33 |1264 |9335 |3043 |  50k|  1 |  30k|  50 | 0.000000e+00 |      --      |    Inf |  12.75%
+  963s| 16400 |   550 |  7613k| 230.0 |   399M |  33 |1264 |9429 |3050 |  50k|  2 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  12.83%
+  964s| 16500 |   547 |  7625k| 229.7 |   399M |  33 |1264 |9518 |3138 |  50k|  1 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  12.91%
+  965s| 16600 |   539 |  7637k| 229.4 |   399M |  33 |1264 |9625 |2976 |  51k|  0 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  12.99%
+  966s| 16700 |   539 |  7649k| 229.0 |   400M |  33 |1264 |9721 |3010 |  51k|  0 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  13.04%
+  968s| 16800 |   539 |  7660k| 228.7 |   400M |  33 |1264 |9760 |3006 |  51k|  2 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  13.12%
+  969s| 16900 |   529 |  7671k| 228.3 |   400M |  33 |1264 |9785 |3142 |  51k|  1 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  13.47%
+  970s| 17000 |   522 |  7684k| 228.0 |   400M |  33 |1264 |9889 |3130 |  51k|  0 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  13.50%
+  971s| 17100 |   524 |  7696k| 227.7 |   400M |  33 |1264 |9957 |3015 |  51k|  2 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  13.52%
+  972s| 17200 |   524 |  7707k| 227.4 |   400M |  33 |1264 |  10k|3072 |  52k|  0 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  13.57%
+  973s| 17300 |   517 |  7719k| 227.0 |   401M |  33 |1264 |  10k|2976 |  52k|  0 |  31k|  50 | 0.000000e+00 |      --      |    Inf |  13.60%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  975s| 17400 |   536 |  7733k| 226.8 |   401M |  33 |1264 |9898 |3039 |  52k|  2 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  13.82%
+  978s| 17500 |   541 |  7750k| 226.6 |   402M |  33 |1264 |9732 |3190 |  53k|  0 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.06%
+  980s| 17600 |   546 |  7769k| 226.5 |   402M |  33 |1264 |9656 |3193 |  53k|  1 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.18%
+  983s| 17700 |   553 |  7792k| 226.5 |   402M |  33 |1264 |9244 |2969 |  53k|  2 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.33%
+  985s| 17800 |   558 |  7811k| 226.4 |   402M |  33 |1264 |9178 |3218 |  54k|  0 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.53%
+  987s| 17900 |   566 |  7829k| 226.3 |   402M |  33 |1264 |9251 |3514 |  54k|  1 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.55%
+  989s| 18000 |   558 |  7851k| 226.3 |   403M |  33 |1264 |9219 |3775 |  54k|  0 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.56%
+  991s| 18100 |   557 |  7871k| 226.2 |   403M |  33 |1264 |9248 |3300 |  55k|  2 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.58%
+  994s| 18200 |   570 |  7892k| 226.2 |   403M |  33 |1264 |9352 |3308 |  55k|  2 |  32k|  50 | 0.000000e+00 |      --      |    Inf |  14.58%
+  996s| 18300 |   567 |  7910k| 226.0 |   403M |  33 |1264 |9437 |3395 |  56k|  0 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  14.58%
+  998s| 18400 |   563 |  7932k| 226.0 |   404M |  33 |1264 |9542 |3625 |  56k|  0 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  14.58%
+ 1002s| 18500 |   579 |  7948k| 225.8 |   404M |  33 |1264 |9440 |3275 |  57k|  0 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  15.02%
+ 1004s| 18600 |   557 |  7968k| 225.7 |   405M |  33 |1264 |9355 |3363 |  57k|  0 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  15.38%
+ 1006s| 18700 |   562 |  7987k| 225.6 |   405M |  33 |1264 |9432 |3236 |  57k|  2 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  15.40%
+ 1008s| 18800 |   556 |  8009k| 225.6 |   406M |  33 |1264 |9432 |3334 |  57k|  2 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  15.41%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1011s| 18900 |   557 |  8029k| 225.5 |   406M |  33 |1264 |9276 |3888 |  58k|  0 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  15.54%
+ 1012s| 19000 |   555 |  8046k| 225.4 |   407M |  33 |1264 |9192 |3170 |  58k|  0 |  33k|  50 | 0.000000e+00 |      --      |    Inf |  15.57%
+ 1015s| 19100 |   553 |  8068k| 225.4 |   407M |  33 |1264 |9194 |2987 |  59k|  0 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  15.61%
+ 1017s| 19200 |   565 |  8082k| 225.1 |   408M |  33 |1264 |8981 |3421 |  59k|  0 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  15.81%
+ 1018s| 19300 |   570 |  8092k| 224.8 |   408M |  33 |1264 |9051 |3432 |  59k|  1 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  15.97%
+ 1020s| 19400 |   549 |  8105k| 224.5 |   408M |  33 |1264 |9074 |3481 |  59k|  0 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  16.43%
+ 1024s| 19500 |   551 |  8123k| 224.4 |   410M |  33 |1264 |9023 |3746 |  59k|  0 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  16.44%
+ 1028s| 19600 |   541 |  8147k| 224.4 |   413M |  33 |1264 |8686 |3193 |  60k|  0 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  16.62%
+ 1030s| 19700 |   540 |  8167k| 224.4 |   416M |  33 |1264 |8576 |3959 |  60k|  1 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  16.64%
+ 1032s| 19800 |   552 |  8185k| 224.2 |   416M |  33 |1264 |8577 |3016 |  61k|  2 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  16.66%
+ 1034s| 19900 |   550 |  8204k| 224.2 |   417M |  33 |1264 |8434 |3146 |  61k|  0 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  16.72%
+ 1036s| 20000 |   540 |  8225k| 224.1 |   418M |  33 |1264 |8308 |3405 |  61k|  0 |  34k|  50 | 0.000000e+00 |      --      |    Inf |  16.81%
+ 1039s| 20100 |   531 |  8251k| 224.2 |   418M |  33 |1264 |8001 |3316 |  62k|  1 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  16.96%
+ 1043s| 20200 |   548 |  8273k| 224.2 |   419M |  33 |1264 |7729 |3410 |  62k|  1 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.10%
+ 1045s| 20300 |   548 |  8291k| 224.1 |   420M |  33 |1264 |7698 |3236 |  62k|  2 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.19%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1047s| 20400 |   555 |  8309k| 224.0 |   420M |  33 |1264 |7670 |3265 |  63k|  2 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.23%
+ 1048s| 20500 |   576 |  8324k| 223.8 |   420M |  33 |1264 |7751 |3303 |  63k|  2 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.24%
+ 1050s| 20600 |   570 |  8346k| 223.8 |   420M |  33 |1264 |7810 |3122 |  64k|  0 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.26%
+ 1053s| 20700 |   572 |  8368k| 223.7 |   420M |  33 |1264 |7784 |3158 |  64k|  2 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.27%
+ 1056s| 20800 |   557 |  8394k| 223.8 |   420M |  33 |1264 |7665 |3999 |  64k|  0 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.33%
+ 1057s| 20900 |   555 |  8409k| 223.6 |   420M |  33 |1264 |7718 |3487 |  65k|  0 |  35k|  50 | 0.000000e+00 |      --      |    Inf |  17.34%
+ 1059s| 21000 |   566 |  8425k| 223.5 |   421M |  33 |1264 |7697 |3451 |  65k|  0 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.36%
+ 1062s| 21100 |   572 |  8454k| 223.6 |   422M |  33 |1264 |7792 |3301 |  66k|  2 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.37%
+ 1065s| 21200 |   577 |  8491k| 224.0 |   423M |  33 |1264 |7877 |3818 |  66k|  1 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.38%
+ 1068s| 21300 |   571 |  8525k| 224.3 |   426M |  33 |1264 |7926 |3269 |  67k|  2 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.38%
+ 1072s| 21400 |   580 |  8567k| 224.9 |   426M |  33 |1264 |7935 |3899 |  67k|  1 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.39%
+ 1076s| 21500 |   587 |  8610k| 225.4 |   429M |  33 |1264 |7897 |3100 |  68k|  0 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.47%
+ 1080s| 21600 |   580 |  8651k| 225.9 |   432M |  33 |1264 |7923 |3134 |  69k|  2 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.50%
+ 1083s| 21700 |   572 |  8689k| 226.3 |   433M |  33 |1264 |7968 |3918 |  69k|  0 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.55%
+ 1086s| 21800 |   589 |  8712k| 226.3 |   434M |  33 |1264 |7932 |3028 |  70k|  1 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.60%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1088s| 21900 |   598 |  8735k| 226.3 |   434M |  33 |1264 |8078 |3104 |  70k|  0 |  36k|  50 | 0.000000e+00 |      --      |    Inf |  17.60%
+ 1090s| 22000 |   593 |  8759k| 226.3 |   434M |  33 |1264 |8213 |3083 |  70k|  1 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.63%
+ 1092s| 22100 |   603 |  8776k| 226.2 |   434M |  33 |1264 |8281 |3254 |  71k|  0 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.65%
+ 1094s| 22200 |   604 |  8796k| 226.1 |   435M |  33 |1264 |8298 |4395 |  71k|  0 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.67%
+ 1096s| 22300 |   603 |  8817k| 226.1 |   438M |  33 |1264 |8024 |4003 |  71k|  0 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.69%
+ 1098s| 22400 |   599 |  8834k| 225.9 |   440M |  33 |1264 |8069 |4034 |  71k|  0 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.69%
+ 1100s| 22500 |   601 |  8850k| 225.8 |   445M |  33 |1264 |8077 |3821 |  71k|  5 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.72%
+ 1102s| 22600 |   608 |  8867k| 225.6 |   447M |  33 |1264 |8078 |3913 |  72k|  1 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.73%
+ 1103s| 22700 |   601 |  8882k| 225.4 |   449M |  33 |1264 |8174 |3882 |  72k|  1 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.78%
+ 1105s| 22800 |   589 |  8901k| 225.3 |   449M |  33 |1264 |8113 |3397 |  72k|  0 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.86%
+ 1108s| 22900 |   601 |  8924k| 225.4 |   454M |  33 |1264 |8026 |3193 |  72k|  2 |  37k|  50 | 0.000000e+00 |      --      |    Inf |  17.87%
+ 1110s| 23000 |   600 |  8946k| 225.3 |   454M |  33 |1264 |7962 |3554 |  73k|  1 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  17.89%
+ 1112s| 23100 |   592 |  8968k| 225.3 |   454M |  33 |1264 |7902 |2980 |  73k|  0 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  18.00%
+ 1115s| 23200 |   590 |  8988k| 225.3 |   455M |  33 |1264 |7881 |3946 |  73k|  0 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  18.30%
+ 1117s| 23300 |   592 |  9015k| 225.4 |   456M |  33 |1264 |7875 |3756 |  74k|  0 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  18.32%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1120s| 23400 |   590 |  9036k| 225.3 |   457M |  33 |1264 |7744 |3209 |  74k|  0 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  18.39%
+ 1121s| 23500 |   593 |  9050k| 225.1 |   457M |  33 |1264 |7864 |3337 |  74k|  0 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  18.50%
+ 1122s| 23600 |   600 |  9061k| 224.8 |   457M |  33 |1264 |7971 |3263 |  75k|  2 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  18.51%
+ 1124s| 23700 |   590 |  9075k| 224.6 |   458M |  33 |1264 |8003 |3233 |  75k|  2 |  38k|  50 | 0.000000e+00 |      --      |    Inf |  18.53%
+ 1126s| 23800 |   577 |  9094k| 224.6 |   460M |  33 |1264 |7900 |3275 |  75k|  2 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.54%
+ 1128s| 23900 |   579 |  9113k| 224.5 |   460M |  33 |1264 |7937 |3580 |  75k|  1 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.55%
+ 1130s| 24000 |   591 |  9131k| 224.4 |   465M |  33 |1264 |7840 |3702 |  76k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.57%
+ 1132s| 24100 |   593 |  9142k| 224.1 |   466M |  33 |1264 |7950 |3701 |  76k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.61%
+ 1133s| 24200 |   599 |  9153k| 223.8 |   467M |  33 |1264 |8029 |3712 |  76k|  1 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.62%
+ 1134s| 24300 |   603 |  9165k| 223.6 |   468M |  33 |1264 |8116 |3721 |  76k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.65%
+ 1136s| 24400 |   602 |  9177k| 223.3 |   469M |  33 |1264 |8169 |3727 |  76k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.67%
+ 1137s| 24500 |   608 |  9188k| 223.0 |   469M |  33 |1264 |8217 |3721 |  76k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.70%
+ 1138s| 24600 |   596 |  9198k| 222.7 |   469M |  33 |1264 |8314 |3727 |  76k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.76%
+ 1139s| 24700 |   590 |  9208k| 222.4 |   470M |  33 |1264 |8406 |3735 |  76k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.80%
+ 1140s| 24800 |   578 |  9222k| 222.2 |   473M |  33 |1264 |8483 |3747 |  77k|  0 |  39k|  50 | 0.000000e+00 |      --      |    Inf |  18.87%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1142s| 24900 |   581 |  9231k| 221.9 |   473M |  33 |1264 |8556 |3704 |  77k|  1 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  18.93%
+ 1144s| 25000 |   576 |  9247k| 221.7 |   473M |  33 |1264 |8588 |3672 |  77k|  0 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  18.98%
+ 1146s| 25100 |   593 |  9267k| 221.7 |   473M |  33 |1264 |8671 |3701 |  77k|  1 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  18.99%
+ 1148s| 25200 |   591 |  9285k| 221.6 |   473M |  33 |1264 |8798 |3760 |  77k|  0 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  18.99%
+ 1150s| 25300 |   594 |  9304k| 221.5 |   474M |  33 |1264 |8861 |3779 |  77k|  1 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  18.99%
+ 1152s| 25400 |   601 |  9323k| 221.5 |   474M |  33 |1264 |8905 |3806 |  77k|  0 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  18.99%
+ 1154s| 25500 |   604 |  9345k| 221.5 |   474M |  33 |1264 |8822 |3001 |  78k|  2 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  19.23%
+ 1156s| 25600 |   610 |  9365k| 221.4 |   474M |  33 |1264 |8931 |3005 |  78k|  2 |  40k|  50 | 0.000000e+00 |      --      |    Inf |  19.36%
+ 1159s| 25700 |   628 |  9390k| 221.5 |   474M |  33 |1264 |9028 |3035 |  79k|  1 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.76%
+ 1161s| 25800 |   625 |  9410k| 221.4 |   474M |  33 |1264 |9116 |3118 |  79k|  0 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.77%
+ 1163s| 25900 |   630 |  9428k| 221.3 |   474M |  33 |1264 |9162 |3079 |  79k|  0 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.78%
+ 1164s| 26000 |   624 |  9446k| 221.2 |   474M |  33 |1264 |9208 |3149 |  79k|  0 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.78%
+ 1167s| 26100 |   621 |  9467k| 221.2 |   474M |  33 |1264 |9261 |3039 |  80k|  2 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.82%
+ 1169s| 26200 |   647 |  9491k| 221.2 |   474M |  33 |1264 |9387 |3018 |  80k|  0 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.90%
+ 1171s| 26300 |   648 |  9512k| 221.2 |   475M |  33 |1264 |9483 |3113 |  81k|  2 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.95%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1175s| 26400 |   644 |  9529k| 221.1 |   475M |  33 |1264 |9567 |3138 |  81k|  0 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.97%
+ 1179s| 26500 |   649 |  9548k| 221.0 |   475M |  33 |1264 |9652 |3111 |  81k|  0 |  41k|  50 | 0.000000e+00 |      --      |    Inf |  19.98%
+ 1183s| 26600 |   649 |  9567k| 220.9 |   475M |  33 |1264 |9746 |3159 |  81k|  1 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.03%
+ 1188s| 26700 |   658 |  9584k| 220.8 |   475M |  33 |1264 |9756 |2989 |  82k|  2 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.31%
+ 1193s| 26800 |   672 |  9607k| 220.9 |   475M |  33 |1264 |9831 |3033 |  82k|  1 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.33%
+ 1198s| 26900 |   664 |  9632k| 220.9 |   475M |  33 |1264 |9969 |2994 |  83k|  2 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.35%
+ 1204s| 27000 |   666 |  9655k| 220.9 |   475M |  33 |1264 |  10k|3076 |  83k|  0 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.37%
+ 1209s| 27100 |   671 |  9677k| 220.9 |   475M |  33 |1264 |  10k|3035 |  84k|  0 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.39%
+ 1214s| 27200 |   678 |  9701k| 221.0 |   475M |  33 |1264 |  10k|3033 |  84k|  2 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.51%
+ 1218s| 27300 |   685 |  9718k| 220.9 |   475M |  33 |1264 |  10k|3061 |  84k|  1 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.57%
+ 1221s| 27400 |   692 |  9737k| 220.8 |   475M |  33 |1264 |  10k|3031 |  85k|  0 |  42k|  50 | 0.000000e+00 |      --      |    Inf |  20.62%
+ 1225s| 27500 |   678 |  9759k| 220.8 |   475M |  33 |1264 |  10k|3133 |  85k|  2 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  20.81%
+ 1230s| 27600 |   650 |  9783k| 220.8 |   475M |  33 |1264 |  10k|3201 |  85k|  0 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  20.92%
+ 1236s| 27700 |   654 |  9811k| 221.0 |   475M |  33 |1264 |  10k|3128 |  86k|  2 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  21.05%
+ 1241s| 27800 |   641 |  9833k| 221.0 |   475M |  33 |1264 |  10k|3219 |  86k|  0 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  21.32%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1246s| 27900 |   632 |  9853k| 220.9 |   475M |  33 |1264 |  10k|3328 |  86k|  0 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  21.33%
+ 1251s| 28000 |   638 |  9877k| 221.0 |   475M |  33 |1264 |  10k|3254 |  87k|  2 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  21.74%
+ 1257s| 28100 |   639 |  9900k| 221.0 |   475M |  33 |1264 |  10k|3219 |  87k|  2 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  21.80%
+ 1263s| 28200 |   643 |  9925k| 221.0 |   475M |  33 |1264 |  10k|3022 |  88k|  0 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  21.95%
+ 1268s| 28300 |   627 |  9950k| 221.1 |   475M |  33 |1264 |  10k|3318 |  88k|  1 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  22.03%
+ 1274s| 28400 |   631 |  9976k| 221.2 |   475M |  33 |1264 |9933 |3133 |  89k|  0 |  43k|  50 | 0.000000e+00 |      --      |    Inf |  22.08%
+ 1281s| 28500 |   635 | 10003k| 221.3 |   475M |  33 |1264 |9873 |3298 |  89k|  0 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  22.14%
+ 1286s| 28600 |   624 | 10024k| 221.3 |   475M |  33 |1264 |9499 |3773 |  89k|  0 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  22.31%
+ 1292s| 28700 |   680 | 10049k| 221.4 |   475M |  33 |1264 |9222 |2996 |  90k|  2 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  23.12%
+ 1298s| 28800 |   699 | 10071k| 221.3 |   476M |  33 |1264 |9287 |2943 |  91k|  0 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  23.39%
+ 1302s| 28900 |   696 | 10091k| 221.3 |   476M |  33 |1264 |9362 |2990 |  91k|  0 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  24.67%
+ 1306s| 29000 |   704 | 10111k| 221.2 |   476M |  33 |1264 |9438 |2923 |  92k|  2 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  24.79%
+ 1310s| 29100 |   711 | 10127k| 221.1 |   476M |  33 |1264 |9545 |3071 |  92k|  0 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  25.18%
+ 1315s| 29200 |   721 | 10148k| 221.1 |   476M |  33 |1264 |9661 |3367 |  92k|  0 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  25.24%
+ 1319s| 29300 |   724 | 10169k| 221.1 |   476M |  33 |1264 |9736 |3025 |  93k|  2 |  44k|  50 | 0.000000e+00 |      --      |    Inf |  25.27%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1323s| 29400 |   719 | 10192k| 221.1 |   476M |  33 |1264 |9820 |2981 |  93k|  0 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.32%
+ 1327s| 29500 |   712 | 10210k| 221.0 |   476M |  33 |1264 |9893 |3140 |  93k|  0 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.36%
+ 1332s| 29600 |   714 | 10230k| 220.9 |   476M |  33 |1264 |9969 |3394 |  94k|  2 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.40%
+ 1336s| 29700 |   718 | 10249k| 220.9 |   476M |  33 |1264 |9904 |3098 |  94k|  1 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.43%
+ 1339s| 29800 |   740 | 10265k| 220.7 |   476M |  33 |1264 |9961 |3098 |  94k|  2 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.47%
+ 1343s| 29900 |   725 | 10283k| 220.7 |   476M |  33 |1264 |  10k|3155 |  94k|  2 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.50%
+ 1347s| 30000 |   699 | 10305k| 220.7 |   476M |  33 |1264 |  10k|3188 |  94k|  0 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.57%
+ 1352s| 30100 |   685 | 10326k| 220.6 |   477M |  33 |1264 |  10k|3369 |  95k|  0 |  45k|  50 | 0.000000e+00 |      --      |    Inf |  25.70%
+ 1356s| 30200 |   663 | 10346k| 220.6 |   477M |  33 |1264 |  10k|3380 |  95k|  0 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  25.77%
+ 1360s| 30300 |   668 | 10365k| 220.5 |   477M |  33 |1264 |  10k|3615 |  95k|  0 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  25.79%
+ 1367s| 30400 |   657 | 10400k| 220.8 |   479M |  33 |1264 |9639 |3923 |  95k|  0 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  25.81%
+ 1372s| 30500 |   649 | 10419k| 220.7 |   480M |  33 |1264 |9403 |3136 |  96k|  2 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  25.97%
+ 1377s| 30600 |   655 | 10448k| 220.9 |   480M |  33 |1264 |9415 |3414 |  96k|  2 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  25.98%
+ 1386s| 30700 |   649 | 10492k| 221.3 |   481M |  33 |1264 |9238 |3684 |  97k|  0 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  26.08%
+ 1393s| 30800 |   652 | 10527k| 221.6 |   481M |  33 |1264 |9182 |3624 |  97k|  2 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  26.09%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1401s| 30900 |   643 | 10564k| 221.9 |   481M |  33 |1264 |9282 |3763 |  97k|  0 |  46k|  50 | 0.000000e+00 |      --      |    Inf |  26.10%
+ 1411s| 31000 |   653 | 10604k| 222.3 |   482M |  33 |1264 |9134 |3747 |  98k|  2 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.14%
+ 1418s| 31100 |   661 | 10639k| 222.6 |   484M |  33 |1264 |9237 |3820 |  98k|  2 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.18%
+ 1427s| 31200 |   661 | 10680k| 223.0 |   486M |  33 |1264 |9350 |3803 |  99k|  0 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.20%
+ 1434s| 31300 |   655 | 10715k| 223.2 |   487M |  33 |1264 |9487 |3804 |  99k|  0 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.21%
+ 1444s| 31400 |   655 | 10753k| 223.6 |   489M |  33 |1264 |9512 |4345 |  99k|  0 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.27%
+ 1451s| 31500 |   635 | 10783k| 223.7 |   495M |  33 |1264 |9423 |4004 |  99k|  0 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.41%
+ 1457s| 31600 |   637 | 10806k| 223.7 |   495M |  33 |1264 |9445 |3744 |  99k|  2 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.46%
+ 1461s| 31700 |   658 | 10821k| 223.6 |   495M |  33 |1264 |9399 |3120 | 100k|  0 |  47k|  50 | 0.000000e+00 |      --      |    Inf |  26.49%
+ 1465s| 31800 |   665 | 10835k| 223.4 |   495M |  33 |1264 |9499 |3128 | 100k|  2 |  48k|  50 | 0.000000e+00 |      --      |    Inf |  26.50%
+ 1468s| 31900 |   671 | 10849k| 223.2 |   495M |  33 |1264 |9613 |3355 | 100k|  2 |  48k|  50 | 0.000000e+00 |      --      |    Inf |  26.51%
+ 1471s| 32000 |   670 | 10863k| 223.1 |   495M |  33 |1264 |9743 |3370 | 101k|  0 |  48k|  50 | 0.000000e+00 |      --      |    Inf |  26.52%
+ 1475s| 32100 |   656 | 10879k| 222.9 |   495M |  33 |1264 |9853 |3400 | 101k|  0 |  48k|  50 | 0.000000e+00 |      --      |    Inf |  26.58%
+ 1478s| 32200 |   655 | 10892k| 222.7 |   495M |  33 |1264 |9949 |3131 | 101k|  0 |  48k|  50 | 0.000000e+00 |      --      |    Inf |  26.59%
+ 1481s| 32300 |   644 | 10907k| 222.6 |   495M |  33 |1264 |  10k|3313 | 101k|  0 |  48k|  50 | 0.000000e+00 |      --      |    Inf |  26.68%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1485s| 32400 |   653 | 10923k| 222.5 |   495M |  33 |1264 |  10k|3345 | 101k|  0 |  48k|  50 | 0.000000e+00 |      --      |    Inf |  26.68%
+ 1489s| 32500 |   649 | 10943k| 222.4 |   496M |  33 |1264 |9741 |3988 | 102k|  1 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.71%
+ 1493s| 32600 |   651 | 10956k| 222.2 |   497M |  33 |1264 |9828 |3983 | 102k|  2 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.74%
+ 1496s| 32700 |   646 | 10969k| 222.0 |   497M |  33 |1264 |9915 |3991 | 102k|  0 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.75%
+ 1499s| 32800 |   641 | 10982k| 221.9 |   498M |  33 |1264 |9996 |4020 | 102k|  0 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.77%
+ 1503s| 32900 |   638 | 11003k| 221.8 |   500M |  33 |1264 |9783 |4024 | 102k|  0 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.88%
+ 1508s| 33000 |   650 | 11020k| 221.7 |   502M |  33 |1264 |9700 |4109 | 102k|  1 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.92%
+ 1513s| 33100 |   662 | 11041k| 221.7 |   505M |  33 |1264 |9795 |4127 | 102k|  0 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.92%
+ 1518s| 33200 |   648 | 11064k| 221.7 |   506M |  33 |1264 |9926 |4138 | 103k|  1 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  26.97%
+ 1522s| 33300 |   660 | 11079k| 221.6 |   508M |  33 |1264 |9865 |3149 | 103k|  2 |  49k|  50 | 0.000000e+00 |      --      |    Inf |  27.01%
+ 1527s| 33400 |   634 | 11101k| 221.6 |   510M |  33 |1264 |9659 |3998 | 103k|  1 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.10%
+ 1532s| 33500 |   637 | 11122k| 221.6 |   513M |  33 |1264 |9668 |4314 | 103k|  0 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.10%
+ 1538s| 33600 |   636 | 11148k| 221.6 |   514M |  33 |1264 |9601 |2991 | 103k|  2 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.14%
+ 1541s| 33700 |   640 | 11164k| 221.5 |   514M |  33 |1264 |9662 |3655 | 104k|  1 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.21%
+ 1545s| 33800 |   631 | 11183k| 221.5 |   514M |  33 |1264 |9728 |3165 | 104k|  0 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.23%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1550s| 33900 |   619 | 11202k| 221.4 |   517M |  33 |1264 |9637 |4130 | 104k|  0 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.34%
+ 1556s| 34000 |   621 | 11226k| 221.4 |   518M |  33 |1264 |9607 |3457 | 105k|  1 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.40%
+ 1561s| 34100 |   637 | 11249k| 221.4 |   519M |  33 |1264 |9688 |3909 | 105k|  2 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.40%
+ 1565s| 34200 |   623 | 11266k| 221.3 |   520M |  33 |1264 |9752 |3962 | 105k|  0 |  50k|  50 | 0.000000e+00 |      --      |    Inf |  27.41%
+ 1570s| 34300 |   619 | 11287k| 221.3 |   520M |  33 |1264 |9810 |4153 | 105k|  0 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.44%
+ 1575s| 34400 |   612 | 11306k| 221.3 |   522M |  33 |1264 |9790 |4173 | 105k|  0 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.50%
+ 1580s| 34500 |   617 | 11328k| 221.3 |   523M |  33 |1264 |9725 |3866 | 106k|  2 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.53%
+ 1585s| 34600 |   617 | 11352k| 221.3 |   524M |  33 |1264 |9710 |3064 | 106k|  2 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.65%
+ 1590s| 34700 |   620 | 11372k| 221.2 |   524M |  33 |1264 |9671 |3388 | 106k|  1 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.67%
+ 1594s| 34800 |   629 | 11392k| 221.2 |   524M |  33 |1264 |9694 |3284 | 106k|  2 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.67%
+ 1598s| 34900 |   618 | 11413k| 221.2 |   525M |  33 |1264 |9759 |3375 | 107k|  2 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.68%
+ 1602s| 35000 |   610 | 11433k| 221.1 |   526M |  33 |1264 |9722 |3532 | 107k|  2 |  51k|  50 | 0.000000e+00 |      --      |    Inf |  27.74%
+ 1606s| 35100 |   596 | 11452k| 221.1 |   526M |  33 |1264 |9539 |3492 | 107k|  0 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  27.82%
+ 1612s| 35200 |   609 | 11471k| 221.0 |   527M |  33 |1264 |9424 |4041 | 107k|  2 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  27.95%
+ 1616s| 35300 |   621 | 11490k| 221.0 |   529M |  33 |1264 |9479 |4325 | 107k|  1 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  27.96%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1623s| 35400 |   611 | 11523k| 221.2 |   532M |  33 |1264 |9568 |4321 | 107k|  1 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  27.97%
+ 1630s| 35500 |   607 | 11558k| 221.4 |   534M |  33 |1264 |9609 |3088 | 108k|  2 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  27.99%
+ 1640s| 35600 |   581 | 11604k| 221.9 |   534M |  33 |1264 |9364 |4328 | 108k|  0 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  28.13%
+ 1648s| 35700 |   577 | 11644k| 222.2 |   535M |  33 |1264 |9238 |3506 | 108k|  2 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  28.16%
+ 1655s| 35800 |   561 | 11675k| 222.4 |   536M |  33 |1264 |9217 |3631 | 109k|  0 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  28.18%
+ 1660s| 35900 |   568 | 11690k| 222.3 |   537M |  33 |1264 |9183 |3980 | 109k|  0 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  28.29%
+ 1664s| 36000 |   566 | 11704k| 222.1 |   537M |  33 |1264 |9262 |3930 | 109k|  1 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  28.38%
+ 1668s| 36100 |   567 | 11717k| 221.9 |   538M |  33 |1264 |9320 |3943 | 109k|  0 |  52k|  50 | 0.000000e+00 |      --      |    Inf |  28.42%
+ 1672s| 36200 |   569 | 11730k| 221.7 |   538M |  33 |1264 |9357 |3938 | 109k|  0 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.52%
+ 1675s| 36300 |   576 | 11745k| 221.6 |   538M |  33 |1264 |9388 |3933 | 109k|  1 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.56%
+ 1679s| 36400 |   587 | 11759k| 221.4 |   539M |  33 |1264 |9437 |3941 | 109k|  0 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.60%
+ 1683s| 36500 |   572 | 11774k| 221.3 |   539M |  33 |1264 |9505 |3957 | 109k|  0 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.68%
+ 1689s| 36600 |   581 | 11790k| 221.2 |   539M |  33 |1264 |9570 |3935 | 109k|  1 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.77%
+ 1693s| 36700 |   576 | 11808k| 221.1 |   539M |  33 |1264 |9658 |3959 | 110k|  0 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.85%
+ 1701s| 36800 |   575 | 11838k| 221.3 |   539M |  33 |1264 |9505 |4240 | 110k|  0 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.95%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1710s| 36900 |   583 | 11884k| 221.7 |   541M |  33 |1264 |9531 |4276 | 110k|  2 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  28.99%
+ 1720s| 37000 |   582 | 11932k| 222.2 |   541M |  33 |1264 |9604 |3641 | 111k|  1 |  53k|  50 | 0.000000e+00 |      --      |    Inf |  29.01%
+ 1726s| 37100 |   576 | 11961k| 222.3 |   542M |  33 |1264 |9514 |4147 | 111k|  2 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.06%
+ 1731s| 37200 |   563 | 11981k| 222.3 |   542M |  33 |1264 |9303 |3509 | 112k|  1 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.15%
+ 1735s| 37300 |   558 | 11998k| 222.2 |   543M |  33 |1264 |9189 |4147 | 112k|  1 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.19%
+ 1740s| 37400 |   537 | 12021k| 222.2 |   545M |  33 |1264 |8924 |4407 | 112k|  1 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.29%
+ 1745s| 37500 |   529 | 12038k| 222.1 |   549M |  33 |1264 |8968 |4529 | 112k|  1 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.34%
+ 1750s| 37600 |   513 | 12057k| 222.0 |   550M |  33 |1264 |8933 |4189 | 112k|  1 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.56%
+ 1753s| 37700 |   515 | 12070k| 221.9 |   550M |  33 |1264 |8930 |3701 | 112k|  0 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.70%
+ 1757s| 37800 |   513 | 12089k| 221.8 |   550M |  33 |1264 |8868 |4276 | 112k|  0 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.73%
+ 1762s| 37900 |   510 | 12112k| 221.8 |   552M |  33 |1264 |8933 |4279 | 112k|  0 |  54k|  50 | 0.000000e+00 |      --      |    Inf |  29.75%
+ 1768s| 38000 |   497 | 12138k| 221.9 |   554M |  33 |1264 |8724 |4276 | 113k|  0 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  29.85%
+ 1772s| 38100 |   476 | 12165k| 222.0 |   554M |  33 |1264 |8412 |3253 | 113k|  2 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.01%
+ 1775s| 38200 |   498 | 12192k| 222.1 |   554M |  33 |1264 |8523 |3311 | 113k|  0 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.05%
+ 1776s| 38300 |   502 | 12209k| 222.0 |   554M |  35 |1264 |8625 |3351 | 113k|  0 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.06%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1778s| 38400 |   482 | 12226k| 221.9 |   554M |  35 |1264 |8691 |3354 | 113k|  2 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.12%
+ 1780s| 38500 |   484 | 12250k| 221.9 |   554M |  35 |1264 |8745 |3309 | 114k|  1 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.16%
+ 1783s| 38600 |   508 | 12277k| 222.0 |   555M |  35 |1264 |8749 |4243 | 114k|  1 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.18%
+ 1785s| 38700 |   505 | 12301k| 222.0 |   556M |  35 |1264 |8821 |4419 | 114k|  0 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.18%
+ 1787s| 38800 |   507 | 12317k| 221.9 |   559M |  35 |1264 |8790 |4433 | 114k|  1 |  55k|  50 | 0.000000e+00 |      --      |    Inf |  30.21%
+ 1790s| 38900 |   517 | 12336k| 221.9 |   559M |  35 |1264 |8738 |3067 | 115k|  1 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.25%
+ 1791s| 39000 |   546 | 12351k| 221.7 |   559M |  35 |1264 |8802 |3116 | 115k|  2 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.30%
+ 1793s| 39100 |   532 | 12374k| 221.8 |   559M |  35 |1264 |8915 |3111 | 115k|  0 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.32%
+ 1796s| 39200 |   537 | 12402k| 221.9 |   559M |  35 |1264 |9002 |3237 | 116k|  0 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.33%
+ 1799s| 39300 |   525 | 12430k| 222.0 |   559M |  35 |1264 |9042 |3476 | 116k|  0 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.34%
+ 1801s| 39400 |   509 | 12455k| 222.0 |   559M |  35 |1264 |9131 |3188 | 117k|  2 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.40%
+ 1804s| 39500 |   500 | 12487k| 222.2 |   559M |  35 |1264 |9142 |4411 | 117k|  1 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.43%
+ 1807s| 39600 |   510 | 12522k| 222.4 |   560M |  35 |1264 |9212 |3345 | 117k|  0 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.44%
+ 1811s| 39700 |   521 | 12565k| 222.8 |   560M |  35 |1264 |9159 |3591 | 118k|  0 |  56k|  50 | 0.000000e+00 |      --      |    Inf |  30.58%
+ 1815s| 39800 |   510 | 12607k| 223.1 |   561M |  35 |1264 |9185 |3996 | 118k|  2 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  31.18%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1818s| 39900 |   534 | 12632k| 223.2 |   562M |  35 |1264 |9244 |3601 | 119k|  2 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  32.82%
+ 1821s| 40000 |   533 | 12664k| 223.4 |   562M |  35 |1264 |9320 |3692 | 119k|  0 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  32.99%
+ 1824s| 40100 |   537 | 12701k| 223.6 |   562M |  35 |1264 |9394 |3596 | 119k|  2 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.05%
+ 1828s| 40200 |   525 | 12736k| 223.8 |   562M |  35 |1264 |9482 |4095 | 120k|  1 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.22%
+ 1830s| 40300 |   534 | 12757k| 223.8 |   563M |  35 |1264 |9560 |4128 | 120k|  0 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.22%
+ 1832s| 40400 |   538 | 12780k| 223.8 |   564M |  35 |1264 |9637 |4117 | 120k|  0 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.22%
+ 1835s| 40500 |   535 | 12812k| 224.0 |   565M |  35 |1264 |9723 |4148 | 120k|  0 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.23%
+ 1838s| 40600 |   532 | 12848k| 224.2 |   567M |  35 |1264 |9749 |4110 | 120k|  1 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.25%
+ 1841s| 40700 |   527 | 12870k| 224.2 |   568M |  35 |1264 |9710 |4146 | 120k|  1 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.27%
+ 1843s| 40800 |   528 | 12890k| 224.2 |   568M |  35 |1264 |9742 |3630 | 121k|  0 |  57k|  50 | 0.000000e+00 |      --      |    Inf |  33.30%
+ 1845s| 40900 |   530 | 12920k| 224.3 |   568M |  35 |1264 |9827 |3640 | 121k|  2 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.30%
+ 1849s| 41000 |   540 | 12956k| 224.5 |   568M |  35 |1264 |9895 |3728 | 121k|  1 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.34%
+ 1851s| 41100 |   535 | 12989k| 224.7 |   568M |  35 |1264 |9996 |3691 | 121k|  0 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.34%
+ 1854s| 41200 |   519 | 13012k| 224.7 |   569M |  35 |1264 |  10k|3953 | 122k|  0 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.37%
+ 1856s| 41300 |   531 | 13031k| 224.7 |   569M |  35 |1264 |  10k|3500 | 122k|  2 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.40%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1858s| 41400 |   534 | 13049k| 224.6 |   569M |  35 |1264 |  10k|3512 | 122k|  0 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.44%
+ 1859s| 41500 |   532 | 13065k| 224.5 |   569M |  35 |1264 |  10k|3500 | 122k|  2 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.45%
+ 1861s| 41600 |   535 | 13083k| 224.4 |   569M |  35 |1264 |  10k|3521 | 122k|  0 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.49%
+ 1863s| 41700 |   527 | 13102k| 224.3 |   570M |  35 |1264 |  10k|3523 | 122k|  0 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.51%
+ 1866s| 41800 |   527 | 13133k| 224.5 |   570M |  35 |1264 |  10k|3872 | 123k|  1 |  58k|  50 | 0.000000e+00 |      --      |    Inf |  33.67%
+ 1869s| 41900 |   528 | 13161k| 224.6 |   570M |  35 |1264 |  10k|3559 | 123k|  0 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.69%
+ 1871s| 42000 |   522 | 13189k| 224.7 |   570M |  35 |1264 |  10k|3932 | 123k|  1 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.69%
+ 1873s| 42100 |   528 | 13208k| 224.6 |   570M |  35 |1264 |  10k|4155 | 123k|  1 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.71%
+ 1875s| 42200 |   534 | 13223k| 224.5 |   573M |  35 |1264 |  10k|4395 | 123k|  1 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.72%
+ 1876s| 42300 |   537 | 13234k| 224.3 |   576M |  35 |1264 |  10k|4403 | 123k|  1 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.72%
+ 1878s| 42400 |   529 | 13247k| 224.2 |   577M |  35 |1264 |  10k|4154 | 123k|  0 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.72%
+ 1879s| 42500 |   519 | 13262k| 224.0 |   578M |  35 |1264 |  10k|4387 | 124k|  1 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.73%
+ 1880s| 42600 |   526 | 13276k| 223.9 |   580M |  35 |1264 |  10k|4157 | 124k|  1 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.73%
+ 1882s| 42700 |   523 | 13289k| 223.7 |   580M |  35 |1264 |  10k|4160 | 124k|  0 |  59k|  50 | 0.000000e+00 |      --      |    Inf |  33.73%
+ 1883s| 42800 |   509 | 13306k| 223.6 |   580M |  35 |1264 |  10k|2926 | 124k|  2 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  33.74%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1885s| 42900 |   511 | 13323k| 223.5 |   581M |  35 |1264 |  10k|3700 | 124k|  2 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  33.84%
+ 1888s| 43000 |   503 | 13348k| 223.6 |   583M |  35 |1264 |  10k|4365 | 124k|  0 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  34.13%
+ 1890s| 43100 |   525 | 13368k| 223.5 |   587M |  35 |1264 |  10k|4484 | 124k|  0 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  34.18%
+ 1893s| 43200 |   512 | 13392k| 223.6 |   588M |  35 |1264 |  10k|4485 | 124k|  1 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  34.28%
+ 1895s| 43300 |   512 | 13413k| 223.5 |   589M |  35 |1264 |  10k|3226 | 124k|  2 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  34.34%
+ 1897s| 43400 |   511 | 13432k| 223.5 |   589M |  35 |1264 |  10k|3996 | 125k|  1 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  34.34%
+ 1898s| 43500 |   509 | 13449k| 223.4 |   589M |  35 |1264 |  10k|3261 | 125k|  0 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  34.36%
+ 1900s| 43600 |   518 | 13466k| 223.3 |   589M |  35 |1264 |  10k|3498 | 125k|  1 |  60k|  50 | 0.000000e+00 |      --      |    Inf |  34.40%
+ 1902s| 43700 |   505 | 13486k| 223.3 |   590M |  35 |1264 |  10k|3815 | 125k|  1 |  61k|  50 | 0.000000e+00 |      --      |    Inf |  34.41%
+ 1905s| 43800 |   501 | 13507k| 223.3 |   590M |  35 |1264 |  10k|3300 | 126k|  0 |  61k|  50 | 0.000000e+00 |      --      |    Inf |  34.55%
+ 1906s| 43900 |   494 | 13524k| 223.2 |   591M |  35 |1264 |  10k|4275 | 126k|  0 |  61k|  50 | 0.000000e+00 |      --      |    Inf |  34.67%
+ 1909s| 44000 |   506 | 13546k| 223.2 |   591M |  35 |1264 |  10k|3692 | 126k|  2 |  61k|  50 | 0.000000e+00 |      --      |    Inf |  34.68%
+ 1911s| 44100 |   508 | 13572k| 223.2 |   592M |  35 |1264 |  10k|3718 | 126k|  1 |  61k|  50 | 0.000000e+00 |      --      |    Inf |  34.71%
+ 1914s| 44200 |   521 | 13604k| 223.4 |   592M |  35 |1264 |  10k|3723 | 127k|  1 |  61k|  50 | 0.000000e+00 |      --      |    Inf |  34.71%
+ 1918s| 44300 |   501 | 13640k| 223.6 |   592M |  35 |1264 |  10k|3868 | 127k|  0 |  61k|  50 | 0.000000e+00 |      --      |    Inf |  34.72%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1921s| 44400 |   502 | 13670k| 223.7 |   592M |  35 |1264 |  10k|3778 | 127k|  2 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  34.74%
+ 1924s| 44500 |   500 | 13698k| 223.8 |   592M |  35 |1264 |  11k|3766 | 127k|  0 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  34.76%
+ 1926s| 44600 |   494 | 13726k| 223.9 |   592M |  35 |1264 |  11k|3830 | 127k|  2 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  34.77%
+ 1929s| 44700 |   500 | 13751k| 224.0 |   592M |  35 |1264 |  11k|3637 | 127k|  2 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  34.93%
+ 1932s| 44800 |   502 | 13779k| 224.0 |   592M |  35 |1264 |  11k|3618 | 128k|  2 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  35.00%
+ 1934s| 44900 |   498 | 13804k| 224.1 |   593M |  35 |1264 |  11k|3689 | 128k|  0 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  35.02%
+ 1936s| 45000 |   514 | 13827k| 224.1 |   593M |  35 |1264 |  11k|3699 | 128k|  0 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  35.04%
+ 1939s| 45100 |   492 | 13854k| 224.2 |   593M |  35 |1264 |  11k|4434 | 128k|  1 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  35.08%
+ 1941s| 45200 |   497 | 13870k| 224.1 |   594M |  35 |1264 |  11k|4216 | 128k|  1 |  62k|  50 | 0.000000e+00 |      --      |    Inf |  35.15%
+ 1944s| 45300 |   493 | 13900k| 224.2 |   595M |  35 |1264 |  11k|4145 | 128k|  0 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.23%
+ 1948s| 45400 |   488 | 13944k| 224.5 |   595M |  35 |1264 |  11k|4144 | 128k|  0 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.31%
+ 1953s| 45500 |   474 | 13990k| 224.9 |   596M |  35 |1264 |  10k|3322 | 129k|  0 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.51%
+ 1955s| 45600 |   482 | 14011k| 224.9 |   596M |  35 |1264 |  10k|3704 | 129k|  0 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.54%
+ 1956s| 45700 |   499 | 14026k| 224.8 |   596M |  35 |1264 |  11k|3420 | 129k|  0 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.58%
+ 1958s| 45800 |   492 | 14044k| 224.7 |   596M |  35 |1264 |  11k|3442 | 129k|  0 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.65%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1960s| 45900 |   483 | 14059k| 224.6 |   596M |  35 |1264 |  11k|3438 | 129k|  0 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.70%
+ 1962s| 46000 |   500 | 14078k| 224.5 |   596M |  35 |1264 |  11k|3420 | 129k|  1 |  63k|  50 | 0.000000e+00 |      --      |    Inf |  35.75%
+ 1964s| 46100 |   503 | 14094k| 224.4 |   596M |  35 |1264 |  11k|3426 | 130k|  0 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  35.78%
+ 1966s| 46200 |   494 | 14116k| 224.4 |   597M |  35 |1264 |  10k|3410 | 130k|  1 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  35.91%
+ 1968s| 46300 |   477 | 14139k| 224.4 |   598M |  35 |1264 |  10k|4541 | 130k|  0 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  35.96%
+ 1971s| 46400 |   488 | 14157k| 224.4 |   598M |  35 |1264 |  10k|3016 | 131k|  2 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  36.11%
+ 1973s| 46500 |   490 | 14175k| 224.3 |   598M |  35 |1264 |  10k|3094 | 131k|  2 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  36.23%
+ 1975s| 46600 |   468 | 14196k| 224.3 |   599M |  35 |1264 |  10k|3522 | 131k|  2 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  36.39%
+ 1978s| 46700 |   466 | 14221k| 224.3 |   599M |  35 |1264 |  10k|4403 | 131k|  1 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  36.45%
+ 1981s| 46800 |   469 | 14243k| 224.3 |   601M |  35 |1264 |  10k|4060 | 131k|  0 |  64k|  50 | 0.000000e+00 |      --      |    Inf |  36.48%
+ 1984s| 46900 |   472 | 14275k| 224.5 |   602M |  35 |1264 |  11k|4114 | 132k|  3 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  36.49%
+ 1988s| 47000 |   470 | 14307k| 224.6 |   604M |  35 |1264 |  11k|3372 | 132k|  1 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  36.53%
+ 1990s| 47100 |   462 | 14330k| 224.6 |   605M |  35 |1264 |  10k|3405 | 132k|  1 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  36.66%
+ 1993s| 47200 |   460 | 14352k| 224.6 |   606M |  35 |1264 |  10k|4406 | 132k|  1 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  40.79%
+ 1996s| 47300 |   445 | 14379k| 224.7 |   607M |  35 |1264 |  10k|4313 | 133k|  0 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  41.07%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 1999s| 47400 |   430 | 14407k| 224.8 |   607M |  35 |1264 |9867 |4326 | 133k|  1 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  41.62%
+ 2001s| 47500 |   429 | 14425k| 224.7 |   609M |  35 |1264 |9734 |3420 | 133k|  2 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  41.67%
+ 2004s| 47600 |   426 | 14444k| 224.6 |   609M |  35 |1264 |9768 |4115 | 133k|  1 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  41.85%
+ 2006s| 47700 |   427 | 14469k| 224.7 |   609M |  35 |1264 |9858 |4107 | 133k|  2 |  65k|  50 | 0.000000e+00 |      --      |    Inf |  41.87%
+ 2008s| 47800 |   431 | 14489k| 224.6 |   609M |  35 |1264 |9890 |4107 | 133k|  2 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  41.91%
+ 2010s| 47900 |   428 | 14509k| 224.6 |   609M |  35 |1264 |9988 |4124 | 133k|  1 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  41.95%
+ 2013s| 48000 |   428 | 14530k| 224.6 |   609M |  35 |1264 |  10k|4111 | 134k|  1 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  41.97%
+ 2015s| 48100 |   417 | 14549k| 224.5 |   609M |  35 |1264 |  10k|4109 | 134k|  0 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  41.98%
+ 2017s| 48200 |   407 | 14572k| 224.5 |   610M |  35 |1264 |9967 |3281 | 134k|  0 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  42.04%
+ 2020s| 48300 |   391 | 14590k| 224.5 |   611M |  35 |1264 |9423 |3335 | 134k|  2 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  42.26%
+ 2021s| 48400 |   391 | 14601k| 224.3 |   611M |  35 |1264 |9466 |3364 | 134k|  0 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  42.36%
+ 2023s| 48500 |   396 | 14617k| 224.2 |   611M |  35 |1264 |9511 |3376 | 134k|  2 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  42.47%
+ 2025s| 48600 |   399 | 14634k| 224.1 |   611M |  35 |1264 |9572 |3457 | 135k|  0 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  42.53%
+ 2027s| 48700 |   396 | 14649k| 224.0 |   611M |  35 |1264 |9629 |3467 | 135k|  1 |  66k|  50 | 0.000000e+00 |      --      |    Inf |  42.55%
+ 2029s| 48800 |   389 | 14669k| 224.0 |   611M |  35 |1264 |9701 |3517 | 135k|  0 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  42.61%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2031s| 48900 |   388 | 14689k| 223.9 |   611M |  35 |1264 |9813 |3342 | 135k|  0 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  42.84%
+ 2033s| 49000 |   386 | 14711k| 223.9 |   612M |  35 |1264 |9891 |3872 | 135k|  2 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  42.88%
+ 2036s| 49100 |   388 | 14734k| 223.9 |   612M |  35 |1264 |9797 |3611 | 135k|  1 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  42.94%
+ 2038s| 49200 |   394 | 14754k| 223.9 |   612M |  35 |1264 |9884 |3607 | 136k|  1 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  42.98%
+ 2040s| 49300 |   386 | 14776k| 223.9 |   612M |  35 |1264 |  10k|3609 | 136k|  0 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  43.02%
+ 2041s| 49400 |   376 | 14793k| 223.8 |   613M |  35 |1264 |  10k|4166 | 136k|  1 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  43.11%
+ 2043s| 49500 |   382 | 14810k| 223.7 |   614M |  35 |1264 |9964 |4275 | 136k|  0 |  67k|  50 | 0.000000e+00 |      --      |    Inf |  43.12%
+ 2045s| 49600 |   390 | 14823k| 223.6 |   615M |  35 |1264 |  10k|3629 | 136k|  2 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.12%
+ 2046s| 49700 |   382 | 14839k| 223.5 |   617M |  35 |1264 |  10k|3619 | 136k|  2 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.13%
+ 2048s| 49800 |   379 | 14855k| 223.4 |   617M |  35 |1264 |  10k|4267 | 136k|  0 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.14%
+ 2050s| 49900 |   383 | 14874k| 223.3 |   619M |  35 |1264 |  10k|3863 | 137k|  0 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.25%
+ 2052s| 50000 |   374 | 14890k| 223.2 |   619M |  35 |1264 |  10k|4440 | 137k|  0 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.38%
+ 2054s| 50100 |   372 | 14909k| 223.2 |   619M |  35 |1264 |  10k|3361 | 137k|  2 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.44%
+ 2056s| 50200 |   371 | 14928k| 223.1 |   620M |  35 |1264 |  10k|4229 | 137k|  0 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.46%
+ 2059s| 50300 |   368 | 14949k| 223.1 |   621M |  35 |1264 |  10k|4469 | 137k|  2 |  68k|  50 | 0.000000e+00 |      --      |    Inf |  43.87%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2061s| 50400 |   357 | 14972k| 223.1 |   623M |  35 |1264 |  10k|4569 | 137k|  0 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  44.25%
+ 2064s| 50500 |   362 | 14994k| 223.1 |   625M |  35 |1264 |  10k|4541 | 137k|  0 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  44.31%
+ 2066s| 50600 |   364 | 15017k| 223.1 |   629M |  35 |1264 |  10k|4547 | 138k|  0 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  44.31%
+ 2069s| 50700 |   360 | 15043k| 223.2 |   632M |  35 |1264 |  10k|4837 | 138k|  1 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  44.33%
+ 2072s| 50800 |   367 | 15066k| 223.2 |   635M |  35 |1264 |9970 |4841 | 138k|  0 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  44.49%
+ 2075s| 50900 |   359 | 15090k| 223.2 |   637M |  35 |1264 |  10k|4869 | 138k|  2 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  44.51%
+ 2077s| 51000 |   365 | 15106k| 223.1 |   637M |  35 |1264 |9729 |4125 | 138k|  0 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  45.68%
+ 2080s| 51100 |   366 | 15126k| 223.1 |   638M |  35 |1264 |9674 |4832 | 138k|  1 |  69k|  50 | 0.000000e+00 |      --      |    Inf |  46.04%
+ 2082s| 51200 |   356 | 15149k| 223.1 |   639M |  35 |1264 |9674 |5042 | 138k|  0 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  46.90%
+ 2084s| 51300 |   361 | 15167k| 223.0 |   639M |  35 |1264 |9675 |3758 | 139k|  0 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  46.91%
+ 2086s| 51400 |   365 | 15186k| 223.0 |   639M |  35 |1264 |9749 |3612 | 139k|  2 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  46.99%
+ 2088s| 51500 |   364 | 15207k| 223.0 |   639M |  35 |1264 |9885 |3857 | 139k|  1 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  47.01%
+ 2091s| 51600 |   353 | 15229k| 223.0 |   640M |  35 |1264 |9942 |3508 | 139k|  0 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  47.11%
+ 2093s| 51700 |   356 | 15249k| 222.9 |   640M |  35 |1264 |9964 |3714 | 139k|  2 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  47.25%
+ 2094s| 51800 |   367 | 15265k| 222.9 |   640M |  35 |1264 |  10k|3895 | 139k|  1 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  47.27%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2096s| 51900 |   359 | 15283k| 222.8 |   641M |  35 |1264 |  10k|3894 | 140k|  1 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  47.28%
+ 2099s| 52000 |   352 | 15308k| 222.8 |   641M |  35 |1264 |  10k|3893 | 140k|  0 |  70k|  50 | 0.000000e+00 |      --      |    Inf |  47.30%
+ 2102s| 52100 |   348 | 15335k| 222.9 |   641M |  35 |1264 |  10k|3463 | 140k|  2 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  47.76%
+ 2103s| 52200 |   358 | 15351k| 222.8 |   641M |  35 |1264 |  10k|3482 | 140k|  1 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.22%
+ 2105s| 52300 |   327 | 15370k| 222.8 |   641M |  35 |1264 |9756 |4435 | 141k|  0 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.49%
+ 2107s| 52400 |   336 | 15385k| 222.7 |   645M |  35 |1264 |9770 |4587 | 141k|  1 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.53%
+ 2109s| 52500 |   327 | 15406k| 222.6 |   647M |  35 |1264 |9790 |4577 | 141k|  0 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.53%
+ 2112s| 52600 |   327 | 15435k| 222.7 |   647M |  35 |1264 |9869 |3726 | 141k|  1 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.54%
+ 2115s| 52700 |   331 | 15458k| 222.7 |   647M |  35 |1264 |9953 |3748 | 141k|  1 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.55%
+ 2117s| 52800 |   327 | 15485k| 222.8 |   647M |  35 |1264 |9981 |3727 | 141k|  1 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.56%
+ 2120s| 52900 |   325 | 15507k| 222.8 |   648M |  35 |1264 |9824 |3216 | 141k|  2 |  71k|  50 | 0.000000e+00 |      --      |    Inf |  48.60%
+ 2121s| 53000 |   318 | 15519k| 222.7 |   648M |  35 |1264 |9910 |3227 | 142k|  0 |  72k|  50 | 0.000000e+00 |      --      |    Inf |  48.64%
+ 2122s| 53100 |   319 | 15532k| 222.5 |   648M |  35 |1264 |9935 |3300 | 142k|  0 |  72k|  50 | 0.000000e+00 |      --      |    Inf |  48.65%
+ 2124s| 53200 |   323 | 15556k| 222.6 |   648M |  35 |1264 |  10k|3285 | 142k|  0 |  72k|  50 | 0.000000e+00 |      --      |    Inf |  48.67%
+ 2126s| 53300 |   318 | 15581k| 222.6 |   648M |  35 |1264 |  10k|3397 | 143k|  0 |  72k|  50 | 0.000000e+00 |      --      |    Inf |  48.68%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2128s| 53400 |   316 | 15599k| 222.5 |   648M |  35 |1264 |  10k|3455 | 143k|  0 |  72k|  50 | 0.000000e+00 |      --      |    Inf |  48.68%
+ 2130s| 53500 |   318 | 15619k| 222.5 |   648M |  35 |1264 |  10k|3478 | 143k|  0 |  72k|  50 | 0.000000e+00 |      --      |    Inf |  48.69%
+ 2132s| 53600 |   318 | 15636k| 222.4 |   648M |  35 |1264 |  10k|3347 | 143k|  2 |  72k|  50 | 0.000000e+00 |      --      |    Inf |  48.69%
+ 2134s| 53700 |   309 | 15658k| 222.4 |   648M |  35 |1264 |  10k|3450 | 144k|  0 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  48.74%
+ 2136s| 53800 |   310 | 15677k| 222.4 |   648M |  35 |1264 |  10k|3413 | 144k|  1 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  48.81%
+ 2138s| 53900 |   314 | 15700k| 222.4 |   648M |  35 |1264 |  10k|3766 | 145k|  0 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  48.94%
+ 2141s| 54000 |   318 | 15726k| 222.4 |   648M |  35 |1264 |  10k|3055 | 145k|  1 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  53.78%
+ 2143s| 54100 |   316 | 15749k| 222.4 |   648M |  35 |1264 |  10k|3292 | 145k|  2 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  53.92%
+ 2145s| 54200 |   320 | 15771k| 222.4 |   648M |  35 |1264 |  10k|3157 | 146k|  2 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  53.94%
+ 2147s| 54300 |   308 | 15795k| 222.5 |   648M |  35 |1264 |  10k|4206 | 146k|  0 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  53.99%
+ 2149s| 54400 |   309 | 15812k| 222.4 |   649M |  35 |1264 |  10k|3249 | 146k|  2 |  73k|  50 | 0.000000e+00 |      --      |    Inf |  54.21%
+ 2151s| 54500 |   315 | 15832k| 222.4 |   649M |  35 |1264 |  10k|3333 | 147k|  0 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.63%
+ 2153s| 54600 |   322 | 15850k| 222.3 |   649M |  35 |1264 |9759 |3257 | 147k|  2 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.73%
+ 2155s| 54700 |   330 | 15872k| 222.3 |   649M |  35 |1264 |9669 |3247 | 148k|  2 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.77%
+ 2157s| 54800 |   342 | 15892k| 222.3 |   649M |  35 |1264 |9718 |3347 | 148k|  0 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.79%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2160s| 54900 |   345 | 15920k| 222.3 |   649M |  35 |1264 |9808 |3399 | 149k|  0 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.79%
+ 2162s| 55000 |   335 | 15944k| 222.4 |   649M |  35 |1264 |9889 |3346 | 149k|  0 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.80%
+ 2165s| 55100 |   328 | 15977k| 222.5 |   649M |  35 |1264 |9952 |3392 | 149k|  0 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.83%
+ 2169s| 55200 |   323 | 16020k| 222.8 |   649M |  35 |1264 |  10k|3538 | 150k|  0 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  54.91%
+ 2172s| 55300 |   316 | 16056k| 223.0 |   649M |  35 |1264 |  10k|3474 | 150k|  1 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  55.06%
+ 2174s| 55400 |   322 | 16076k| 223.0 |   649M |  35 |1264 |  10k|3387 | 151k|  2 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  55.11%
+ 2175s| 55500 |   324 | 16090k| 222.9 |   649M |  35 |1264 |  10k|3404 | 151k|  2 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  55.14%
+ 2177s| 55600 |   326 | 16107k| 222.8 |   649M |  35 |1264 |  10k|3429 | 151k|  1 |  74k|  50 | 0.000000e+00 |      --      |    Inf |  55.19%
+ 2179s| 55700 |   339 | 16126k| 222.7 |   649M |  35 |1264 |  10k|3459 | 151k|  2 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  55.22%
+ 2181s| 55800 |   326 | 16148k| 222.7 |   649M |  35 |1264 |  10k|3450 | 152k|  0 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  55.24%
+ 2183s| 55900 |   320 | 16169k| 222.7 |   649M |  35 |1264 |  10k|3477 | 152k|  0 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  55.26%
+ 2185s| 56000 |   314 | 16191k| 222.7 |   649M |  35 |1264 |  10k|3295 | 152k|  0 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  55.29%
+ 2188s| 56100 |   313 | 16220k| 222.8 |   649M |  35 |1264 |  10k|3368 | 153k|  2 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  55.32%
+ 2190s| 56200 |   307 | 16245k| 222.8 |   649M |  35 |1264 |  10k|3697 | 153k|  0 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  55.37%
+ 2192s| 56300 |   313 | 16265k| 222.8 |   649M |  35 |1264 |  10k|3313 | 154k|  0 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  55.94%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2194s| 56400 |   314 | 16284k| 222.8 |   649M |  35 |1264 |  10k|3317 | 154k|  2 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  56.00%
+ 2197s| 56500 |   312 | 16311k| 222.8 |   649M |  35 |1264 |9731 |3539 | 155k|  2 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  56.35%
+ 2199s| 56600 |   309 | 16330k| 222.8 |   650M |  35 |1264 |9841 |4693 | 155k|  0 |  75k|  50 | 0.000000e+00 |      --      |    Inf |  56.73%
+ 2202s| 56700 |   301 | 16359k| 222.9 |   650M |  35 |1264 |9694 |3177 | 155k|  2 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  56.91%
+ 2205s| 56800 |   305 | 16391k| 223.0 |   650M |  35 |1264 |9798 |3231 | 155k|  0 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  56.95%
+ 2209s| 56900 |   307 | 16434k| 223.3 |   650M |  35 |1264 |9836 |4415 | 156k|  1 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  57.10%
+ 2212s| 57000 |   315 | 16467k| 223.4 |   652M |  35 |1264 |9924 |4435 | 156k|  0 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  57.14%
+ 2215s| 57100 |   299 | 16490k| 223.4 |   653M |  35 |1264 |9942 |4774 | 156k|  0 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  57.26%
+ 2217s| 57200 |   293 | 16517k| 223.5 |   656M |  35 |1264 |9737 |3369 | 156k|  2 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  57.36%
+ 2219s| 57300 |   289 | 16536k| 223.5 |   656M |  35 |1264 |9766 |3451 | 156k|  0 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  57.37%
+ 2223s| 57400 |   291 | 16568k| 223.6 |   656M |  35 |1264 |9562 |3094 | 157k|  2 |  76k|  50 | 0.000000e+00 |      --      |    Inf |  58.26%
+ 2225s| 57500 |   294 | 16595k| 223.7 |   656M |  35 |1264 |9676 |3072 | 157k|  2 |  77k|  50 | 0.000000e+00 |      --      |    Inf |  58.64%
+ 2228s| 57600 |   288 | 16616k| 223.6 |   656M |  35 |1264 |9651 |4477 | 157k|  2 |  77k|  50 | 0.000000e+00 |      --      |    Inf |  59.04%
+ 2230s| 57700 |   296 | 16638k| 223.6 |   658M |  35 |1264 |9613 |4225 | 157k|  0 |  77k|  50 | 0.000000e+00 |      --      |    Inf |  59.38%
+ 2233s| 57800 |   312 | 16663k| 223.7 |   662M |  35 |1264 |9555 |4220 | 158k|  0 |  77k|  50 | 0.000000e+00 |      --      |    Inf |  59.82%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2236s| 57900 |   306 | 16690k| 223.7 |   662M |  35 |1264 |9400 |4262 | 158k|  1 |  77k|  50 | 0.000000e+00 |      --      |    Inf |  60.09%
+ 2239s| 58000 |   312 | 16711k| 223.7 |   662M |  35 |1264 |9354 |4341 | 158k|  0 |  77k|  50 | 0.000000e+00 |      --      |    Inf |  60.27%
+ 2240s| 58100 |   317 | 16725k| 223.6 |   664M |  35 |1264 |9391 |4359 | 158k|  2 |  77k|  50 | 0.000000e+00 |      --      |    Inf |  60.32%
+ 2243s| 58200 |   298 | 16752k| 223.7 |   665M |  35 |1264 |8908 |3281 | 158k|  2 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  62.41%
+ 2246s| 58300 |   292 | 16781k| 223.7 |   665M |  35 |1264 |8660 |4400 | 158k|  2 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  63.02%
+ 2248s| 58400 |   296 | 16799k| 223.7 |   665M |  35 |1264 |8733 |4411 | 158k|  1 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  63.11%
+ 2250s| 58500 |   295 | 16819k| 223.7 |   666M |  35 |1264 |8840 |4436 | 158k|  0 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  63.12%
+ 2252s| 58600 |   295 | 16838k| 223.6 |   667M |  35 |1264 |8910 |4427 | 159k|  1 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  63.13%
+ 2255s| 58700 |   298 | 16859k| 223.6 |   668M |  35 |1264 |8900 |4794 | 159k|  1 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  63.41%
+ 2258s| 58800 |   306 | 16885k| 223.6 |   670M |  35 |1264 |8952 |4796 | 159k|  1 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  63.55%
+ 2260s| 58900 |   283 | 16911k| 223.7 |   670M |  35 |1264 |8928 |4716 | 159k|  1 |  78k|  50 | 0.000000e+00 |      --      |    Inf |  63.66%
+ 2263s| 59000 |   286 | 16934k| 223.7 |   670M |  35 |1264 |8987 |4055 | 159k|  0 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  63.81%
+ 2266s| 59100 |   291 | 16966k| 223.8 |   670M |  35 |1264 |8858 |4257 | 159k|  0 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  64.71%
+ 2271s| 59200 |   297 | 16997k| 223.9 |   670M |  35 |1264 |8787 |4797 | 160k|  1 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  65.83%
+ 2273s| 59300 |   292 | 17018k| 223.9 |   670M |  35 |1264 |8579 |4421 | 160k|  0 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  66.00%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2275s| 59400 |   305 | 17036k| 223.9 |   671M |  35 |1264 |8483 |2999 | 160k|  0 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  66.14%
+ 2276s| 59500 |   308 | 17050k| 223.8 |   671M |  35 |1264 |8568 |4906 | 160k|  2 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  66.20%
+ 2278s| 59600 |   311 | 17065k| 223.7 |   673M |  35 |1264 |8613 |4913 | 161k|  1 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  66.67%
+ 2281s| 59700 |   297 | 17086k| 223.6 |   674M |  35 |1264 |8658 |2927 | 161k|  0 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  66.90%
+ 2283s| 59800 |   297 | 17104k| 223.6 |   674M |  35 |1264 |8749 |4904 | 161k|  1 |  79k|  50 | 0.000000e+00 |      --      |    Inf |  67.09%
+ 2285s| 59900 |   307 | 17120k| 223.5 |   674M |  35 |1264 |8825 |4887 | 161k|  1 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  67.28%
+ 2288s| 60000 |   284 | 17143k| 223.5 |   676M |  35 |1264 |8743 |3711 | 161k|  1 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  68.15%
+ 2291s| 60100 |   279 | 17174k| 223.6 |   676M |  35 |1264 |8629 |3993 | 162k|  0 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  68.78%
+ 2293s| 60200 |   278 | 17194k| 223.6 |   676M |  35 |1264 |8583 |4537 | 162k|  0 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  69.08%
+ 2296s| 60300 |   267 | 17221k| 223.6 |   677M |  35 |1264 |8385 |4303 | 162k|  2 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  72.57%
+ 2299s| 60400 |   277 | 17246k| 223.7 |   677M |  35 |1264 |8470 |4324 | 162k|  0 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  72.69%
+ 2302s| 60500 |   292 | 17269k| 223.7 |   677M |  35 |1264 |8571 |4327 | 162k|  1 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  72.75%
+ 2305s| 60600 |   289 | 17306k| 223.9 |   680M |  35 |1264 |8660 |4330 | 162k|  2 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  72.76%
+ 2309s| 60700 |   281 | 17347k| 224.1 |   682M |  35 |1264 |8798 |4381 | 163k|  0 |  80k|  50 | 0.000000e+00 |      --      |    Inf |  72.76%
+ 2313s| 60800 |   275 | 17376k| 224.2 |   683M |  35 |1264 |8917 |4320 | 163k|  0 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  72.81%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2315s| 60900 |   267 | 17404k| 224.3 |   683M |  35 |1264 |8954 |4382 | 163k|  0 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  72.86%
+ 2318s| 61000 |   251 | 17430k| 224.3 |   685M |  35 |1264 |8822 |4473 | 163k|  0 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  73.06%
+ 2321s| 61100 |   254 | 17454k| 224.3 |   687M |  35 |1264 |8864 |4498 | 163k|  1 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  73.11%
+ 2323s| 61200 |   256 | 17474k| 224.3 |   688M |  35 |1264 |8529 |2971 | 164k|  2 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  74.97%
+ 2326s| 61300 |   256 | 17498k| 224.3 |   688M |  35 |1264 |8619 |3066 | 164k|  0 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  75.06%
+ 2327s| 61400 |   262 | 17517k| 224.3 |   688M |  35 |1264 |8723 |3040 | 164k|  2 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  75.13%
+ 2329s| 61500 |   294 | 17535k| 224.2 |   688M |  35 |1264 |8695 |3151 | 165k|  2 |  81k|  50 | 0.000000e+00 |      --      |    Inf |  75.18%
+ 2331s| 61600 |   286 | 17559k| 224.3 |   688M |  35 |1264 |8804 |3187 | 165k|  1 |  82k|  50 | 0.000000e+00 |      --      |    Inf |  75.18%
+ 2333s| 61700 |   284 | 17580k| 224.2 |   688M |  35 |1264 |8940 |3223 | 165k|  1 |  82k|  50 | 0.000000e+00 |      --      |    Inf |  75.18%
+ 2335s| 61800 |   284 | 17603k| 224.2 |   688M |  35 |1264 |9028 |3125 | 166k|  2 |  82k|  50 | 0.000000e+00 |      --      |    Inf |  75.18%
+ 2337s| 61900 |   287 | 17623k| 224.2 |   688M |  35 |1264 |9094 |3362 | 166k|  2 |  82k|  50 | 0.000000e+00 |      --      |    Inf |  75.19%
+ 2339s| 62000 |   283 | 17643k| 224.2 |   688M |  35 |1264 |9175 |3072 | 166k|  0 |  82k|  50 | 0.000000e+00 |      --      |    Inf |  75.31%
+ 2343s| 62100 |   299 | 17696k| 224.6 |   688M |  35 |1264 |9260 |3291 | 167k|  0 |  82k|  50 | 0.000000e+00 |      --      |    Inf |  75.38%
+ 2347s| 62200 |   285 | 17738k| 224.8 |   688M |  35 |1264 |9353 |3634 | 168k|  0 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  75.58%
+ 2350s| 62300 |   279 | 17772k| 225.0 |   688M |  35 |1264 |9200 |4395 | 168k|  0 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  75.80%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2354s| 62400 |   285 | 17809k| 225.1 |   688M |  35 |1264 |9002 |4414 | 169k|  2 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  76.03%
+ 2357s| 62500 |   263 | 17833k| 225.2 |   689M |  35 |1264 |8828 |3327 | 169k|  0 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  76.23%
+ 2360s| 62600 |   263 | 17858k| 225.2 |   689M |  35 |1264 |8619 |3936 | 169k|  1 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  76.38%
+ 2362s| 62700 |   249 | 17881k| 225.2 |   689M |  35 |1264 |8396 |2866 | 169k|  2 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  77.12%
+ 2364s| 62800 |   246 | 17898k| 225.1 |   689M |  35 |1264 |8269 |4131 | 169k|  0 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  77.72%
+ 2365s| 62900 |   251 | 17912k| 225.0 |   690M |  35 |1264 |8321 |4076 | 169k|  0 |  83k|  50 | 0.000000e+00 |      --      |    Inf |  77.88%
+ 2367s| 63000 |   261 | 17928k| 224.9 |   691M |  35 |1264 |8389 |4154 | 169k|  0 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  77.93%
+ 2369s| 63100 |   256 | 17944k| 224.9 |   691M |  35 |1264 |8460 |4078 | 169k|  1 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  78.04%
+ 2371s| 63200 |   255 | 17965k| 224.9 |   693M |  35 |1264 |8553 |4083 | 169k|  1 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  78.13%
+ 2373s| 63300 |   236 | 17993k| 224.9 |   693M |  35 |1264 |8480 |4279 | 170k|  1 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  78.42%
+ 2376s| 63400 |   252 | 18015k| 224.9 |   694M |  35 |1264 |8468 |4405 | 170k|  0 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  78.51%
+ 2378s| 63500 |   251 | 18037k| 224.9 |   695M |  35 |1264 |8547 |4516 | 170k|  0 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  78.55%
+ 2381s| 63600 |   235 | 18064k| 225.0 |   698M |  35 |1264 |8469 |4864 | 170k|  2 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  78.59%
+ 2384s| 63700 |   243 | 18092k| 225.0 |   701M |  35 |1264 |8480 |4524 | 170k|  1 |  84k|  50 | 0.000000e+00 |      --      |    Inf |  78.60%
+ 2387s| 63800 |   238 | 18121k| 225.1 |   703M |  35 |1264 |8531 |4544 | 170k|  0 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  78.61%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2390s| 63900 |   228 | 18145k| 225.1 |   703M |  35 |1264 |8535 |3469 | 170k|  0 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  78.70%
+ 2393s| 64000 |   237 | 18171k| 225.2 |   703M |  35 |1264 |8347 |3615 | 171k|  1 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  78.95%
+ 2397s| 64100 |   233 | 18207k| 225.3 |   703M |  35 |1264 |8069 |3232 | 171k|  0 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  80.67%
+ 2399s| 64200 |   238 | 18230k| 225.3 |   703M |  35 |1264 |8144 |3198 | 172k|  2 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  80.96%
+ 2402s| 64300 |   214 | 18258k| 225.4 |   703M |  35 |1264 |7530 |4673 | 172k|  1 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  82.28%
+ 2404s| 64400 |   218 | 18273k| 225.3 |   705M |  35 |1264 |7626 |4690 | 172k|  0 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  82.29%
+ 2406s| 64500 |   206 | 18299k| 225.4 |   705M |  35 |1264 |7689 |4547 | 172k|  0 |  85k|  50 | 0.000000e+00 |      --      |    Inf |  82.44%
+ 2408s| 64600 |   212 | 18312k| 225.2 |   705M |  35 |1264 |7746 |3407 | 172k|  0 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  82.45%
+ 2409s| 64700 |   203 | 18331k| 225.2 |   705M |  35 |1264 |7735 |4249 | 172k|  1 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  82.48%
+ 2413s| 64800 |   225 | 18367k| 225.4 |   705M |  35 |1264 |7675 |3835 | 173k|  2 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  82.59%
+ 2417s| 64900 |   219 | 18406k| 225.6 |   707M |  35 |1264 |7774 |3885 | 173k|  0 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  82.59%
+ 2421s| 65000 |   227 | 18443k| 225.7 |   707M |  35 |1264 |7837 |3908 | 173k|  0 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  82.60%
+ 2425s| 65100 |   226 | 18479k| 225.9 |   707M |  35 |1264 |7906 |3843 | 173k|  2 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  82.62%
+ 2428s| 65200 |   214 | 18509k| 226.0 |   708M |  35 |1264 |7657 |3338 | 174k|  0 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  82.67%
+ 2431s| 65300 |   216 | 18534k| 226.0 |   709M |  35 |1264 |7486 |4258 | 174k|  0 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  84.04%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2435s| 65400 |   203 | 18568k| 226.2 |   711M |  35 |1264 |7291 |5108 | 174k|  1 |  86k|  50 | 0.000000e+00 |      --      |    Inf |  84.80%
+ 2440s| 65500 |   207 | 18602k| 226.3 |   711M |  35 |1264 |7181 |3445 | 174k|  0 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  86.59%
+ 2444s| 65600 |   196 | 18635k| 226.4 |   711M |  35 |1264 |7095 |4169 | 174k|  0 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  87.28%
+ 2448s| 65700 |   186 | 18676k| 226.7 |   711M |  35 |1264 |6992 |4277 | 175k|  0 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  87.94%
+ 2451s| 65800 |   162 | 18705k| 226.7 |   711M |  35 |1264 |6827 |3838 | 175k|  0 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  88.58%
+ 2454s| 65900 |   129 | 18734k| 226.8 |   712M |  35 |1264 |6619 |2970 | 175k|  0 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  90.57%
+ 2457s| 66000 |   129 | 18769k| 227.0 |   712M |  35 |1264 |6655 |3131 | 176k|  2 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  92.17%
+ 2460s| 66100 |   140 | 18795k| 227.0 |   712M |  35 |1264 |6619 |2993 | 177k|  2 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  93.48%
+ 2463s| 66200 |   137 | 18827k| 227.1 |   712M |  35 |1264 |6666 |3203 | 178k|  1 |  87k|  50 | 0.000000e+00 |      --      |    Inf |  94.35%
+ 2466s| 66300 |   109 | 18854k| 227.2 |   712M |  35 |1264 |6573 |4932 | 178k|  1 |  88k|  50 | 0.000000e+00 |      --      |    Inf |  95.58%
+ 2468s| 66400 |   102 | 18878k| 227.2 |   713M |  35 |1264 |6548 |5135 | 178k|  0 |  88k|  50 | 0.000000e+00 |      --      |    Inf |  95.97%
+ 2471s| 66500 |    81 | 18902k| 227.2 |   714M |  35 |1264 |6519 |2993 | 178k|  0 |  88k|  50 | 0.000000e+00 |      --      |    Inf |  96.09%
+ 2473s| 66600 |    48 | 18928k| 227.2 |   714M |  35 |1264 |6259 |5153 | 179k|  0 |  88k|  50 | 0.000000e+00 |      --      |    Inf |  97.26%
+ 2478s| 66700 |    50 | 18962k| 227.4 |   714M |  35 |1264 |6178 |5136 | 179k|  1 |  88k|  50 | 0.000000e+00 |      --      |    Inf |  98.32%
+ 2483s| 66800 |    36 | 18994k| 227.5 |   716M |  35 |1264 |6224 |5172 | 179k|  1 |  88k|  50 | 0.000000e+00 |      --      |    Inf |  98.78%
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+ 2486s| 66900 |    39 | 19017k| 227.5 |   719M |  35 |1264 |6330 |5160 | 179k|  1 |  88k|  50 | 0.000000e+00 |      --      |    Inf |  98.82%
+ 2490s| 67000 |    36 | 19047k| 227.6 |   722M |  35 |1264 |6453 |5186 | 179k|  0 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  98.94%
+ 2493s| 67100 |    25 | 19073k| 227.6 |   722M |  35 |1264 |6498 |5160 | 179k|  1 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  99.06%
+ 2495s| 67200 |    25 | 19091k| 227.6 |   722M |  35 |1264 |6619 |5172 | 179k|  1 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  99.19%
+ 2498s| 67300 |    21 | 19114k| 227.6 |   722M |  35 |1264 |6702 |5173 | 179k|  0 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  99.42%
+ 2502s| 67400 |    33 | 19150k| 227.7 |   726M |  35 |1264 |6784 |5169 | 179k|  0 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  99.51%
+ 2506s| 67500 |    30 | 19178k| 227.8 |   728M |  35 |1264 |6883 |5194 | 179k|  1 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  99.58%
+ 2510s| 67600 |    26 | 19214k| 227.9 |   729M |  35 |1264 |7001 |5194 | 179k|  0 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  99.67%
+ 2514s| 67700 |    22 | 19247k| 228.0 |   730M |  35 |1264 |7123 |5212 | 180k|  0 |  89k|  50 | 0.000000e+00 |      --      |    Inf |  99.68%
+
+SCIP Status        : problem is solved [infeasible]
+Solving Time (sec) : 2516.00
+Solving Nodes      : 67763 (total of 84425 nodes in 2 runs)
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+Dual Bound         : +1.00000000000000e+20
+Gap                : 0.00 %
+
+
+no solution available
+
+SCIP> 

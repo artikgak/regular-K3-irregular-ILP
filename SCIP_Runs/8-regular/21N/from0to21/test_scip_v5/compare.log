@@ -1,0 +1,39 @@
+Baseline:
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution"
+
+Solving Time (sec) : 1856.00
+Solving Nodes      : 52061 (total of 53424 nodes in 2 runs)
+mdpt = 38
+
+
+
+EXP1 — + Conflict Analysis
+Краща генерація конфліктних cuts до рестарту → рестарт продуктивніший.
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b set conflict useprop TRUE set conflict preferbinary TRUE set conflict usegenres TRUE set conflict conflictweight 1.0 optimize display solution" > exp1_conflict.log
+
+
+EXP2 — + Ранній рестарт
+Рестарт спрацює раніше (~700 вузлів замість ~1363) → менше марної роботи.
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b set load exp2_restart.set optimize display solution" > exp2_early_restart.log
+
+
+
+EXP3 — + Краще розгалуження
+Точніші pseudocost оцінки → кращий вибір змінної для бранчингу.
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b set load exp3_branching.set optimize display solution" > exp3_branching.log
+
+
+
+EXP4 — Combined (все разом)
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b set conflict useprop TRUE set conflict preferbinary TRUE set conflict usegenres TRUE set conflict conflictweight 1.0 set load exp4_combined.set optimize display solution" > exp4_combined.log
+
+
+
+
+
+
+
+
+
+
+

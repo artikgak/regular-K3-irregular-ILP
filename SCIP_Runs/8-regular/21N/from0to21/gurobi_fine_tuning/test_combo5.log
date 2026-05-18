@@ -1,0 +1,169 @@
+
+Gurobi 13.0.1 (win64, gurobi_cl) logging started Thu Apr 23 23:15:06 2026
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2811917
+Set parameter BranchDir to value 1
+Set parameter Heuristics to value 0
+Set parameter MIPFocus to value 3
+Set parameter VarBranch to value 3
+Set parameter Cuts to value 3
+Set parameter CliqueCuts to value 2
+Set parameter CoverCuts to value 2
+Set parameter ImpliedCuts to value 2
+Set parameter MIRCuts to value 2
+Set parameter ZeroHalfCuts to value 2
+Set parameter LogFile to value "test_combo5.log"
+Set parameter Presolve to value 2
+Using license file C:\Users\artik\gurobi.lic
+Academic license 2811917 - for non-commercial use only - registered to ar___@ukma.edu.ua
+
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+Copyright (c) 2026, Gurobi Optimization, LLC
+
+Warning: Numeric variable name in LP file ('0') - often the result
+         of a constant term in the left-hand side of a constraint.
+
+Read LP format model from file N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Reading time = 0.01 seconds
+obj: 5981 rows, 1681 columns, 22826 nonzeros
+
+Using Gurobi shared library D:\gurobi\win64\bin\gurobi130.dll
+
+CPU model: 12th Gen Intel(R) Core(TM) i7-12700H, instruction set [SSE2|AVX|AVX2]
+Thread count: 14 physical cores, 20 logical processors, using up to 20 threads
+
+Non-default parameters:
+BranchDir  1
+Heuristics  0
+MIPFocus  3
+VarBranch  3
+Cuts  3
+CliqueCuts  2
+CoverCuts  2
+ImpliedCuts  2
+MIRCuts  2
+ZeroHalfCuts  2
+Presolve  2
+
+Academic license 2811917 - for non-commercial use only - registered to ar___@ukma.edu.ua
+Optimize a model with 5981 rows, 1681 columns and 22826 nonzeros (Min)
+Model fingerprint: 0x9c0a2201
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1680 integer (1658 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 6e+01]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 8e+01]
+  RHS range        [1e+00, 6e+01]
+
+Presolve removed 2080 rows and 549 columns
+Presolve time: 0.05s
+Presolved: 3901 rows, 1132 columns, 15247 nonzeros
+Variable types: 0 continuous, 1132 integer (1112 binary)
+Root relaxation presolve removed 114 rows and 56 columns
+Root relaxation presolved: 3787 rows, 1076 columns, 14864 nonzeros
+
+
+Root relaxation: objective 0.000000e+00, 1365 iterations, 0.09 seconds (0.17 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  168          -    0.00000      -     -    0s
+     0     0    0.00000    0  181          -    0.00000      -     -    0s
+     0     0    0.00000    0  153          -    0.00000      -     -    0s
+     0     0    0.00000    0  146          -    0.00000      -     -    0s
+     0     0    0.00000    0  147          -    0.00000      -     -    1s
+     0     0    0.00000    0  147          -    0.00000      -     -    1s
+     0     0    0.00000    0  139          -    0.00000      -     -    1s
+     0     0    0.00000    0  201          -    0.00000      -     -    1s
+     0     0    0.00000    0  170          -    0.00000      -     -    1s
+     0     0    0.00000    0  145          -    0.00000      -     -    1s
+     0     0    0.00000    0  187          -    0.00000      -     -    2s
+     0     0    0.00000    0  187          -    0.00000      -     -    2s
+     0     0    0.00000    0  187          -    0.00000      -     -    2s
+     0     0    0.00000    0  187          -    0.00000      -     -    2s
+     0     2    0.00000    0  187          -    0.00000      -     -    3s
+    29    72    0.00000    5  175          -    0.00000      -   737    6s
+    71   146    0.00000    7  201          -    0.00000      -   519   10s
+   159   235    0.00000   11  157          -    0.00000      -   437   23s
+   360   315    0.00000   14  250          -    0.00000      -   427   42s
+   619   452    0.00000   20  182          -    0.00000      -   475   65s
+   953   565    0.00000   17  245          -    0.00000      -   468   97s
+  1447   693    0.00000   19  228          -    0.00000      -   463  119s
+  2064   851    0.00000   20  258          -    0.00000      -   469  137s
+  2784  1063    0.00000   15  159          -    0.00000      -   463  157s
+  3457  1275    0.00000   18  273          -    0.00000      -   460  178s
+  4137  1276    0.00000   26  187          -    0.00000      -   460  180s
+  4144  1281    0.00000   18  158          -    0.00000      -   459  185s
+  4163  1310    0.00000   14  194          -    0.00000      -   463  190s
+  4249  1436    0.00000   18  155          -    0.00000      -   466  198s
+  4361  1528    0.00000   20  188          -    0.00000      -   462  205s
+  4610  1569    0.00000   24  305          -    0.00000      -   459  215s
+  4970  1574    0.00000   29  256          -    0.00000      -   465  229s
+  5466  1594    0.00000   31  179          -    0.00000      -   465  245s
+  6062  1610    0.00000   28  194          -    0.00000      -   465  275s
+  6831  1554    0.00000   27  187          -    0.00000      -   467  347s
+  7835  1383 infeasible   34               -    0.00000      -   469  423s
+  8815  1502    0.00000   30  246          -    0.00000      -   475  492s
+  9760  1665    0.00000   31  175          -    0.00000      -   484  518s
+ 10743  1870    0.00000   38  262          -    0.00000      -   491  545s
+ 11672  2040    0.00000   32  309          -    0.00000      -   499  575s
+ 12617  2179    0.00000   33  263          -    0.00000      -   505  607s
+ 13610  2399 infeasible   29               -    0.00000      -   512  644s
+ 14588  2570 infeasible   38               -    0.00000      -   513  682s
+ 15573  2750    0.00000   28  279          -    0.00000      -   516  713s
+ 16596  2923 infeasible   33               -    0.00000      -   518  773s
+ 17618  3119    0.00000   31  262          -    0.00000      -   519  830s
+ 18640  3304    0.00000   31  186          -    0.00000      -   520  886s
+ 19642  3468    0.00000   35  161          -    0.00000      -   525  944s
+ 20681  3568 infeasible   37               -    0.00000      -   530 1001s
+ 21773  3757    0.00000   32  263          -    0.00000      -   533 1057s
+ 22696  3944    0.00000   28  295          -    0.00000      -   537 1107s
+ 23698  4151    0.00000   35  268          -    0.00000      -   539 1164s
+ 24726  4308    0.00000   30  285          -    0.00000      -   539 1223s
+ 25712  4513    0.00000   33  200          -    0.00000      -   541 1284s
+ 26749  4674    0.00000   30  295          -    0.00000      -   542 1342s
+ 27818  4825    0.00000   25  255          -    0.00000      -   542 1378s
+ 28840  4949    0.00000   24  288          -    0.00000      -   544 1410s
+ 29917  5129    0.00000   32  294          -    0.00000      -   544 1441s
+ 30968  5300 infeasible   34               -    0.00000      -   545 1474s
+ 32055  5475    0.00000   30  218          -    0.00000      -   545 1508s
+ 33261  5649    0.00000   29  177          -    0.00000      -   546 1544s
+ 34460  5874    0.00000   26  315          -    0.00000      -   546 1587s
+ 35702  6063    0.00000   37  280          -    0.00000      -   546 1627s
+ 36956  6349    0.00000   27  287          -    0.00000      -   547 1666s
+ 38254  6656    0.00000   21  320          -    0.00000      -   547 1708s
+ 39616  6989    0.00000   30  252          -    0.00000      -   546 1755s
+ 41057  7340    0.00000   26  198          -    0.00000      -   545 1879s
+ 42561  7705    0.00000   28  276          -    0.00000      -   544 2005s
+ 44084  8063    0.00000   25  212          -    0.00000      -   544 2135s
+ 45668  8389    0.00000   28  298          -    0.00000      -   545 2256s
+ 47315  8511    0.00000   23  178          -    0.00000      -   546 2264s
+
+Cutting planes:
+  Gomory: 8
+  Lift-and-project: 6
+  Cover: 12
+  Implied bound: 9
+  Clique: 9
+  MIR: 207
+  StrongCG: 116
+  Flow cover: 419
+  Zero half: 2975
+  RLT: 794
+  Relax-and-lift: 298
+  PSD: 1
+
+Explored 47556 nodes (25967415 simplex iterations) in 2264.24 seconds (2108.06 work units)
+Thread count was 20 (of 20 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 0.000000000000e+00, gap -
+
+No solution available
+

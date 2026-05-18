@@ -1,0 +1,319 @@
+
+Gurobi 13.0.1 (win64, gurobi_cl) logging started Thu Apr 23 12:18:15 2026
+
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2811917
+Set parameter LogFile to value "test1.log"
+Using license file C:\Users\artik\gurobi.lic
+Academic license 2811917 - for non-commercial use only - registered to ar___@ukma.edu.ua
+
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+Copyright (c) 2026, Gurobi Optimization, LLC
+
+Warning: Numeric variable name in LP file ('0') - often the result
+         of a constant term in the left-hand side of a constraint.
+
+Read LP format model from file N21_R8_K3_0_21_split_21_fix0B_5_wo_lem.lp
+Reading time = 0.01 seconds
+obj: 5981 rows, 1681 columns, 22826 nonzeros
+
+Using Gurobi shared library D:\gurobi\win64\bin\gurobi130.dll
+
+CPU model: 12th Gen Intel(R) Core(TM) i7-12700H, instruction set [SSE2|AVX|AVX2]
+Thread count: 14 physical cores, 20 logical processors, using up to 20 threads
+
+Academic license 2811917 - for non-commercial use only - registered to ar___@ukma.edu.ua
+Optimize a model with 5981 rows, 1681 columns and 22826 nonzeros (Min)
+Model fingerprint: 0x9c0a2201
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1680 integer (1658 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 6e+01]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 8e+01]
+  RHS range        [1e+00, 6e+01]
+
+Presolve removed 2080 rows and 549 columns
+Presolve time: 0.02s
+Presolved: 3901 rows, 1132 columns, 14961 nonzeros
+Variable types: 0 continuous, 1132 integer (1112 binary)
+
+Root relaxation: objective 0.000000e+00, 1328 iterations, 0.07 seconds (0.12 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.00000    0  167          -    0.00000      -     -    0s
+     0     0    0.00000    0  149          -    0.00000      -     -    0s
+     0     0    0.00000    0  142          -    0.00000      -     -    0s
+     0     0    0.00000    0  160          -    0.00000      -     -    0s
+     0     0    0.00000    0  160          -    0.00000      -     -    0s
+     0     0    0.00000    0  140          -    0.00000      -     -    0s
+     0     0    0.00000    0  157          -    0.00000      -     -    0s
+     0     0    0.00000    0  157          -    0.00000      -     -    0s
+     0     0    0.00000    0  151          -    0.00000      -     -    0s
+     0     0    0.00000    0  191          -    0.00000      -     -    0s
+     0     0    0.00000    0  155          -    0.00000      -     -    1s
+     0     0    0.00000    0  146          -    0.00000      -     -    1s
+     0     0    0.00000    0  165          -    0.00000      -     -    1s
+     0     0    0.00000    0  159          -    0.00000      -     -    1s
+     0     0    0.00000    0  153          -    0.00000      -     -    1s
+     0     0    0.00000    0  162          -    0.00000      -     -    1s
+     0     0    0.00000    0  154          -    0.00000      -     -    1s
+     0     0    0.00000    0  154          -    0.00000      -     -    1s
+     0     0    0.00000    0  154          -    0.00000      -     -    1s
+     0     2    0.00000    0  129          -    0.00000      -     -    2s
+   221   407    0.00000   12  154          -    0.00000      -   241    5s
+  1329   960    0.00000   30  234          -    0.00000      -   332   11s
+  3265  1396 infeasible   44               -    0.00000      -   351   16s
+  5074  1604    0.00000   14  170          -    0.00000      -   356   20s
+  5091  1615    0.00000   15  172          -    0.00000      -   355   25s
+  5647  2041    0.00000   35  243          -    0.00000      -   354   31s
+  6906  2243    0.00000   37  209          -    0.00000      -   343   36s
+  7470  2123 infeasible   38               -    0.00000      -   340   40s
+  8385  2400    0.00000   40  212          -    0.00000      -   337   52s
+  9499  2154 infeasible   48               -    0.00000      -   332   64s
+  9886  2423 infeasible   49               -    0.00000      -   330   68s
+ 11298  2814 infeasible   51               -    0.00000      -   327   73s
+ 12857  3412 infeasible   58               -    0.00000      -   326   78s
+ 14965  3750    0.00000   38  238          -    0.00000      -   324   82s
+ 16752  4048    0.00000   45  195          -    0.00000      -   324   85s
+ 20101  4800 infeasible   48               -    0.00000      -   325   92s
+ 21598  5019    0.00000   53  165          -    0.00000      -   325   95s
+ 23378  5484    0.00000   51  205          -    0.00000      -   325  101s
+ 25473  6044    0.00000   52  173          -    0.00000      -   324  107s
+ 26819  6367 infeasible   45               -    0.00000      -   323  111s
+ 28891  6671 infeasible   55               -    0.00000      -   323  116s
+ 29890  6892    0.00000   54  129          -    0.00000      -   323  120s
+ 32599  7452    0.00000   49  149          -    0.00000      -   322  126s
+ 35931  8148 infeasible   56               -    0.00000      -   321  132s
+ 37443  8565    0.00000   46  144          -    0.00000      -   321  136s
+ 40549  9524    0.00000   51  166          -    0.00000      -   321  143s
+ 42435 10084    0.00000   59  164          -    0.00000      -   320  146s
+ 44235 10201 infeasible   52               -    0.00000      -   320  150s
+ 46621 11318    0.00000   50  192          -    0.00000      -   319  167s
+ 49075 11468    0.00000   51  216          -    0.00000      -   318  170s
+ 50272 11709    0.00000   48  198          -    0.00000      -   320  175s
+ 51869 12041    0.00000   41  187          -    0.00000      -   321  180s
+ 53793 12123    0.00000   48  207          -    0.00000      -   322  185s
+ 54577 12452 infeasible   46               -    0.00000      -   323  190s
+ 56424 12781    0.00000   30  208          -    0.00000      -   324  196s
+ 58393 12962 infeasible   55               -    0.00000      -   325  201s
+ 59482 13378 infeasible   26               -    0.00000      -   326  207s
+ 61794 13524    0.00000   44  192          -    0.00000      -   327  213s
+ 62478 13815    0.00000   29  225          -    0.00000      -   327  219s
+ 64325 14219    0.00000   35  157          -    0.00000      -   328  226s
+ 66485 14624 infeasible   56               -    0.00000      -   329  232s
+ 68802 14662    0.00000   45  167          -    0.00000      -   330  238s
+ 69010 14783    0.00000   46  179          -    0.00000      -   330  245s
+Exploring 50000 nodes in MinRel heuristic
+MinRel: 98 nodes explored, relaxation 1.70e+01, total elapsed time 250s
+MinRel: 424 nodes explored, relaxation 1.40e+01, total elapsed time 255s
+MinRel: 1153 nodes explored, relaxation 1.30e+01, total elapsed time 260s
+MinRel: 3789 nodes explored, relaxation 1.30e+01, total elapsed time 265s
+MinRel: 4458 nodes explored, relaxation 1.30e+01, total elapsed time 270s
+MinRel: 4467 nodes explored, relaxation 1.30e+01, total elapsed time 275s
+MinRel: 4623 nodes explored, relaxation 1.30e+01, total elapsed time 280s
+MinRel: 4779 nodes explored, relaxation 1.30e+01, total elapsed time 285s
+MinRel: 5183 nodes explored, relaxation 1.30e+01, total elapsed time 290s
+MinRel: 5819 nodes explored, relaxation 9.00e+00, total elapsed time 295s
+MinRel: 6340 nodes explored, relaxation 9.00e+00, total elapsed time 300s
+MinRel: 8822 nodes explored, relaxation 9.00e+00, total elapsed time 305s
+MinRel: 9473 nodes explored, relaxation 8.00e+00, total elapsed time 310s
+MinRel: 10630 nodes explored, relaxation 8.00e+00, total elapsed time 315s
+MinRel: 12944 nodes explored, relaxation 8.00e+00, total elapsed time 320s
+MinRel: 14013 nodes explored, relaxation 8.00e+00, total elapsed time 325s
+MinRel: 15402 nodes explored, relaxation 8.00e+00, total elapsed time 330s
+MinRel: 15434 nodes explored, relaxation 8.00e+00, total elapsed time 335s
+MinRel: 16010 nodes explored, relaxation 8.00e+00, total elapsed time 340s
+MinRel: 16027 nodes explored, relaxation 8.00e+00, total elapsed time 345s
+MinRel: 16880 nodes explored, relaxation 8.00e+00, total elapsed time 350s
+MinRel: 17899 nodes explored, relaxation 8.00e+00, total elapsed time 355s
+MinRel: 19292 nodes explored, relaxation 8.00e+00, total elapsed time 360s
+MinRel: 20723 nodes explored, relaxation 8.00e+00, total elapsed time 365s
+MinRel: 21911 nodes explored, relaxation 8.00e+00, total elapsed time 370s
+MinRel: 24620 nodes explored, relaxation 8.00e+00, total elapsed time 375s
+MinRel: 24832 nodes explored, relaxation 8.00e+00, total elapsed time 380s
+MinRel: 25821 nodes explored, relaxation 8.00e+00, total elapsed time 385s
+MinRel: 25838 nodes explored, relaxation 8.00e+00, total elapsed time 390s
+MinRel: 26726 nodes explored, relaxation 8.00e+00, total elapsed time 395s
+MinRel: 27678 nodes explored, relaxation 8.00e+00, total elapsed time 400s
+MinRel: 28796 nodes explored, relaxation 8.00e+00, total elapsed time 405s
+MinRel: 30335 nodes explored, relaxation 8.00e+00, total elapsed time 410s
+MinRel: 31712 nodes explored, relaxation 8.00e+00, total elapsed time 415s
+MinRel: 34939 nodes explored, relaxation 8.00e+00, total elapsed time 420s
+MinRel: 36452 nodes explored, relaxation 8.00e+00, total elapsed time 425s
+MinRel: 37508 nodes explored, relaxation 8.00e+00, total elapsed time 430s
+MinRel: 39135 nodes explored, relaxation 8.00e+00, total elapsed time 435s
+MinRel: 40723 nodes explored, relaxation 8.00e+00, total elapsed time 440s
+MinRel: 42449 nodes explored, relaxation 8.00e+00, total elapsed time 445s
+MinRel: 43988 nodes explored, relaxation 8.00e+00, total elapsed time 450s
+MinRel: 43988 nodes explored, relaxation 8.00e+00, total elapsed time 455s
+MinRel: 43988 nodes explored, relaxation 8.00e+00, total elapsed time 460s
+MinRel: 43988 nodes explored, relaxation 8.00e+00, total elapsed time 465s
+MinRel: 46399 nodes explored, relaxation 8.00e+00, total elapsed time 470s
+MinRel: 47721 nodes explored, relaxation 8.00e+00, total elapsed time 475s
+MinRel: 48545 nodes explored, relaxation 8.00e+00, total elapsed time 480s
+MinRel: 49627 nodes explored, relaxation 8.00e+00, total elapsed time 485s
+No solution found by MinRel heuristic
+ 69816 14785    0.00000   43  199          -    0.00000      -   330  541s
+ 69827 14793    0.00000   34  181          -    0.00000      -   330  545s
+ 69838 14803    0.00000   21  180          -    0.00000      -   330  550s
+ 70263 15028    0.00000   41  174          -    0.00000      -   330  555s
+ 70418 15048    0.00000   35  196          -    0.00000      -   330  560s
+ 70859 15473 infeasible   45               -    0.00000      -   330  570s
+ 71793 15789    0.00000   46  199          -    0.00000      -   330  579s
+ 73808 15630    0.00000   42  167          -    0.00000      -   330  585s
+ 75237 15663 infeasible   49               -    0.00000      -   330  592s
+ 76856 15551    0.00000   43  178          -    0.00000      -   330  597s
+ 78421 15233    0.00000   50  177          -    0.00000      -   331  601s
+ 79343 15309    0.00000   60  165          -    0.00000      -   331  605s
+ 81313 14980    0.00000   49  187          -    0.00000      -   331  612s
+ 82474 14834    0.00000   57  169          -    0.00000      -   331  616s
+ 83871 14573    0.00000   47  176          -    0.00000      -   332  620s
+ 86593 14080 infeasible   52               -    0.00000      -   332  626s
+ 89211 13475 infeasible   49               -    0.00000      -   333  633s
+ 89280 13549    0.00000   48  162          -    0.00000      -   333  636s
+ 90678 13546 infeasible   56               -    0.00000      -   333  643s
+ 91850 13370    0.00000   61  197          -    0.00000      -   333  646s
+ 93064 13139    0.00000   62  209          -    0.00000      -   333  650s
+ 94326 12847    0.00000   52  157          -    0.00000      -   334  658s
+ 95499 12680    0.00000   61  166          -    0.00000      -   334  666s
+ 96763 12357 infeasible   62               -    0.00000      -   334  674s
+ 97251 12361    0.00000   62  157          -    0.00000      -   334  682s
+ 98240 12349 infeasible   63               -    0.00000      -   334  693s
+ 99831 11957 infeasible   64               -    0.00000      -   335  702s
+ 101110 11739    0.00000   64  164          -    0.00000      -   335  711s
+ 102644 11418 infeasible   57               -    0.00000      -   335  720s
+ 104100 11160    0.00000   48  191          -    0.00000      -   335  729s
+ 105598 10935 infeasible   63               -    0.00000      -   335  734s
+ 107066 10527    0.00000   52  188          -    0.00000      -   335  738s
+ 107295 10479    0.00000   53  186          -    0.00000      -   335  745s
+ 107979 10618    0.00000   55  181          -    0.00000      -   335  759s
+ 109191 10533    0.00000   54  189          -    0.00000      -   335  771s
+ 111034 10281 infeasible   42               -    0.00000      -   336  784s
+ 113068  9895    0.00000   57  153          -    0.00000      -   336  796s
+ 115100  9554    0.00000   54  152          -    0.00000      -   336  810s
+ 115400  9716    0.00000   55  139          -    0.00000      -   336  824s
+ 116414 10038    0.00000   53  185          -    0.00000      -   336  838s
+ 118206 10449 infeasible   58               -    0.00000      -   337  853s
+ 120615 10788 infeasible   63               -    0.00000      -   337  868s
+ 122968 11312    0.00000   52  182          -    0.00000      -   337  887s
+ 125724 11702 infeasible   54               -    0.00000      -   338  901s
+ 127744 12051 infeasible   52               -    0.00000      -   338  915s
+ 129593 12402    0.00000   50  191          -    0.00000      -   339  929s
+ 131582 12783    0.00000   53  231          -    0.00000      -   340  944s
+ 133779 13086    0.00000   56  271          -    0.00000      -   340  958s
+ 136002 13316 infeasible   58               -    0.00000      -   340  972s
+ 138214 13472    0.00000   57  152          -    0.00000      -   340  985s
+ 139196 13684 infeasible   70               -    0.00000      -   341  999s
+ 141114 13914    0.00000   45  155          -    0.00000      -   341 1014s
+ 143140 14246 infeasible   64               -    0.00000      -   341 1028s
+ 145460 14746    0.00000   43  154          -    0.00000      -   341 1043s
+ 147540 14755    0.00000   59  209          -    0.00000      -   342 1061s
+ 147611 17857 infeasible   60               -    0.00000      -   342 1146s
+ 167611 18050    0.00000   57  173          -    0.00000      -   345 1157s
+ 168869 18169    0.00000   64  136          -    0.00000      -   345 1162s
+ 169946 18311    0.00000   61  182          -    0.00000      -   345 1168s
+ 171158 18484 infeasible   58               -    0.00000      -   346 1181s
+ 173115 18724    0.00000   60  182          -    0.00000      -   346 1199s
+ 175663 18897    0.00000   61  182          -    0.00000      -   347 1214s
+ 177789 18897    0.00000   63  150          -    0.00000      -   347 1215s
+ 178214 19044    0.00000   64  205          -    0.00000      -   347 1229s
+ 180463 19205    0.00000   65  170          -    0.00000      -   347 1243s
+ 182148 19414    0.00000   72  168          -    0.00000      -   347 1258s
+ 184447 19548    0.00000   55  181          -    0.00000      -   348 1273s
+ 185815 19800 infeasible   59               -    0.00000      -   348 1288s
+ 188037 20053 infeasible   58               -    0.00000      -   348 1303s
+ 190088 20340 infeasible   60               -    0.00000      -   349 1318s
+ 191485 20579    0.00000   59  188          -    0.00000      -   349 1329s
+ 193678 20830    0.00000   58  171          -    0.00000      -   349 1334s
+ 195943 21006    0.00000   60  175          -    0.00000      -   350 1339s
+ 197587 21448 infeasible   61               -    0.00000      -   350 1346s
+ 200907 21810    0.00000   52  143          -    0.00000      -   350 1351s
+ 203323 21890 infeasible   60               -    0.00000      -   350 1356s
+ 204015 22162    0.00000   55  176          -    0.00000      -   350 1361s
+ 206057 22160    0.00000   38  200          -    0.00000      -   350 1366s
+ 206099 22175    0.00000   39  225          -    0.00000      -   350 1371s
+ 206130 22243 infeasible   40               -    0.00000      -   350 1376s
+ 206438 22304 infeasible   39               -    0.00000      -   350 1381s
+ 206997 22457    0.00000   50  191          -    0.00000      -   350 1388s
+ 207972 22516 infeasible   45               -    0.00000      -   350 1395s
+ 208739 22687    0.00000   43  243          -    0.00000      -   350 1403s
+ 210040 23009 infeasible   44               -    0.00000      -   350 1411s
+ 212870 23338    0.00000   44  181          -    0.00000      -   350 1419s
+ 215721 23604    0.00000   49  193          -    0.00000      -   350 1427s
+ 218631 23998 infeasible   43               -    0.00000      -   350 1441s
+ 221167 24447    0.00000   51  206          -    0.00000      -   350 1460s
+ 223912 24555 infeasible   65               -    0.00000      -   351 1473s
+ 224918 24746 infeasible   64               -    0.00000      -   351 1489s
+ 227027 24999 infeasible   53               -    0.00000      -   351 1505s
+ 229504 25212    0.00000   51  139          -    0.00000      -   351 1519s
+ 231093 25212 infeasible   62               -    0.00000      -   351 1520s
+ 231753 25361    0.00000   63  151          -    0.00000      -   351 1530s
+ 233260 25601    0.00000   63  147          -    0.00000      -   351 1535s
+ 235690 25909    0.00000   62  195          -    0.00000      -   351 1540s
+ 237948 26016 infeasible   60               -    0.00000      -   351 1545s
+ 238843 26241 infeasible   55               -    0.00000      -   351 1550s
+ 240896 26599    0.00000   47  166          -    0.00000      -   351 1555s
+ 244541 26824    0.00000   58  196          -    0.00000      -   352 1560s
+ 245517 26928 infeasible   57               -    0.00000      -   352 1565s
+ 246491 27534 infeasible   45               -    0.00000      -   352 1579s
+ 251925 27841 infeasible   65               -    0.00000      -   352 1585s
+ 254438 28144 infeasible   57               -    0.00000      -   352 1591s
+ 256717 28494 infeasible   56               -    0.00000      -   352 1597s
+ 259079 28593    0.00000   56  166          -    0.00000      -   352 1602s
+ 260112 28713    0.00000   49  214          -    0.00000      -   352 1607s
+ 261924 28903 infeasible   56               -    0.00000      -   352 1613s
+ 264144 29160    0.00000   49  210          -    0.00000      -   352 1618s
+ 266391 29349 infeasible   63               -    0.00000      -   352 1624s
+ 267294 29519    0.00000   45  154          -    0.00000      -   352 1630s
+ 268004 29631    0.00000   46  158          -    0.00000      -   352 1636s
+ 268462 29965    0.00000   47  160          -    0.00000      -   352 1642s
+ 269650 30393 infeasible   56               -    0.00000      -   352 1653s
+ 271628 31086    0.00000   59  168          -    0.00000      -   352 1664s
+ 275025 31666    0.00000   56  193          -    0.00000      -   352 1673s
+ 278653 32119 infeasible   57               -    0.00000      -   352 1681s
+ 281588 32575 infeasible   69               -    0.00000      -   352 1688s
+ 284444 32865 infeasible   47               -    0.00000      -   352 1695s
+ 287040 33099 infeasible   56               -    0.00000      -   353 1701s
+ 289520 33372    0.00000   51  135          -    0.00000      -   353 1707s
+ 291880 33571 infeasible   62               -    0.00000      -   353 1714s
+ 293865 33962    0.00000   58  159          -    0.00000      -   353 1721s
+ 296724 33968    0.00000   58  155          -    0.00000      -   353 1726s
+ 296758 33970    0.00000   59  157          -    0.00000      -   353 1732s
+ 297036 34054    0.00000   60  145          -    0.00000      -   353 1738s
+ 297750 34204    0.00000   61  168          -    0.00000      -   353 1745s
+ 298812 34510 infeasible   66               -    0.00000      -   353 1753s
+ 301518 34808    0.00000   60  208          -    0.00000      -   353 1761s
+ 302920 35136 infeasible   61               -    0.00000      -   353 1768s
+ 305496 35488    0.00000   57  145          -    0.00000      -   353 1775s
+ 308502 35713 infeasible   55               -    0.00000      -   353 1782s
+ 311331 36028    0.00000   46  155          -    0.00000      -   353 1788s
+ 313786 36274    0.00000   54  154          -    0.00000      -   353 1794s
+ 316212 36449    0.00000   53  164          -    0.00000      -   353 1800s
+ 317875 36826    0.00000   63  177          -    0.00000      -   353 1808s
+ 320962 37085    0.00000   57  161          -    0.00000      -   353 1814s
+ 323383 37210    0.00000   59  194          -    0.00000      -   354 1820s
+ 324658 37576 infeasible   54               -    0.00000      -   354 1826s
+ 327150 37802    0.00000   53  158          -    0.00000      -   354 1832s
+ 329552 38132    0.00000   60  188          -    0.00000      -   354 1837s
+ 331946 38372    0.00000   57  163          -    0.00000      -   354 1843s
+ 332986 38705    0.00000   50  175          -    0.00000      -   354 1848s
+ 334855 39079 infeasible   64               -    0.00000      -   354 1854s
+ 337187 39522 infeasible   60               -    0.00000      -   354 1860s
+Exploring 500000 nodes in MinRel heuristic
+MinRel: 81 nodes explored, relaxation 2.00e+01, total elapsed time 1865s
+No solution found by MinRel heuristic
+
+Explored 339718 nodes (120272676 simplex iterations) in 1868.35 seconds (1812.12 work units)
+Thread count was 20 (of 20 available processors)
+
+Solution count 0
+
+Solve interrupted
+Best objective -, best bound 0.000000000000e+00, gap -
+
+No solution available
+
