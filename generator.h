@@ -22,8 +22,14 @@ struct GraphConfig
 	int neighbours_of_fixed_vertex_in_B = -1; // only used if fixVertexInB
 	bool fixExactNumberOfNeighboursOfFixedInB = false; // if false, then neighbours_of_fixed_vertex_in_B is an upper bound, not exact
 	bool fixRestNumberOfVerticesInA = false; // if true, fix neighbours of fixed in B in A is r - fixExactNumberOfNeighboursOfFixedInB
-
-	bool useLemmas = false;
+	
+	bool fixVertexInA = false;
+	int k3degFixedInA = -1;
+	int neighbours_of_fixed_vertex_in_A_inside_A = -1; // only used if fixVertexInA
+	bool fixRestNumberOfVerticesInB = false;
+	
+	bool useLemmasOnEdgeDivision = false;
+	bool useLemmas31_34 = false;
 
 	bool usePolytopeMatrix = false;
 
@@ -68,6 +74,14 @@ struct GraphConfig
 		{
 			std::cout << "WARNING: fixExactNumberOfNeighboursOfFixedInB and fixRestNumberOfVerticesInA are not the same.";
 		}
+		if (fixVertexInB && fixVertexInA)
+			throw std::invalid_argument("Cannot use fixVertexInB and fixVertexInA simultaneously.");
+		if (fixVertexInA) {
+			if (k3degFixedInA < 0)
+				throw std::invalid_argument("Invalid k3degFixedInA value.");
+			if (neighbours_of_fixed_vertex_in_A_inside_A < 0 || neighbours_of_fixed_vertex_in_A_inside_A >= r)
+				throw std::invalid_argument("Invalid neighbours_of_fixed_vertex_in_A values.");
+		}
 		#ifndef NDEBUG
 		std::cout << "GraphConfig validated successfully.\n";
 		#endif // !NDEBUG
@@ -78,19 +92,30 @@ struct GraphConfig
 // 0 anchor vertex (if split_AB)
 // 1..r vertices in A
 // r+1..n-1 vertices in B
-// Note: if fixVertexInBMode != NONE, then vertex r+1 is fixed in B 
+// Note: if fixVertexInB is used, then vertex r+1 is fixed in B 
 // and has neighbours_of_fixed_vertex_in_B neighbours (r+2 .. r+1+neighbours_of_fixed_vertex_in_B) in B. 
-// So it can't be in A and can't be the anchor vertex.
+// Note: if fixVertexInA is used, then vertex 1 is fixed in A.
+// Its neighbours in A are 2 .. 2 + neighbours_of_fixed_vertex_in_A_inside_A - 1.
+// Its neighbours in B are r+1 .. r+1 + neighbours_of_fixed_vertex_in_A_inside_B - 1.
 struct VertexSets {
 	const GraphConfig& cfg;
 	std::vector<int> allVertices;
 	std::vector<int> verticesInA;
 	std::vector<int> verticesInB;
+
+	// properties for fixVertexInB
 	std::vector<int> neighOfFixedInB;
 	std::vector<int> otherInB;
 	std::vector<int> neigOfFixedInBinA;
 	std::vector<int> notNeigOfFixedInBinA;
 	std::vector<int> allNeighOfFixedInB;
+
+	// properties for fixVertexInA
+	std::vector<int> neighOfFixedInAInA;
+	std::vector<int> notNeighOfFixedInAInA;
+	std::vector<int> neighOfFixedInAInB;
+	std::vector<int> notNeighOfFixedInAInB;
+	std::vector<int> allNeighOfFixedInA;
 
 	VertexSets(const GraphConfig& cfg) : cfg(cfg) 
 	{ 
@@ -143,6 +168,32 @@ struct VertexSets {
 					allNeighOfFixedInB.insert(allNeighOfFixedInB.end(), neigOfFixedInBinA.begin(), neigOfFixedInBinA.end());
 				}
 			}
+			else if (cfg.fixVertexInA)
+			{
+				int fixedVertex = fixedVertexInA(); // 1
+				int neighInA_count = cfg.neighbours_of_fixed_vertex_in_A_inside_A;
+
+				for (int i = 0; i < neighInA_count; ++i)
+					neighOfFixedInAInA.push_back(i+2);
+				for (int i = 2 + neighInA_count; i <= cfg.r; ++i)
+					notNeighOfFixedInAInA.push_back(i);
+				
+				if (cfg.fixRestNumberOfVerticesInB)
+				{
+					int neighInB_count = cfg.r - 1 - neighInA_count;
+					for (int i = cfg.r + 1; i <= cfg.r + neighInB_count; ++i)
+						neighOfFixedInAInB.push_back(i);
+					for (int i = cfg.r + neighInB_count + 1; i < cfg.n; ++i)
+						notNeighOfFixedInAInB.push_back(i);
+				}
+
+				allNeighOfFixedInA.push_back(0); // the anchor
+				allNeighOfFixedInA.insert(allNeighOfFixedInA.end(), neighOfFixedInAInA.begin(), neighOfFixedInAInA.end());
+				if (cfg.fixRestNumberOfVerticesInB)
+				{
+					allNeighOfFixedInA.insert(allNeighOfFixedInA.end(), neighOfFixedInAInB.begin(), neighOfFixedInAInB.end());
+				}
+			}
 		}
 	}
 
@@ -158,14 +209,23 @@ struct VertexSets {
 	bool isNeighbourOfFixedB(int v) const { return cfg.fixVertexInB && v > cfg.r + 1 && v <= cfg.r + 1 + cfg.neighbours_of_fixed_vertex_in_B; }
 
 	int fixedVertexInB() const { return cfg.fixVertexInB ? cfg.r + 1 : throw "There is no fixed vertex in B."; }
+	int fixedVertexInA() const { return cfg.fixVertexInA ? 1 : throw "There is no fixed vertex in A."; }
 
 	const std::vector<int>& A() const { return verticesInA; }
 	const std::vector<int>& B() const { return verticesInB; }
+
 	const std::vector<int>& getNeighOfFixedInB() const { return neighOfFixedInB; }
 	const std::vector<int>& getOtherInB() const { return otherInB; }
 	const std::vector<int>& getNeigOfFixedInBinA() const { return neigOfFixedInBinA; }
 	const std::vector<int>& getNotNeigOfFixedInBinA() const { return notNeigOfFixedInBinA; }
 	const std::vector<int>& getAllNeighOfFixedInB() const { return allNeighOfFixedInB; }
+
+	const std::vector<int>& getNeighOfFixedInAInA() const { return neighOfFixedInAInA; }
+	const std::vector<int>& getNotNeighOfFixedInAInA() const { return notNeighOfFixedInAInA; }
+	const std::vector<int>& getNeighOfFixedInAInB() const { return neighOfFixedInAInB; }
+	const std::vector<int>& getNotNeighOfFixedInAInB() const { return notNeighOfFixedInAInB; }
+	const std::vector<int>& getAllNeighOfFixedInA() const { return allNeighOfFixedInA; }
+
 	const std::vector<int>& getAllVertices() const { return allVertices; }
 };
 

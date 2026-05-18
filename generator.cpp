@@ -31,7 +31,17 @@ std::string getFileName(const GraphConfig& cfg)
 		res += "_fixrestA";
     }
 
-    if (cfg.useLemmas == false)
+    if (cfg.fixVertexInA)
+    {
+        res += "_fix" + std::to_string(cfg.k3degFixedInA) + "A_" + std::to_string(cfg.neighbours_of_fixed_vertex_in_A_inside_A);
+    }
+
+    if (cfg.fixRestNumberOfVerticesInB)
+    {
+        res += "_fixrestB";
+    }
+
+    if (cfg.useLemmas31_34 == false)
     {
 		res += "_wo_lem";
     }
@@ -41,7 +51,7 @@ std::string getFileName(const GraphConfig& cfg)
         res += "_mat";
     }
 
-    res += "_str4_v7.lp";
+    res += "_str4_v9.lp";
     return res;
 }
 
@@ -266,6 +276,65 @@ void writeConditionOnNeighOfVertexInB(std::ostream& out, const GraphConfig& cfg,
     out << "\n";
 }
 
+void writeFixVertexInA(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+    if (cfg.fixVertexInA == false)
+        return;
+    VertexSets vs(cfg);
+    const int fixedVertex = vs.fixedVertexInA();
+    const auto& neighInA = vs.getNeighOfFixedInAInA();
+    const auto& notNeighInA = vs.getNotNeighOfFixedInAInA();
+    const auto& neighInB = vs.getNeighOfFixedInAInB();
+    const auto& notNeighInB = vs.getNotNeighOfFixedInAInB();
+    // Fix adjacency in A
+    for (int i : neighInA)
+        out << "fix" << fixedVertex << "_" << i << ": " << varRegister.edge(fixedVertex, i) << " = 1\n";
+    for (int i : notNeighInA)
+        out << "fix" << fixedVertex << "_" << i << ": " << varRegister.edge(fixedVertex, i) << " = 0\n";
+
+    // Fix adjacency in B
+    for (int i : neighInB)
+        out << "fix" << fixedVertex << "_" << i << ": " << varRegister.edge(fixedVertex, i) << " = 1\n";
+    for (int i : notNeighInB)
+        out << "fix" << fixedVertex << "_" << i << ": " << varRegister.edge(fixedVertex, i) << " = 0\n";
+    out << "\n";
+}
+
+void writeConditionOnNeighOfVertexInA(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+    if (cfg.fixVertexInA == false)
+        return;
+    VertexSets vs(cfg);
+    const auto& fixedAllAdjOfFixedInA = vs.getAllNeighOfFixedInA();
+    if (cfg.k3degFixedInA == 0)
+    {
+        for (int i = 0; i < fixedAllAdjOfFixedInA.size() - 1; ++i)
+        {
+            for (int j = i + 1; j < fixedAllAdjOfFixedInA.size(); ++j)
+            {
+                out << "fix" << fixedAllAdjOfFixedInA[i] << "_" << fixedAllAdjOfFixedInA[j] << ": "
+                    << varRegister.edge(fixedAllAdjOfFixedInA[i], fixedAllAdjOfFixedInA[j]) << " = 0\n";
+            }
+        }
+    }
+    else
+    {
+        out << "fix" << std::to_string(cfg.k3degFixedInA) << "A_tri: ";
+        bool first = true;
+        for (int i = 0; i < fixedAllAdjOfFixedInA.size() - 1; ++i)
+        {
+            for (int j = i + 1; j < fixedAllAdjOfFixedInA.size(); ++j)
+            {
+                if (!first) out << " + ";
+                out << varRegister.edge(fixedAllAdjOfFixedInA[i], fixedAllAdjOfFixedInA[j]);
+                first = false;
+            }
+        }
+        out << " = " << cfg.k3degFixedInA << "\n";
+    }
+    out << "\n";
+}
+
 void writeOrderTotalK3degCondition(std::ostream& out, const std::vector<int>& array, GraphVarRegister& varRegister)
 {
     if(array.size() <= 1)
@@ -375,6 +444,15 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
             writePaiwiseDifferentK3degCondition(out, fixedAdjInB, otherInB, cfg, varRegister);
         }
 
+        if (cfg.fixVertexInA)
+        {
+            writePaiwiseDifferentK3degCondition(out, vs.getNeighOfFixedInAInA(), vs.getNotNeighOfFixedInAInA(), cfg, varRegister);
+            if (cfg.fixRestNumberOfVerticesInB)
+            {
+                writePaiwiseDifferentK3degCondition(out, vs.getNeighOfFixedInAInB(), vs.getNotNeighOfFixedInAInB(), cfg, varRegister);
+            }
+        }
+
         // A neq B
         writePaiwiseDifferentK3degCondition(out, verticesInA, verticesInB, cfg, varRegister);
         out << "\n";
@@ -401,18 +479,33 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
         out << "\n";
     }
 
+    if (cfg.fixVertexInA)
+    {
+        writeOrderTotalK3degCondition(out, vs.getNeighOfFixedInAInA(), varRegister);
+        out << "\n";
+        writeOrderTotalK3degCondition(out, vs.getNotNeighOfFixedInAInA(), varRegister);
+        out << "\n";
+        if (cfg.fixRestNumberOfVerticesInB)
+        {
+            writeOrderTotalK3degCondition(out, vs.getNeighOfFixedInAInB(), varRegister);
+            out << "\n";
+            writeOrderTotalK3degCondition(out, vs.getNotNeighOfFixedInAInB(), varRegister);
+            out << "\n";
+        }
+    }
+
     if (!cfg.use_split_AB)
     {
         writeOrderTotalK3degCondition(out, vs.getAllVertices(), varRegister);
         return;
     }
 
-    if (cfg.fixRestNumberOfVerticesInA == false)
+    if (cfg.fixRestNumberOfVerticesInA == false && cfg.fixVertexInA == false)
     {
         writeOrderTotalK3degCondition(out, verticesInA, varRegister);
     }
 
-    if (cfg.fixVertexInB == false)
+    if (cfg.fixVertexInB == false && (cfg.fixVertexInA == false || cfg.fixRestNumberOfVerticesInB == false))
     {
         // ordering of K3-degrees inside B
         writeOrderTotalK3degCondition(out, verticesInB, varRegister);
@@ -447,6 +540,58 @@ void writeLemmaNeighborsInA(std::ostream& out, const GraphConfig& cfg, GraphVarR
         out << " >= 3\n";
     }
     out << "\n";
+}
+
+void writeLemmasOnEdgeDivision(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+	VertexSets vertexSets(cfg);
+
+    //we can calculate exact number of edges in non zero neighbourhood
+    const auto& neighOfFixedInBInA = vertexSets.getNeigOfFixedInBinA();
+    const auto& notNeighOfFixedInBinA = vertexSets.getNotNeigOfFixedInBinA();
+    const auto& neighOfFixedInBInB = vertexSets.getNeighOfFixedInB();
+    const auto& notNeighOfFixedInBInB = vertexSets.getOtherInB();
+
+    // calculate 
+    const int nTotalVertices = notNeighOfFixedInBinA.size() + notNeighOfFixedInBInB.size();
+    const int requiredTotalDegree = nTotalVertices * cfg.r;
+    //2 * (ребра_всередині)+(ребра_назовні) = requiredTotalDegree
+    // ребра назовні
+    //1. $v_0$(якор) - рівно notNeighOfFixedInBinA.size()
+    const int out1 = notNeighOfFixedInBinA.size();
+    //2. $v_9$(вершина з K3 = 0) - 0 ребер
+    //3. $W = { 10, 11, 12, 13, 14 }$(сусіди $v_9$ в $B$)
+    const int totalDegreeNeighFixedInB = neighOfFixedInBInB.size() * cfg.r;
+    const int edgestoFixed = neighOfFixedInBInB.size(); // back to v9
+    // inbetween 0, because K3 deg(v9) = 0, also 0 to neighInA
+    const int out3 = totalDegreeNeighFixedInB - edgestoFixed;
+    //4. $X = { 1, 2, 3 }$(сусіди $v_9$ в $A$)
+    const int totalDegreeNeighFixedInA = neighOfFixedInBInA.size() * cfg.r;
+    const int edgestoAnchor = neighOfFixedInBInA.size(); // back to v0
+    const int edgestoFixedInB = neighOfFixedInBInA.size(); // back to v9
+    // inbetween 0, because K3 deg(v9) = 0, also 0 to neighInB
+    const int out4 = totalDegreeNeighFixedInA - edgestoAnchor - edgestoFixedInB;
+
+    assert((requiredTotalDegree - out1 - out3 - out4) % 2 == 0);
+    const int edgesInside = (requiredTotalDegree - out1 - out3 - out4) / 2;
+
+    std::vector<int> allNotNeighOfFixedInB;
+    allNotNeighOfFixedInB.insert(allNotNeighOfFixedInB.end(), notNeighOfFixedInBinA.begin(), notNeighOfFixedInBinA.end());
+    allNotNeighOfFixedInB.insert(allNotNeighOfFixedInB.end(), notNeighOfFixedInBInB.begin(), notNeighOfFixedInBInB.end());
+    out << "edgesInside_YZ: ";
+    bool first = true;
+    for (int i = 0; i < allNotNeighOfFixedInB.size() - 1; i++)
+    {
+        for (int j = i + 1; j < allNotNeighOfFixedInB.size(); j++)
+        {
+            if (!first) {
+                out << " + ";
+            }
+            out << varRegister.edge(allNotNeighOfFixedInB[i], allNotNeighOfFixedInB[j]);
+            first = false;
+        }
+    }
+    out << " = " << edgesInside << "\n";
 }
 
 void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
@@ -543,52 +688,7 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarR
 
     if(cfg.k3degFixedInB==0 && cfg.fixExactNumberOfNeighboursOfFixedInB && cfg.fixRestNumberOfVerticesInA)
     {
-        //we can calculate exact number of edges in non zero neighbourhood
-        const auto& neighOfFixedInBInA = vertexSets.getNeigOfFixedInBinA();
-        const auto& notNeighOfFixedInBinA = vertexSets.getNotNeigOfFixedInBinA();
-        const auto& neighOfFixedInBInB = vertexSets.getNeighOfFixedInB();
-        const auto& notNeighOfFixedInBInB = vertexSets.getOtherInB();
-
-        // calculate 
-        const int nTotalVertices = notNeighOfFixedInBinA.size() + notNeighOfFixedInBInB.size();
-        const int requiredTotalDegree = nTotalVertices * cfg.r;
-        //2 * (ребра_всередині)+(ребра_назовні) = requiredTotalDegree
-        // ребра назовні
-        //1. $v_0$(якор) - рівно notNeighOfFixedInBinA.size()
-        const int out1 = notNeighOfFixedInBinA.size();
-        //2. $v_9$(вершина з K3 = 0) - 0 ребер
-        //3. $W = { 10, 11, 12, 13, 14 }$(сусіди $v_9$ в $B$)
-		const int totalDegreeNeighFixedInB = neighOfFixedInBInB.size() * cfg.r;
-        const int edgestoFixed = neighOfFixedInBInB.size(); // back to v9
-        // inbetween 0, because K3 deg(v9) = 0, also 0 to neighInA
-        const int out3 = totalDegreeNeighFixedInB - edgestoFixed;
-        //4. $X = { 1, 2, 3 }$(сусіди $v_9$ в $A$)
-        const int totalDegreeNeighFixedInA = neighOfFixedInBInA.size() * cfg.r;
-        const int edgestoAnchor = neighOfFixedInBInA.size(); // back to v0
-        const int edgestoFixedInB = neighOfFixedInBInA.size(); // back to v9
-        // inbetween 0, because K3 deg(v9) = 0, also 0 to neighInB
-        const int out4 = totalDegreeNeighFixedInA - edgestoAnchor - edgestoFixedInB;
-
-        assert((requiredTotalDegree - out1 - out3 - out4) % 2 == 0);
-        const int edgesInside = (requiredTotalDegree - out1 - out3 - out4) / 2;
-
-        std::vector<int> allNotNeighOfFixedInB;
-        allNotNeighOfFixedInB.insert(allNotNeighOfFixedInB.end(), notNeighOfFixedInBinA.begin(), notNeighOfFixedInBinA.end());
-        allNotNeighOfFixedInB.insert(allNotNeighOfFixedInB.end(), notNeighOfFixedInBInB.begin(), notNeighOfFixedInBInB.end());
-        out << "edgesInside_YZ: ";
-        bool first = true;
-        for (int i = 0; i < allNotNeighOfFixedInB.size() - 1; i++)
-        {
-            for (int j = i + 1; j < allNotNeighOfFixedInB.size(); j++)
-            {
-                if (!first) {
-                    out << " + ";
-                }
-                out << varRegister.edge(allNotNeighOfFixedInB[i], allNotNeighOfFixedInB[j]);
-                first = false;
-            }
-        }
-        out << " = " << edgesInside << "\n";
+        writeLemmasOnEdgeDivision(out, cfg, varRegister);
     }
     out << "\n";
 
@@ -814,11 +914,16 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 	    writeFixVertexInB(f, cfg, varRegister);
 		writeConditionOnNeighOfVertexInB(f, cfg, varRegister);
     }
+    else if (cfg.use_split_AB && cfg.fixVertexInA)
+    {
+        writeFixVertexInA(f, cfg, varRegister);
+        writeConditionOnNeighOfVertexInA(f, cfg, varRegister);
+    }
 
     if (cfg.use_split_AB)
     {
         writeConditionsOnEdges(f, cfg, varRegister);
-        if (cfg.useLemmas)
+        if (cfg.useLemmas31_34)
         {
             writeLemma3_1(f, cfg, varRegister);
             writeLemma3_4(f, cfg, varRegister);
