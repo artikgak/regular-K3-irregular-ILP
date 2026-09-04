@@ -1,0 +1,122 @@
+# =============================================================================
+# SCIP Settings for Infeasibility Proofs
+# 8-Regular K3-Irregular Graph Non-Existence
+# =============================================================================
+# Profile: INFEASIBILITY_PROOF (Primary — recommended for most runs)
+#
+# Optimized for proving that no feasible solution exists for binary IP models
+# encoding the existence of r-regular K3-irregular graphs.
+# Tested against N19_R8, N20_R8, N21_R8 instances.
+#
+# Usage:
+#   scip.exe -s infeasibility_proof.set -c "read <instance>.lp optimize"
+#   OR interactively:
+#   SCIP> set load infeasibility_proof.set
+#   SCIP> read <instance>.lp
+#   SCIP> optimize
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# 1. HEURISTICS — Turn OFF (no feasible solution exists, don't waste time)
+# ---------------------------------------------------------------------------
+# Since we're proving infeasibility, heuristics searching for primal solutions
+# are pure overhead. Disabling them reclaims significant CPU time.
+heuristics/emphasis = off
+
+# ---------------------------------------------------------------------------
+# 2. PRESOLVING — AGGRESSIVE
+# ---------------------------------------------------------------------------
+# Aggressive presolving is critical: it tightens bounds, detects cliques,
+# propagates implications, and may even detect infeasibility outright (as
+# observed with N14_R_spec8 where presolving alone proved infeasibility).
+presolving/emphasis = aggressive
+
+# Unlimited presolving rounds — let SCIP simplify as much as possible
+presolving/maxrounds = -1
+presolving/maxrestarts = -1
+
+# ---------------------------------------------------------------------------
+# 3. SEPARATING — AGGRESSIVE
+# ---------------------------------------------------------------------------
+# Strong cutting planes tighten the LP relaxation, which helps detect
+# infeasibility faster by making LP nodes more informative.
+separating/emphasis = aggressive
+
+# ---------------------------------------------------------------------------
+# 4. CONFLICT ANALYSIS — MAXIMIZED
+# ---------------------------------------------------------------------------
+# Conflict analysis is the #1 mechanism for proving infeasibility.
+# When SCIP discovers a node is infeasible, it derives conflict constraints
+# (nogood clauses) that prune the search tree globally.
+conflict/enable = TRUE
+
+# Use both conflict graph and dual proof analysis for LP infeasibility
+# 'b' = both methods (best for our structured binary problems)
+conflict/useinflp = b
+
+# Enable conflict analysis from propagation
+conflict/useprop = TRUE
+
+# Enable conflict analysis from pseudo-solutions
+conflict/usepseudo = TRUE
+
+# Enable conflict analysis from strong branching
+conflict/usesb = TRUE
+
+# Increase conflict clause limits — our problems benefit from learning more
+conflict/maxconss = -1
+conflict/maxstoresize = 10000
+
+# ---------------------------------------------------------------------------
+# 5. NODE SELECTION — Restart DFS
+# ---------------------------------------------------------------------------
+# Restart DFS explores deeply first, then restarts to the most promising
+# open node. For infeasibility proofs, DFS is effective because:
+#  - It reaches leaf nodes (contradictions) quickly
+#  - It generates conflict clauses early that prune global search
+#  - Memory usage stays lower (fewer open nodes)
+nodeselection/restartdfs/stdpriority = 100000
+
+# ---------------------------------------------------------------------------
+# 6. BRANCHING
+# ---------------------------------------------------------------------------
+# Reliability pseudo-cost branching with binary preference for our pure BIP
+branching/preferbinary = TRUE
+
+# Increase strong branching effort at root to get better initial decisions
+branching/relpscost/sbiterquot = 0.5
+branching/relpscost/maxreliable = 8.0
+
+# ---------------------------------------------------------------------------
+# 7. PROPAGATION
+# ---------------------------------------------------------------------------
+# Maximize propagation to detect infeasibilities early
+propagating/maxrounds = -1
+propagating/maxroundsroot = -1
+
+# Don't abort early on cutoff — continue propagation to learn more conflicts
+propagating/abortoncutoff = FALSE
+
+# Probing (look-ahead propagation)
+propagating/probing/maxprerounds = -1
+
+# ---------------------------------------------------------------------------
+# 8. LP SOLVER
+# ---------------------------------------------------------------------------
+# Tighten LP feasibility tolerance for more precise detection
+# (default is 1e-6; keeping it tight helps since all our coefficients are 0/1)
+lp/checkfeastolfac = 1.0
+
+# ---------------------------------------------------------------------------
+# 9. DISPLAY & LOGGING
+# ---------------------------------------------------------------------------
+# Show progress every 100 nodes (useful for monitoring long runs)
+display/freq = 100
+
+# ---------------------------------------------------------------------------
+# 10. LIMITS (adjust as needed)
+# ---------------------------------------------------------------------------
+# No time limit by default — change for batch runs
+# limits/time = 86400
+# limits/memory = 8192
+

@@ -1,0 +1,196 @@
+SCIP version 10.0.1 [precision: 8 byte] [memory: block] [mode: optimized] [LP solver: SoPlex 8.0.1] [GitHash: 76a50c97d6]
+Copyright (c) 2002-2026 Zuse Institute Berlin (ZIB)
+
+External libraries: 
+  SoPlex 8.0.1         Linear programming solver developed at Zuse Institute Berlin (soplex.zib.de) [GitHash: c69290aa]
+  CppAD 20180000.0     Algorithmic Differentiation of C++ algorithms developed by B. Bell (github.com/coin-or/CppAD)
+  ZLIB 1.3.1           General purpose compression library by J. Gailly and M. Adler (zlib.net)
+  MPFR 4.2.2           GNU Multiple Precision Floating-Point Reliable Library (mpfr.org)
+  Boost 1.89.0         Boost C++ Libraries (boost.org)
+  TinyCThread 1.2      small portable implementation of the C11 threads API (tinycthread.github.io)
+  GMP 6.3.0            GNU Multiple Precision Arithmetic Library developed by T. Granlund (gmplib.org)
+  ZIMPL 3.7.0          Zuse Institute Mathematical Programming Language developed by T. Koch (zimpl.zib.de)
+  AMPL/MP 4.0.4        AMPL .nl file reader library (github.com/ampl/mp)
+  PaPILO 3.0.0         parallel presolve for integer and linear optimization (github.com/scipopt/papilo) (built with TBB) [GitHash: 4cbdc327]
+  Nauty 2.8.8          Computing Graph Automorphism Groups by Brendan D. McKay (users.cecs.anu.edu.au/~bdm/nauty)
+  sassy 2.0            Symmetry preprocessor by Markus Anders (github.com/markusa4/sassy)
+  Ipopt 3.14.19        Interior Point Optimizer developed by A. Waechter et.al. (github.com/coin-or/Ipopt)
+
+user parameter file <scip.set> not found - using default parameters
+
+
+read problem <N21_R8_K3_2_22_split_22_fix2B_7_exact_wo_lem.lp>
+============
+
+original problem has 1652 variables (1628 bin, 22 int, 2 cont) and 5879 constraints
+heuristics/padm/freq = -1
+heuristics/ofins/freq = -1
+heuristics/reoptsols/freq = -1
+heuristics/trivialnegation/freq = -1
+heuristics/trivial/freq = -1
+heuristics/clique/freq = -1
+heuristics/locks/freq = -1
+heuristics/vbounds/freq = -1
+heuristics/shiftandpropagate/freq = -1
+heuristics/completesol/freq = -1
+heuristics/simplerounding/freq = -1
+heuristics/randrounding/freq = -1
+heuristics/zirounding/freq = -1
+heuristics/rounding/freq = -1
+heuristics/shifting/freq = -1
+heuristics/intshifting/freq = -1
+heuristics/oneopt/freq = -1
+heuristics/indicator/freq = -1
+heuristics/adaptivediving/freq = -1
+heuristics/indicatordiving/freq = -1
+heuristics/farkasdiving/freq = -1
+heuristics/feaspump/freq = -1
+heuristics/conflictdiving/freq = -1
+heuristics/pscostdiving/freq = -1
+heuristics/fracdiving/freq = -1
+heuristics/nlpdiving/freq = -1
+heuristics/veclendiving/freq = -1
+heuristics/distributiondiving/freq = -1
+heuristics/objpscostdiving/freq = -1
+heuristics/rootsoldiving/freq = -1
+heuristics/linesearchdiving/freq = -1
+heuristics/guideddiving/freq = -1
+heuristics/rens/freq = -1
+heuristics/alns/freq = -1
+heuristics/rins/freq = -1
+heuristics/gins/freq = -1
+heuristics/crossover/freq = -1
+heuristics/lpface/freq = -1
+heuristics/undercover/freq = -1
+heuristics/subnlp/freq = -1
+heuristics/mpec/freq = -1
+heuristics/multistart/freq = -1
+heuristics/trysol/freq = -1
+presolving/restartfac = 0.0125
+presolving/restartminred = 0.06
+constraints/setppc/cliquelifting = TRUE
+presolving/boundshift/maxrounds = -1
+presolving/qpkktref/maxrounds = -1
+presolving/stuffing/maxrounds = -1
+presolving/tworowbnd/maxrounds = -1
+presolving/dualinfer/maxrounds = -1
+presolving/dualagg/maxrounds = -1
+presolving/implint/maxrounds = -1
+presolving/redvub/maxrounds = -1
+propagating/probing/maxuseless = 1500
+propagating/probing/maxtotaluseless = 75
+separating/closecuts/freq = 0
+separating/rlt/freq = 20
+separating/rlt/maxroundsroot = 15
+separating/disjunctive/freq = 20
+separating/disjunctive/maxroundsroot = 150
+separating/gauge/freq = 0
+separating/interminor/freq = 0
+separating/convexproj/freq = 0
+separating/gomory/maxroundsroot = 15
+separating/gomory/maxsepacutsroot = 400
+separating/aggregation/maxsepacutsroot = 1000
+separating/clique/freq = 20
+separating/zerohalf/maxroundsroot = 30
+separating/zerohalf/maxsepacutsroot = 200
+separating/lagromory/freq = 0
+separating/mcf/freq = 20
+separating/mcf/maxsepacutsroot = 400
+separating/eccuts/freq = 0
+separating/eccuts/maxroundsroot = 375
+separating/eccuts/maxsepacutsroot = 100
+separating/oddcycle/freq = 0
+separating/oddcycle/maxroundsroot = 15
+separating/oddcycle/maxsepacutsroot = 10000
+constraints/benderslp/sepafreq = 0
+constraints/integral/sepafreq = 0
+constraints/SOS2/sepafreq = 10
+constraints/varbound/sepafreq = 10
+constraints/knapsack/sepafreq = 10
+constraints/knapsack/maxsepacutsroot = 500
+constraints/setppc/sepafreq = 10
+constraints/or/sepafreq = 10
+constraints/xor/sepafreq = 10
+constraints/conjunction/sepafreq = 0
+constraints/disjunction/sepafreq = 0
+constraints/exactsol/sepafreq = 0
+constraints/linear/sepafreq = 10
+constraints/linear/maxsepacutsroot = 500
+constraints/exactlinear/sepafreq = 10
+constraints/exactlinear/maxsepacutsroot = 500
+constraints/orbitope_full/sepafreq = 0
+constraints/orbitope_pp/sepafreq = 0
+constraints/logicor/sepafreq = 10
+constraints/bounddisjunction/sepafreq = 0
+constraints/pseudoboolean/sepafreq = 0
+constraints/superindicator/sepafreq = 0
+constraints/benders/sepafreq = 0
+constraints/fixedvar/sepafreq = 0
+constraints/countsols/sepafreq = 0
+constraints/components/sepafreq = 0
+cutselection/hybrid/minorthoroot = 0.1
+separating/maxroundsrootsubrun = 5
+separating/maxaddrounds = 5
+separating/maxcutsroot = 5000
+constraints/linear/separateall = TRUE
+separating/aggregation/maxfailsroot = 200
+separating/mcf/maxtestdelta = -1
+separating/mcf/trynegscaling = TRUE
+nodeselection/restartdfs/stdpriority = 100000
+conflict/useinflp = b
+
+presolving:
+(round 1, fast)       283 del vars, 119 del conss, 0 add conss, 45 chg bounds, 88 chg sides, 176 chg coeffs, 0 upgd conss, 0 impls, 3152 clqs, 0 implints
+(round 2, fast)       518 del vars, 1202 del conss, 0 add conss, 51 chg bounds, 88 chg sides, 238 chg coeffs, 0 upgd conss, 0 impls, 3202 clqs, 0 implints
+(round 3, fast)       518 del vars, 1202 del conss, 0 add conss, 56 chg bounds, 88 chg sides, 292 chg coeffs, 0 upgd conss, 0 impls, 3202 clqs, 0 implints
+   (0.0s) running MILP presolver
+   (0.0s) MILP presolver (6 rounds): 49 aggregations, 28 fixings, 3 bound changes
+(round 4, medium)     595 del vars, 1202 del conss, 0 add conss, 63 chg bounds, 88 chg sides, 341 chg coeffs, 0 upgd conss, 0 impls, 3020 clqs, 0 implints
+(round 5, fast)       595 del vars, 1384 del conss, 0 add conss, 63 chg bounds, 88 chg sides, 374 chg coeffs, 0 upgd conss, 0 impls, 3020 clqs, 0 implints
+(round 6, exhaustive) 595 del vars, 1385 del conss, 0 add conss, 63 chg bounds, 88 chg sides, 374 chg coeffs, 4275 upgd conss, 0 impls, 3020 clqs, 0 implints
+(round 7, exhaustive) 595 del vars, 5429 del conss, 1025 add conss, 63 chg bounds, 88 chg sides, 374 chg coeffs, 4275 upgd conss, 0 impls, 3020 clqs, 0 implints
+(round 8, exhaustive) 595 del vars, 5429 del conss, 1025 add conss, 63 chg bounds, 88 chg sides, 545 chg coeffs, 4275 upgd conss, 0 impls, 3020 clqs, 0 implints
+(round 9, exhaustive) 620 del vars, 5429 del conss, 1025 add conss, 63 chg bounds, 88 chg sides, 545 chg coeffs, 4275 upgd conss, 352 impls, 4613 clqs, 0 implints
+(round 10, fast)       620 del vars, 5429 del conss, 1025 add conss, 63 chg bounds, 88 chg sides, 545 chg coeffs, 4300 upgd conss, 352 impls, 4613 clqs, 0 implints
+   (0.0s) probing: 1000/1292 (77.4%) - 30 fixings, 0 aggregations, 2102 implications, 0 bound changes
+   (0.0s) probing: 1191/1292 (92.2%) - 35 fixings, 0 aggregations, 2116 implications, 0 bound changes
+   (0.0s) probing aborted: 75/75 successive totally useless probings
+(round 11, exhaustive) 630 del vars, 5429 del conss, 1025 add conss, 63 chg bounds, 88 chg sides, 545 chg coeffs, 4300 upgd conss, 352 impls, 4679 clqs, 0 implints
+(round 12, fast)       630 del vars, 5429 del conss, 1025 add conss, 63 chg bounds, 88 chg sides, 545 chg coeffs, 4310 upgd conss, 352 impls, 4679 clqs, 0 implints
+   (0.0s) probing: 1198/1292 (92.7%) - 35 fixings, 0 aggregations, 2116 implications, 0 bound changes
+   (0.0s) probing aborted: 75/75 successive totally useless probings
+   (0.0s) symmetry computation started: requiring (bin +, int +, cont +), (fixed: bin -, int -, cont -)
+   (0.0s) symmetry computation finished: 9 generators found (max: 1500, log10 of symmetry group size: 5.08) (symcode time: 0.00)
+dynamic symmetry handling statistics:
+   orbitopal reduction:       no components
+   orbital reduction:          1 components of sizes 45
+   lexicographic reduction:   45 permutations with support sizes 324, 320, 324, 324, 320, 320, 320, 320, 320, 580, 324, 584, 580, 580, 580, 580, 580, 580, 580, 320, 588, 588, 588, 588, 324, 580, 580, 580, 580, 580, 580, 580, 580, 580, 580, 320, 588, 588, 588, 320, 588, 588, 320, 588, 320
+handled 1 out of 1 symmetry components
+presolving (13 rounds: 13 fast, 7 medium, 6 exhaustive):
+ 630 deleted vars, 5429 deleted constraints, 1025 added constraints, 63 tightened bounds, 0 added holes, 88 changed sides, 545 changed coefficients
+ 352 implications, 4679 cliques, 0 implied integral variables (0 bin, 0 int, 0 cont)
+presolved problem has 1276 variables (1257 bin, 19 int, 0 cont) and 1475 constraints
+      7 constraints of type <varbound>
+    179 constraints of type <knapsack>
+      1 constraints of type <setppc>
+    990 constraints of type <and>
+    219 constraints of type <linear>
+     79 constraints of type <logicor>
+transformed objective value is always integral (scale: 1)
+Presolving Time: 0.00
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl. 
+  0.0s|     1 |     0 |   236 |     - |    40M |   0 |1276 |1475 |2465 |   0 |  0 |   0 |   0 |    cutoff    |      --      |   0.00%| unknown
+  0.0s|     1 |     0 |   236 |     - |    40M |   0 |1276 |1475 |2465 |   0 |  0 |   0 |   0 |    cutoff    |      --      |   0.00%| unknown
+
+SCIP Status        : problem is solved [infeasible]
+Solving Time (sec) : 0.00
+Solving Nodes      : 1
+Primal Bound       : +1.00000000000000e+20 (0 solutions)
+Dual Bound         : +1.00000000000000e+20
+Gap                : 0.00 %
+
+
+no solution available
+
+SCIP> 

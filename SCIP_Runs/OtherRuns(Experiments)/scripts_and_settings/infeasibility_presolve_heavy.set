@@ -1,0 +1,77 @@
+# =============================================================================
+# SCIP Settings for Infeasibility Proofs  
+# Variant: PRESOLVING-HEAVY (Max presolve, minimal search)
+# =============================================================================
+# Profile: For instances where presolving alone might detect infeasibility
+#
+# Maximizes presolving effort. If your LP files have strong structural
+# constraints (like split+fix0B variants with lemma 3.1/3.4), presolving
+# may detect infeasibility without any branching (as seen with N14_R_spec8).
+#
+# Usage:
+#   scip.exe -s infeasibility_presolve_heavy.set -c "read <instance>.lp optimize"
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# HEURISTICS — OFF
+# ---------------------------------------------------------------------------
+heuristics/emphasis = off
+
+# ---------------------------------------------------------------------------
+# PRESOLVING — MAXIMUM POSSIBLE
+# ---------------------------------------------------------------------------
+presolving/emphasis = aggressive
+presolving/maxrounds = -1
+presolving/maxrestarts = -1
+
+# Increase component presolving
+presolving/components/maxrounds = -1
+
+# ---------------------------------------------------------------------------
+# SEPARATING — AGGRESSIVE but bounded
+# ---------------------------------------------------------------------------
+separating/emphasis = aggressive
+
+# Extra separation rounds at root to strengthen LP
+separating/maxroundsroot = 50
+separating/maxstallroundsroot = 20
+
+# ---------------------------------------------------------------------------
+# CONFLICT ANALYSIS — FULL
+# ---------------------------------------------------------------------------
+conflict/enable = TRUE
+conflict/useinflp = b
+conflict/useprop = TRUE
+conflict/usepseudo = TRUE
+conflict/usesb = TRUE
+conflict/maxconss = -1
+conflict/maxstoresize = 10000
+
+# ---------------------------------------------------------------------------
+# NODE SELECTION — Restart DFS
+# ---------------------------------------------------------------------------
+nodeselection/restartdfs/stdpriority = 100000
+
+# ---------------------------------------------------------------------------
+# BRANCHING
+# ---------------------------------------------------------------------------
+branching/preferbinary = TRUE
+
+# ---------------------------------------------------------------------------
+# PROPAGATION — FULL
+# ---------------------------------------------------------------------------
+propagating/maxrounds = -1
+propagating/maxroundsroot = -1
+propagating/abortoncutoff = FALSE
+
+# ---------------------------------------------------------------------------
+# CONSTRAINTS — Enable additional constraint handler features
+# ---------------------------------------------------------------------------
+# Logicor constraint upgrade (detects implications from OR-type constraints)
+constraints/logicor/implications = TRUE
+
+# ---------------------------------------------------------------------------
+# DISPLAY
+# ---------------------------------------------------------------------------
+display/freq = 100
+

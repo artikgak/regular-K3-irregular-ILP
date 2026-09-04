@@ -41,15 +41,25 @@ std::string getFileName(const GraphConfig& cfg)
         res += "_fixrestB";
     }
 
-    if (cfg.useLemmas31_34 == false)
+    if (cfg.useLemmas31_34)
     {
-		res += "_wo_lem";
+		res += "_lem31_31";
     }
 
     if (cfg.usePolytopeMatrix)
     {
         res += "_mat";
     }
+
+    if(cfg.defectBound >= 0)
+    {
+        res += "_defect_" + std::to_string(cfg.defectBound);
+	}
+
+    if(cfg.specialConditionFor9_20)
+    {
+        res += "_spec9_20v3";
+	}
 
     res += "_str4_v9.lp";
     return res;
@@ -142,7 +152,7 @@ void writeTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarReg
 
 void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
-    // Перебираємо всі можливі пари вершин (потенційні ребра)
+    // Iterate through all possible vertex pairs (potential edges).
     for (int i = 0; i < cfg.n - 1; i++)
     {
         for (int j = i + 1; j < cfg.n; j++)
@@ -150,14 +160,14 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg, GraphVarReg
             out << "notruetwins_" << to_string(i) << "_" << to_string(j) << ": ";
             bool first = true;
 
-            // Рахуємо всі можливі трикутники, які містять вершини i та j
+            // Count all possible triangles containing vertices i and j
             for (int k = 0; k < cfg.n; k++)
             {
                 if (k == i || k == j) continue;
 
                 if (!first) out << " + ";
 
-                // Функція tvar очікує строго відсортовані індекси a < b < c
+                // The function tvar expects strictly sorted indices a < b < c
                 int a = i, b = j, c = k;
                 if (a > b) swap(a, b);
                 if (b > c) swap(b, c);
@@ -166,7 +176,7 @@ void writeNoTrueTwinsCond(std::ostream& out, const GraphConfig& cfg, GraphVarReg
                 out << varRegister.triangle(a, b, c);
                 first = false;
             }
-            // Максимум r-2 спільних сусідів (трикутників) на будь-якому ребрі
+            // Maximum of r-2 common neighbors (triangles) on any edge
             out << " <= " << to_string(cfg.r - 2) << "\n";
         }
     }
@@ -330,7 +340,7 @@ void writeConditionOnNeighOfVertexInA(std::ostream& out, const GraphConfig& cfg,
                 first = false;
             }
         }
-        out << " = " << cfg.k3degFixedInA << "\n";
+        out << (cfg.fixRestNumberOfVerticesInB ? " = " : " <= ") << cfg.k3degFixedInA << "\n";
     }
     out << "\n";
 }
@@ -371,7 +381,7 @@ void writePaiwiseDifferentK3degCondition(std::ostream& out, const std::vector<in
 
 void PolytopeAllDistinctK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
-    // 1. Кожна вершина має РІВНО ОДНЕ значення k3-степеня
+    // 1. Each vertex has EXACTLY ONE k3-degree value
     for (int v = 0; v < cfg.n; v++) {
         out << "assign_vert_" << v << ": ";
         for (int d = cfg.min_k3; d <= cfg.max_k3; d++) {
@@ -383,7 +393,7 @@ void PolytopeAllDistinctK3Degs(std::ostream& out, const GraphConfig& cfg, GraphV
 
 	const int AvailK3Degs = cfg.max_k3 - cfg.min_k3 + 1;
 
-    // 2. Кожне значення K3-степеня використовується НЕ БІЛЬШЕ одного разу
+    // 2. Each K3-degree value is used at most once
     for (int d = cfg.min_k3; d <= cfg.max_k3; d++) {
         out << "assign_val_" << d << ": ";
         for (int v = 0; v < cfg.n; v++) {
@@ -391,16 +401,16 @@ void PolytopeAllDistinctK3Degs(std::ostream& out, const GraphConfig& cfg, GraphV
             if (v < cfg.n - 1) out << " + ";
         }
         if(AvailK3Degs == cfg.n)
-            out << " = 1\n";  // <--- ТУТ ТЕПЕР <= 1
+            out << " = 1\n";  // <--- HERE NOW <= 1
         else
-            out << " <= 1\n";  // <--- ТУТ ТЕПЕР <= 1
+            out << " <= 1\n";  // <--- HERE NOW <= 1
     }
 
-    // 3. Зв'язок змінної d_i з нашою матрицею: d_i = SUM(v * z_i_v)
+    // 3. The relationship of the variable d_i to our matrix: d_i = SUM(v * z_i_v)
     for (int v = 0; v < cfg.n; v++) {
         out << "link_d_" << v << ": " << varRegister.k3deg(v);
         for (int d = cfg.min_k3; d <= cfg.max_k3; d++) {
-            if (d == 0) continue; // 0 * z_i_0 = 0, тому пропускаємо нуль
+            if (d == 0) continue; // 0 * z_i_0 = 0, so skip the zero
             out << " - " << d << " " << varRegister.polytopeBin(v, d);
         }
         out << " = 0\n";
@@ -524,7 +534,7 @@ void writeLemmaNeighborsInA(std::ostream& out, const GraphConfig& cfg, GraphVarR
     if(cfg.use_split_AB == false)
 		return;
 
-    // Вважаємо, що множина A — це вершини від 1 до r (де r=8 для 8-регулярного графа)
+    // We consider the set A to be the vertices from 1 to r (where r=8 for an 8-regular graph).
     for (int i = 1; i <= cfg.r; i++) 
     {
         out << "lemmaA_deg_" << i << ": ";
@@ -534,7 +544,7 @@ void writeLemmaNeighborsInA(std::ostream& out, const GraphConfig& cfg, GraphVarR
             if (i == j) continue;
 
             if (!first) out << " + ";
-            out << varRegister.edge(i, j); // або як у тебе рахується ребро
+            out << varRegister.edge(i, j);
             first = false;
         }
         out << " >= 3\n";
@@ -555,17 +565,17 @@ void writeLemmasOnEdgeDivision(std::ostream& out, const GraphConfig& cfg, GraphV
     // calculate 
     const int nTotalVertices = notNeighOfFixedInBinA.size() + notNeighOfFixedInBInB.size();
     const int requiredTotalDegree = nTotalVertices * cfg.r;
-    //2 * (ребра_всередині)+(ребра_назовні) = requiredTotalDegree
-    // ребра назовні
-    //1. $v_0$(якор) - рівно notNeighOfFixedInBinA.size()
+    //2 * (edges inside)+(edges outside) = requiredTotalDegree
+    // edges outside
+    //1. $v_0$(anchor) - exactly notNeighOfFixedInBinA.size()
     const int out1 = notNeighOfFixedInBinA.size();
-    //2. $v_9$(вершина з K3 = 0) - 0 ребер
-    //3. $W = { 10, 11, 12, 13, 14 }$(сусіди $v_9$ в $B$)
+    //2. $v_9$(vertex with K3 = 0) - 0 edges
+    //3. $W = { 10, 11, 12, 13, 14 }$(neighbors of $v_9$ in $B$)
     const int totalDegreeNeighFixedInB = neighOfFixedInBInB.size() * cfg.r;
     const int edgestoFixed = neighOfFixedInBInB.size(); // back to v9
     // inbetween 0, because K3 deg(v9) = 0, also 0 to neighInA
     const int out3 = totalDegreeNeighFixedInB - edgestoFixed;
-    //4. $X = { 1, 2, 3 }$(сусіди $v_9$ в $A$)
+    //4. $X = { 1, 2, 3 }$(neighbours of $v_9$ in $A$)
     const int totalDegreeNeighFixedInA = neighOfFixedInBInA.size() * cfg.r;
     const int edgestoAnchor = neighOfFixedInBInA.size(); // back to v0
     const int edgestoFixedInB = neighOfFixedInBInA.size(); // back to v9
@@ -695,8 +705,231 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarR
 	writeLemmaNeighborsInA(out, cfg, varRegister);
 }
 
+void writeconditionOnDefectParts(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+    if (!cfg.use_split_AB)
+        return;
+    if(cfg.fixVertexInA == false && cfg.fixVertexInB == false)
+		return;
+	if (cfg.defectBound < 0)
+		return;
+
+    VertexSets vertexSets(cfg);
+
+    if (cfg.fixVertexInA)
+    {
+        // let a \in A be the fixed vertex
+        // X = A \cap N(a); U = A \ ({a} \cup X)
+		// Y = B \cap N(a); R = B \ Y 
+        // cfg.useLemmasOnEdgeDivision
+
+		const std::vector<int>& X = vertexSets.getNeighOfFixedInAInA();
+		const std::vector<int>& U = vertexSets.getNotNeighOfFixedInAInA();
+		const std::vector<int>& Y = vertexSets.getNeighOfFixedInAInB();
+		const std::vector<int>& R = vertexSets.getNotNeighOfFixedInAInB();
+
+		// e(X, U) + e(R,Y) + not_e(X, Y) + not_e(U, R) = cfg.defectBound
+
+        out << "defect: ";
+		// not edges = total pairs - edges
+        const int rhs = cfg.defectBound - (X.size() * Y.size()) - (U.size() * R.size());
+        bool first = true;
+
+        // e(X,U)
+        for (int i = 0; i < X.size(); i++)
+        {
+            for (int j = 0; j < U.size(); j++)
+            {
+                if (!first)
+                    out << " + ";
+                out << varRegister.edge(X[i], U[j]);
+                first = false;
+            }
+		}
+
+        // e(R,Y)
+        for (int i = 0; i < R.size(); i++)
+        {
+            for (int j = 0; j < Y.size(); j++)
+            {
+                if (!first)
+                    out << " + ";
+                out << varRegister.edge(R[i], Y[j]);
+                first = false;
+            }
+        }
+
+        // not_e(X,Y)
+        for (int i = 0; i < X.size(); i++)
+        {
+            for (int j = 0; j < Y.size(); j++)
+            {
+                out << " - " << varRegister.edge(X[i], Y[j]);
+                first = false;
+            }
+        }
+
+        // not_e(U,R)
+        for (int i = 0; i < U.size(); i++)
+        {
+            for (int j = 0; j < R.size(); j++)
+            {
+                out << " - " << varRegister.edge(U[i], R[j]);
+                first = false;
+            }
+        }
+
+		out << " <= " << rhs << "\n";
+    }
+    else if (cfg.fixVertexInB)
+    {
+        // let b \in B be the fixed vertex
+        // X = A \cap N(b); R = A \ X
+        // Z = B \cap N(b); W = B \ ({b} \cup Z) 
+        // cfg.useLemmasOnEdgeDivision
+
+		const std::vector<int>& X = vertexSets.getNeigOfFixedInBinA();
+		const std::vector<int>& R = vertexSets.getNotNeigOfFixedInBinA();
+		const std::vector<int>& Z = vertexSets.getNeighOfFixedInB();
+		const std::vector<int>& W = vertexSets.getOtherInB();
+
+        // e(R, X) + e(Z, W) + not_e(R, W) + not_e(X, Z) = cfg.defectBound
+
+        const int rhs = cfg.defectBound - (R.size() * W.size()) - (X.size() * Z.size());
+        out << "defect: ";
+        bool first = true;
+
+		// e(R,X)
+        for (int i = 0; i < R.size(); i++)
+        {
+            for (int j = 0; j < X.size(); j++)
+            {
+                if (!first)
+                    out << " + ";
+                out << varRegister.edge(R[i], X[j]);
+                first = false;
+            }
+        }
+
+        // e(Z,W)
+        for (int i = 0; i < Z.size(); i++)
+        {
+            for (int j = 0; j < W.size(); j++)
+            {
+                if (!first) out << " + ";
+                out << varRegister.edge(Z[i], W[j]);
+                first = false;
+            }
+        }
+
+        // not_e(R,W)
+        for (int i = 0; i < R.size(); i++)
+        {
+            for (int j = 0; j < W.size(); j++)
+            {
+                out << " - " << varRegister.edge(R[i], W[j]);
+                first = false;
+            }
+        }
+
+        // not_e(X,Z)
+        for (int i = 0; i < X.size(); i++)
+        {
+            for (int j = 0; j < Z.size(); j++)
+            {
+                out << " - " << varRegister.edge(X[i], Z[j]);
+                first = false;
+            }
+		}
+
+        out << " <= " << rhs << "\n";
+    }
+
+}
+
+void writeSpecialConditionFor9_20(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+    // let b \in B be the fixed vertex
+    // X = A \cap N(b); R = A \ X
+    // Z = B \cap N(b); W = B \ ({b} \cup Z) 
+
+    if(!cfg.fixVertexInB)
+		return;
+    if (cfg.n != 20 || cfg.r != 9)
+        return;
+	
+    // E(X,R) + E(Z,W) - ( E(X,Z) + E(R,W) ) = 38
+    // 18 <= E(X,R) <= 20
+	// 18 <= E(Z,W) <= 20
+    // E(X,Z) <= 2
+	// E(R,W) <= 2
+
+    VertexSets vertexSets(cfg);
+    
+    const std::vector<int>& X = vertexSets.getNeigOfFixedInBinA();
+    const std::vector<int>& R = vertexSets.getNotNeigOfFixedInBinA();
+    const std::vector<int>& Z = vertexSets.getNeighOfFixedInB();
+    const std::vector<int>& W = vertexSets.getOtherInB();
+
+    auto lambdaEdgeSum = [&](const std::vector<int>& set1, const std::vector<int>& set2) -> std::string {
+        std::string sum = "";
+        bool first = true;
+        for (int i : set1)
+        {
+            for (int j : set2)
+            {
+                if (!first)
+                    sum += " + ";
+                sum += varRegister.edge(i, j);
+                first = false;
+            }
+        }
+        return sum;
+	};
+
+    auto lambdaMinusEdgeSum = [&](const std::vector<int>& set1, const std::vector<int>& set2) -> std::string {
+        std::string sum = "";
+        for (int i : set1)
+        {
+            for (int j : set2)
+            {
+                sum += " - " + varRegister.edge(i, j);
+            }
+        }
+        return sum;
+    };
+
+    if(cfg.anchorK3 == 23 && cfg.k3degFixedInB == 4)
+    {
+        out << "exact_38: " << lambdaEdgeSum(X, R) << " + " << lambdaEdgeSum(Z, W)
+            << lambdaMinusEdgeSum(X, Z) << lambdaMinusEdgeSum(R, W) << " = 38\n";
+
+        out << "eXR_lb: " << lambdaEdgeSum(X, R) << " >= 18\n";
+        out << "eXR_ub: " << lambdaEdgeSum(X, R) << " <= 20\n";
+
+        out << "eZW_lb: " << lambdaEdgeSum(Z, W) << " >= 18\n";
+        out << "eZW_ub: " << lambdaEdgeSum(Z, W) << " <= 20\n";
+
+        out << "eXZ_RW_ub: " << lambdaEdgeSum(X, Z) << " + " << lambdaEdgeSum(R, W) << " <= 2\n";
+    }
+    else if (cfg.anchorK3 == 4 && cfg.k3degFixedInB == 23)
+    {
+        out << "exact_38: " << lambdaEdgeSum(X, Z) << " + " << lambdaEdgeSum(R, W)
+            << lambdaMinusEdgeSum(X, R) << lambdaMinusEdgeSum(Z, W) << " = 38\n";
+
+        out << "eXZ_lb: " << lambdaEdgeSum(X, Z) << " >= 18\n";
+        out << "eXZ_ub: " << lambdaEdgeSum(X, Z) << " <= 20\n";
+
+        out << "eRW_lb: " << lambdaEdgeSum(R, W) << " >= 18\n";
+        out << "eRW_ub: " << lambdaEdgeSum(R, W) << " <= 20\n";
+
+        out << "eXR_ZW_ub: " << lambdaEdgeSum(X, R) << " + " << lambdaEdgeSum(Z, W) << " <= 2\n";
+	}
+
+}
+
 // =========================================================================
-// ЛЕМА 3.1: Для кожної вершини a \in A, deg_{G[A]}(a) <= min{r - 2, d}
+// Lemma 3.1: For any vertex a \in A, deg_{G[A]}(a) <= min{r - 2, d}
 // d=anchorK3, A has 1...r vertices, B has r+1...n-1 vertices
 // =========================================================================
 void writeLemma3_1(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
@@ -725,7 +958,7 @@ void writeLemma3_1(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& 
 
 
 // =========================================================================
-// ЛЕМА 3.4: Для кожної вершини b \in B, max{1, |B|-1-|E(\overline{G[B]})} <= deg_{G[B]}(b) <= min{r, |E(B)|, |B| - 1}
+// Lemma 3.4: For any vertex b \in B, max{1, |B|-1-|E(\overline{G[B]})} <= deg_{G[B]}(b) <= min{r, |E(B)|, |B| - 1}
 // d=anchorK3, A has 1...r vertices, B has r+1...n-1 vertices
 // (R1) deg_B(b) <= r - maybe
 // (R2) deg_b(b) <= |B| - 1 - trivial
@@ -781,7 +1014,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& va
         std::cerr << "Warning: k3degFixedInB is not equal to min_k3 or max_k3, so bounds for other vertices won't be updated\n";
 	}
 
-    // 1. Межі для якоря (якщо є розбиття)
+    // 1. Bounds for anchor (if split A-B)
     if (cfg.use_split_AB)
     {
         out << varRegister.k3deg(0) << " = " << to_string(cfg.anchorK3) << "\n";
@@ -791,7 +1024,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& va
 			updmaxBound = cfg.max_k3 - 1;
     }
 
-    // 2. Межі для фіксованої вершини в B (якщо є)
+    // 2. Bounds for the fixed vertex in B
     if (cfg.fixVertexInB)
     {
         const int fixedVertex = vs.fixedVertexInB();
@@ -804,7 +1037,7 @@ void writeBounds(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& va
             updmaxBound--;
 	}
 
-    // 3. Записуємо межі для всіх інших вершин
+    // 3. Write bound for all other vertices
     for (int i = 0; i < cfg.n; i++)
     {
         if (cfg.use_split_AB && i == 0)
@@ -865,7 +1098,7 @@ void writeBinaryVars(std::ostream& out, const GraphConfig& cfg, GraphVarRegister
     // b_ vars for A neq B
     if (cfg.use_split_AB)
     {
-        // a) Змінні b_i_j між множиною A та множиною B
+        // a) Vartiables b_i_j between set A and set B
 
         for (int v : verticesInA)
         {
@@ -928,6 +1161,16 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
             writeLemma3_1(f, cfg, varRegister);
             writeLemma3_4(f, cfg, varRegister);
         }
+    }
+
+    if (cfg.writeconditionOnDefectParts)
+    {
+        writeconditionOnDefectParts(f, cfg, varRegister);
+    }
+
+    if (cfg.specialConditionFor9_20)
+    {
+		writeSpecialConditionFor9_20(f, cfg, varRegister);
     }
 
     writeRegularityCondition(f, cfg, varRegister);

@@ -1,0 +1,74 @@
+# =============================================================================
+# SCIP 10.0 Settings for Infeasibility Proofs
+# Variant: LEAN LP + MAX CONFLICT
+# =============================================================================
+# Minimize LP overhead, maximize conflict learning speed.
+# LP iterations per node were 362-488 in Round 1 — too expensive.
+# This preset radically reduces cuts and uses dual simplex for speed.
+#
+# Launch:
+#   scip.exe -c "set heuristics emphasis off set presolving emphasis aggressive set separating emphasis off set load SCIP_Runs\infeasibility_lean_lp.set read <instance>.lp optimize quit"
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# PRESOLVING — individual settings
+# ---------------------------------------------------------------------------
+presolving/maxrounds = -1
+presolving/maxrestarts = -1
+
+# ---------------------------------------------------------------------------
+# SEPARATING — MINIMAL (complement emphasis off)
+# ---------------------------------------------------------------------------
+# Only separate at root, then nothing
+separating/maxroundsroot = 10
+separating/maxrounds = 0
+separating/maxstallroundsroot = 5
+
+# ---------------------------------------------------------------------------
+# CONFLICT ANALYSIS — MAXIMUM POSSIBLE
+# ---------------------------------------------------------------------------
+conflict/enable = TRUE
+conflict/useinflp = b
+conflict/useprop = TRUE
+conflict/usepseudo = TRUE
+conflict/usesb = TRUE
+conflict/maxconss = -1
+conflict/maxstoresize = 40000
+conflict/fuiplevels = -1
+conflict/interconss = -1
+conflict/reconvlevels = -1
+
+# ---------------------------------------------------------------------------
+# NODE SELECTION — Restart DFS
+# ---------------------------------------------------------------------------
+nodeselection/restartdfs/stdpriority = 100000
+
+# ---------------------------------------------------------------------------
+# BRANCHING — Inference-based (prefers conflict-causing variables)
+# ---------------------------------------------------------------------------
+branching/preferbinary = TRUE
+branching/inference/priority = 1000000
+
+# ---------------------------------------------------------------------------
+# PROPAGATION — MAXIMIZED
+# ---------------------------------------------------------------------------
+propagating/maxrounds = -1
+propagating/maxroundsroot = -1
+propagating/abortoncutoff = FALSE
+propagating/probing/maxprerounds = -1
+
+# ---------------------------------------------------------------------------
+# SYMMETRY — Enable
+# ---------------------------------------------------------------------------
+misc/usesymmetry = 7
+
+# ---------------------------------------------------------------------------
+# LP SETTINGS — Dual simplex for faster infeasibility detection
+# ---------------------------------------------------------------------------
+lp/initalgorithm = d
+lp/resolvealgorithm = d
+
+# ---------------------------------------------------------------------------
+# DISPLAY
+# ---------------------------------------------------------------------------
+display/freq = 100

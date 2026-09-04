@@ -1,0 +1,79 @@
+# =============================================================================
+# SCIP Settings for Infeasibility Proofs
+# Variant: AGGRESSIVE CONFLICT LEARNING
+# =============================================================================
+# Profile: For harder instances (N20+, larger K3 ranges)
+#
+# This profile shifts more resources toward conflict analysis and
+# propagation at the expense of cutting planes. Useful when the standard
+# profile gets stuck with high node counts and low completion.
+#
+# Usage:
+#   scip.exe -s infeasibility_aggressive_conflict.set -c "read <instance>.lp optimize"
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# HEURISTICS — OFF
+# ---------------------------------------------------------------------------
+heuristics/emphasis = off
+
+# ---------------------------------------------------------------------------
+# PRESOLVING — AGGRESSIVE
+# ---------------------------------------------------------------------------
+presolving/emphasis = aggressive
+presolving/maxrounds = -1
+presolving/maxrestarts = -1
+
+# ---------------------------------------------------------------------------
+# SEPARATING — FAST (not aggressive)
+# ---------------------------------------------------------------------------
+# For harder instances, aggressive separating can create huge LP relaxations
+# that slow down node processing. Use fast separating to keep LPs manageable.
+separating/emphasis = fast
+
+# Limit the number of separation rounds per node
+separating/maxrounds = 5
+separating/maxroundsroot = 20
+
+# ---------------------------------------------------------------------------
+# CONFLICT ANALYSIS — MAXIMIZED
+# ---------------------------------------------------------------------------
+conflict/enable = TRUE
+conflict/useinflp = b
+conflict/useprop = TRUE
+conflict/usepseudo = TRUE
+conflict/usesb = TRUE
+conflict/maxconss = -1
+conflict/maxstoresize = 20000
+
+# Increase dynamic length for conflict clauses
+conflict/fuiplevels = -1
+conflict/interconss = -1
+conflict/reconvlevels = -1
+
+# ---------------------------------------------------------------------------
+# NODE SELECTION — Restart DFS (deep-first for fast conflict generation)
+# ---------------------------------------------------------------------------
+nodeselection/restartdfs/stdpriority = 100000
+
+# ---------------------------------------------------------------------------
+# BRANCHING — Strong emphasis on conflict-driven decisions
+# ---------------------------------------------------------------------------
+branching/preferbinary = TRUE
+
+# Use inference-based branching which prefers variables that caused conflicts
+branching/inference/priority = 1000000
+
+# ---------------------------------------------------------------------------
+# PROPAGATION — MAXIMIZED
+# ---------------------------------------------------------------------------
+propagating/maxrounds = -1
+propagating/maxroundsroot = -1
+propagating/abortoncutoff = FALSE
+propagating/probing/maxprerounds = -1
+
+# ---------------------------------------------------------------------------
+# DISPLAY
+# ---------------------------------------------------------------------------
+display/freq = 100
+

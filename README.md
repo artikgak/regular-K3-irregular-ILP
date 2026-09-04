@@ -1,39 +1,41 @@
-# SCIP_irreg
+# SCIP K3-Irregular Graph Generator
 
-Program to generate lp files to test if regular K_3-irregular graphs exits for given regulairy and order
+This repository contains a C++ program that formulates the search for regular $K_3$-irregular graphs as an Integer Linear Programming (ILP) problem. It generates models in the standard `.lp` format. Here I use [SCIP Optimization Suite](https://scipopt.org/) for solving (and performed some experiments with gurobi).
 
-## Some commands to run script [todo, edit them]
+## Overview
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\fscip.exe" default.prm reg_irreg_N14_R7.lp -sth 12 -fsol solution.sol > runlog12th.txt
+A $K_3$-irregular graph is a graph where no two vertices belong to the same number of triangles (i.e., every vertex has a distinct $K_3$-degree). This program is designed to test the existence of $r$-regular $K_3$-irregular graphs of order $n$. By formulating the structural constraints as an ILP problem, we can use an exact solver like SCIP to computationally prove whether such graphs exist for specific parameter combinations, particularly for small values of $r$ and $n$ (such as $r=8$ or $r=9$).
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\fscip.exe" default.prm reg_irreg_N24_R9.lp -sth 4 -fsol solution.sol -isol solStart_N24_R92.mst
+The ILP models use several theoretical lemmas to significantly reduce the search space through symmetry breaking, bounds tightening, and specific subcase partitioning (e.g., anchoring a vertex with maximum or minimum $K_3$-degree).
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R9.lp optimize"
+**The main computational result achieved using this repository is the exhaustive proof of the non-existence of $8$-regular $K_3$-irregular graphs.** 
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R9.lp read solStart_N24_R9.mst optimize"
+This project builds upon our previous theoretical work: [Regular $K_3$-irregular graph](https://arxiv.org/abs/2507.18776). 
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\fscip.exe" default.prm reg_irreg_N22_R8.lp -sth 12
+A follow-up paper detailing the specific mathematical constraints and computational methodology for $r=8$ is currently in preparation and a link will be added here once it is published on arXiv.
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_test.lp set emphasis feasibility set heuristics emphasis aggressive optimize" // not good
+## How to Build
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_test.lp set emphasis feasibility optimize" // worse
+The project is built using C++ and requires the Boost Graph Library.
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_test.lp set heuristics emphasis aggressive optimize" /// better
+1. Install **Boost** (e.g., `boost_1_82_0`).
+2. Open `SCIP_irreg.sln` in Visual Studio.
+3. Update the `Additional Include Directories` in the project properties (`SCIP_irreg.vcxproj`) to point to your local Boost installation path.
+4. Compile the project.
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N22_R_spec8_t.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution"
+## Usage
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N14_R8.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution
+1. Open `main.cpp` and modify the `GraphConfig cfg` object to set the desired graph parameters ($n$, $r$, $K_3$-degree bounds, and specific constraints like `use_split_AB` or `fixVertexInB`).
+2. Run the compiled executable. It will generate a `.lp` file in the working directory (e.g., `N22_R8_K3_0_21_split_21...lp`).
+3. Use SCIP to solve the generated `.lp` file.
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N14_R_spec8.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution
+### Example SCIP Execution:
+scip -c "read N22_R8_K3_0_21_split_21.lp optimize display solution" > N22_R8_log.txt
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N15_R8.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution
+## Repository Structure
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N15_R_spec8.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution
-
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N16_R_spec8.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution
-
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N20_R_spec8.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution
-
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R_spec9.lp set heuristics completesol maxunknownrate 0.99  read presolve9r_split.mst optimize display solution quit" > sol24_9.log
-
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R_spec9.lp set heuristics completesol maxunknownrate 0.99  read presolve9r_split.mst optimize write solution solution.txt"
+- `main.cpp`: Entry point and configuration template.
+- `generator.cpp` / `generator.h`: Contains the core logic for translating the graph theoretical constraints and lemmas into ILP equations.
+- `graphhelper.h`: Utilities for graph parsing and validating SCIP solutions.
+- `SCIP_Runs/`: Directory structure intended for organizing ILP solver outputs (logs, `.sol`, `.mst`, `.lp` files are ignored by git).
+- `run_commands_history.txt`: Archive of specific solver command-line invocations used during computational experiments.

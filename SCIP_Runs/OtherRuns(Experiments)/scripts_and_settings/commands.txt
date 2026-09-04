@@ -1,0 +1,215 @@
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\fscip.exe" default.prm reg_irreg_N14_R7.lp -sth 12 -fsol solution.sol > runlog12th.txt
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\fscip.exe" default.prm reg_irreg_N24_R9.lp -sth 4 -fsol solution.sol -isol solStart_N24_R92.mst
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R9.lp optimize"
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R9.lp read solStart_N24_R9.mst optimize"
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\fscip.exe" default.prm reg_irreg_N22_R8.lp -sth 12
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_test.lp set emphasis feasibility set heuristics emphasis aggressive optimize" // not good
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_test.lp set emphasis feasibility optimize" // worse
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_test.lp set heuristics emphasis aggressive optimize" /// better
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N22_R_spec8_t.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution"
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R_spec9.lp set heuristics completesol maxunknownrate 0.99  read presolve9r_split.mst optimize display solution quit" > sol24_9.log
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N24_R_spec9.lp set heuristics completesol maxunknownrate 0.99  read presolve9r_split.mst optimize write solution solution.txt"
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_K3min3_K3max20_K3split3 set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > reg_irreg_N18_R8_K3min3_K3max20+K3split3_log.txt
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read l34abcd_reg_irreg_N24_R9_K3min3_K3max26_K3split3.lp set heuristics completesol maxunknownrate 0.99 read presolve9r_split.mst optimize"
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N19_R8_K3_0_20_split_20.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > N19_R8_K3_0_20_split_20_log.txt
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N20_R8_K3_1_21_split_21_lem_31_34_testFix1B.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > N20_R8_K3_1_21_split_21_lem_31_34_fix1B_log.txt
+
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N20_R8_K3_0_21_split_21.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > N22_R8_K3_0_22_split_22_lem_31_34_fix0B_log.txt
+
+try to exclude 0 from [0 .. 19] (fix 0): 2400 sec = 40 m THE END, 1-19 not divisible by 3
+test
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N20_R8_K3_0_21_split_21.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution"
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N20_R8_K3_0_21_split_21.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set presolving maxrestarts 1 set conflict restartnum 750 set conflict preferbinary TRUE set conflict conflictweight 1.0 set conflict usegenres TRUE set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > N20_R8_K3_0_21_split_21.lp_log.txt
+
+the same with update setting to restart:
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N20_R8_K3_1_20_split_20_lem_31_34_fix1B.lp"
+
+ time | node  | left  |LP iter|LP it/n|mem/heur|mdpt |vars |cons |rows |cuts |sepa|confs|strbr|  dualbound   | primalbound  |  gap   | compl.
+usual
+  184s| 12000 |  1084 |  1694k| 141.1 |    58M |  35 |1248 |3175 |2568 |  37k|  2 |9033 |  18 | 0.000000e+00 |      --      |    Inf | unknown
+restart after 500 confs
+  184s| 14900 |   841 |  1816k| 112.4 |    69M |  33 |1248 |5859 |2637 |  26k|  2 |  11k|  35 | 0.000000e+00 |      --      |    Inf |   1.08%
+restart after 1000 confs
+  185s|  9600 |   504 |  2088k| 174.9 |    69M |  30 |1248 |7196 |2833 |  30k|  2 |8260 |  37 | 0.000000e+00 |      --      |    Inf |   0.79%
+restart after 750 confs
+  184s| 16100 |   300 |  1878k| 104.9 |    64M |  34 |1248 |8706 |2599 |  13k|  0 |  14k|  37 | 0.000000e+00 |      --      |    Inf |   1.04%
+
+Profile: INFEASIBILITY_PROOF (Primary — recommended for most runs)
+  301s|  7700 |  3240 |  3766k| 488.3 |   127M |  58 |1238 |4349 |2684 |  87k|  2 |4842 |  16 | 0.000000e+00 |      --      |    Inf |   1.92%
+Variant: PRESOLVING-HEAVY (Max presolve, minimal search)
+  302s| 11400 |  5601 |  4141k| 362.7 |    75M |  40 |1238 |3577 |2533 |  99k|  2 |6138 |  15 | 0.000000e+00 |      --      |    Inf | unknown
+Variant: AGGRESSIVE CONFLICT LEARNING
+  302s|  5700 |  3221 |  2344k| 410.3 |   109M |  51 |1238 |3664 |2399 |  65k|  2 |5009 |   0 | 0.000000e+00 |      --      |    Inf | unknown
+SYMMETRY_AWARE
+  300s|  6900 |  2941 |  3401k| 492.1 |   124M |  58 |1238 |4451 |2689 |  79k|  0 |4381 |  16 | 0.000000e+00 |      --      |    Inf |   1.85%
+LEAN_LP
+  300s| 18800 |  6360 |  4389k| 233.1 |    68M |  50 |1238 |6060 |2357 |  78 |  0 |  17k|   0 | 0.000000e+00 |      --      |    Inf | unknown
+HYBRID_RESTARTS
+  300s|  7700 |  3240 |  3766k| 488.3 |   127M |  58 |1238 |4349 |2684 |  87k|  2 |4842 |  16 | 0.000000e+00 |      --      |    Inf |   1.92%
+CLIQUE_CENTRIC
+  300s|  5200 |  2364 |  2781k| 533.7 |   108M |  58 |1238 |3438 |2578 |  69k|  2 |3109 |  16 | 0.000000e+00 |      --      |    Inf |   1.85%
+CLIQUE_CENTRIC with optimize parameters from launch instead of .set
+  301s| 11100 |  4846 |  4031k| 363.0 |    88M |  48 |1238 |3637 |2425 |  37k|  1 |6879 |  21 | 0.000000e+00 |      --      |    Inf | unknown
+Try previous with restart 750
+  136s|  2900 |  1370 |  1614k| 554.5 |    81M |  55 |1238 |3067 |   0 |  42k|  0 |2003 |  16 | 0.000000e+00 |      --      |    Inf |   1.32%
+(run 1, node 2931) restarting after 750 successful conflict analysis calls
+  155s|   900 |   102 |  1858k| 482.8 |    88M |  38 |1238 |3449 |2779 |4672 |  0 |2428 |  32 | 0.000000e+00 |      --      |    Inf | unknown
+(run 2, node 921) restarting after 1125 successful conflict analysis calls
+
+TODO
+SCIP/set/conflict> restartnum 500
+SCIP/set/conflict> preferbinary TRUE
+SCIP/set/conflict> conflictweight 1.0
+SCIP/set/conflict> usegenres TRUE
+
+# propagating/abortoncutoff = FALSE
+
+n12 r8 = 9sec
+n13 r8 = 582sec + (k3 <= 22 - 97.9sec | 128sec) + (100sec | 200sec + 3T + T>84 (strategy 3))  (26 sec usual scip with config, wo config = 14, propagating/abortoncutoff = FALSE 11)
+n14 r8 = 2472sec + (k3 <= 22) але (6610sec + k3 <= 22 + d0>=0) але (??? + 3T + d0>=0)
+n15 r8 = 
+
+
+# ord0: d0 - d1 <= -1
+# ord1: d1 - d2 <= -1
+# ord2: d2 - d3 <= -1
+# ord3: d3 - d4 <= -1
+# ord4: d4 - d5 <= -1
+# ord5: d5 - d6 <= -1
+# ord6: d6 - d7 <= -1
+# ord7: d7 - d8 <= -1
+# ord8: d8 - d9 <= -1
+# ord9: d9 - d10 <= -1
+# ord10: d10 - d11 <= -1
+# ord11: d11 - d12 <= -1
+# ord12: d12 - d13 <= -1
+# ord13: d13 - d14 <= -1
+# ord14: d14 - d15 <= -1
+# ord15: d15 - d16 <= -1
+# ord16: d16 - d17 <= -1
+# ord17: d17 - d18 <= -1
+# ord18: d18 - d19 <= -1
+# ord19: d19 - d20 <= -1
+# ord20: d20 - d21 <= -1
+# ord21: d21 - d22 <= -1
+# ord22: d22 - d23 <= -1
+# ord23: d23 - d24 <= -1
+
+
+x1_2 1
+x1_3 1
+x1_4 1
+x1_5 1
+x1_6 1
+x1_7 1
+x1_9 1
+x1_10 1
+
+x1_8 0
+x1_11 0
+x1_12 0
+x1_13 0
+x1_14 0
+x1_15 0
+x1_16 0
+x1_17 0
+x1_18 0
+x1_19 0
+x1_20 0
+x1_21 0
+x1_22 0
+x1_23 0
+
+x2_3 1
+x2_4 1
+x2_5 1
+x2_6 1
+x2_7 1
+x2_13 1
+x2_23 1
+
+x3_4 1
+x3_5 1
+x3_7 1
+x3_8 1
+x3_19 1
+x3_23 1
+
+x4_5 1
+x4_6 1
+x4_7 1
+x4_8 1
+x4_14 1
+
+x5_6 1
+x5_7 1
+x5_9 1
+x5_23 1
+
+x6_7 1
+x6_8 1
+x6_9 1
+x6_23 1
+
+x7_10 1
+x7_23 1
+
+x8_11 1
+x8_12 1
+x8_16 1
+x8_20 1
+x8_21 1
+x8_22 1
+
+x9_11 1
+x9_12 1
+x9_13 1
+x9_20 1
+x9_21 1
+x9_22 1
+
+x10_11 1
+x10_12 1
+x10_14 1
+x10_16 1
+x10_20 1
+x10_21 1
+x10_22 1
+
+x11_14 1
+x11_15 1
+x11_16 1
+x11_17 1
+x11_18 1
+
+x12_15 1
+x12_17 1
+x12_18 1
+x12_19 1
+x12_23 1
+
+x13_14 1
+x13_15 1
+x13_16 1
+x13_18 1
+x13_20 1
+x13_21 1
+x13_22 1
+
+x14_15 1
+x14_17 1
+x14_19 1
+x14_21 1
+x14_22 1
+

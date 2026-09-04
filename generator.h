@@ -28,10 +28,13 @@ struct GraphConfig
 	int neighbours_of_fixed_vertex_in_A_inside_A = -1; // only used if fixVertexInA
 	bool fixRestNumberOfVerticesInB = false;
 	
-	bool useLemmasOnEdgeDivision = false;
+	bool writeconditionOnDefectParts = false;
+	int defectBound = -1; // only used if writeconditionOnDefectParts
 	bool useLemmas31_34 = false;
 
 	bool usePolytopeMatrix = false;
+
+	bool specialConditionFor9_20 = false; // only used if n=20, r=9, 4..23 range
 
 	void validate() const
 	{
@@ -82,6 +85,8 @@ struct GraphConfig
 			if (neighbours_of_fixed_vertex_in_A_inside_A < 0 || neighbours_of_fixed_vertex_in_A_inside_A >= r)
 				throw std::invalid_argument("Invalid neighbours_of_fixed_vertex_in_A values.");
 		}
+		if(specialConditionFor9_20 && (n != 20 || r != 9 || min_k3 != 4 || max_k3 != 23 || !fixVertexInB))
+			throw std::invalid_argument("specialConditionFor9_20 can only be used with n=20, r=9, min_k3=4, max_k3=23.");
 		#ifndef NDEBUG
 		std::cout << "GraphConfig validated successfully.\n";
 		#endif // !NDEBUG

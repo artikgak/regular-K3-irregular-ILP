@@ -98,11 +98,11 @@ std::string generatePresove(const UndirectedGraph& graph)
 		k3_degs_with_index.push_back(std::pair<int, int>(k3_degs[i], i));
 	}
 
-	// Сортуємо за зростанням K3-степеня. 
-	// Тепер позиція в масиві (від 0 до n-1) - це і є наш MILP-індекс!
+	// sort ascending K3-dgrees. 
+	// now indexes in array (from 0 to n-1) - is our MILP-index!
 	std::sort(k3_degs_with_index.begin(), k3_degs_with_index.end());
 
-	// 1. Фіксуємо всі K3-степені (змінні d_i)
+	// 1. Fix all K3-degrees (changed d_i)
 	for (int milp_idx = 0; milp_idx < n; ++milp_idx)
 	{
 		res += "d" + std::to_string(milp_idx)
@@ -113,16 +113,15 @@ std::string generatePresove(const UndirectedGraph& graph)
 	{
 		for (int v_milp = u_milp + 1; v_milp < n; ++v_milp)
 		{
-			// Дістаємо їхні оригінальні індекси в Boost-графі
+			// Get their original indecies in Boost-graph
 			int u_orig = k3_degs_with_index[u_milp].second;
 			int v_orig = k3_degs_with_index[v_milp].second;
 
-			// Перевіряємо, чи є ребро між цими вершинами в оригінальному графі
-			// Функція edge() у Boost повертає пару, де .second - це bool (існує чи ні)
+			// Check if there is an edge between these vertices in original graph
 			auto e = edge(u_orig, v_orig, graph);
 			int edge_exists = e.second ? 1 : 0;
 
-			// Виводимо готове рівняння для LP файлу
+			// output equation for LP file
 			res += "x" + std::to_string(u_milp) + "_" + std::to_string(v_milp) + " " + std::to_string(edge_exists) + "\n";
 		}
 	}
@@ -137,7 +136,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 
 	const std::vector<int> k3_degs = K3Irregullar(graph);
 
-	// 1. Знаходимо anchor вершину із заданим K3-степенем (це наша MILP вершина 0)
+	// 1. Find anchor vertex of given K3-degree (this is our MILP vertex 0)
 	int v_anchor_orig = -1;
 	for (int i = 0; i < n; ++i) {
 		if (k3_degs[i] == cfg.anchorK3) {
@@ -146,13 +145,13 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 		}
 	}
 
-	// Захист від помилок: якщо такої вершини в графі немає
+	// Protection from mistakes: if there is no such vertex in a graph
 	if (v_anchor_orig == -1) {
-		std::cerr << "Помилка: Вершину з K3-степенем " << cfg.anchorK3 << " не знайдено!" << std::endl;
+		std::cerr << "Error: vertex of K3-degree " << cfg.anchorK3 << " not found!" << std::endl;
 		return "";
 	}
 
-	// 2. Розбиваємо решту вершин на Окіл (A) та Не-окіл (B)
+	// 2. Split rest of the vertices into neighborhood (A) and non-neighborhood (B)
 	std::vector<std::pair<int, int>> A_raw;
 	std::vector<std::pair<int, int>> B_raw;
 
@@ -161,7 +160,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 		if (i == v_anchor_orig)
 			continue;
 
-		// Перевіряємо, чи є ребро між v_split та i
+		// Check if there is an edge between v_split and i
 		auto e = edge(v_anchor_orig, i, graph);
 		if (e.second) 
 		{
@@ -177,7 +176,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 	milp_to_orig[0] = v_anchor_orig;
 	int current_milp_idx = 1;
 
-	// 3. Знаходимо фіксовану вершину в B (вона нам потрібна для сортування A)
+	// 3. Find fixed vertex in B (we need it to sort A)
 	int fixed_B_orig = -1;
 	if (cfg.fixVertexInB)
 	{
@@ -193,7 +192,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 
 	if (cfg.fixVertexInB && fixed_B_orig == -1)
 	{
-		std::cerr << "Помилка: Вершину в B з K3-степенем " << cfg.k3degFixedInB << " не знайдено!" << std::endl;
+		std::cerr << "Error: there is no vertex in B with K3-degree " << cfg.k3degFixedInB << std::endl;
 		return "";
 	}
 
@@ -251,7 +250,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 		for (auto& p : A_adj_to_fixed) milp_to_orig[current_milp_idx++] = p.second;
 		for (auto& p : A_not_adj_to_fixed) milp_to_orig[current_milp_idx++] = p.second;
 	}
-	// 4. Обробка множини А (індекси 1..R) із урахуванням фіксації вершини в B (якщо потрібно)
+	// 4. Process set A (indecies 1..R) accounting for fixed vertex in B (if needed)
 	else if (cfg.fixVertexInB && cfg.fixRestNumberOfVerticesInA )
 	{
 		std::vector<std::pair<int, int>> A_adj_to_fixed;
@@ -270,7 +269,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 			}
 		}
 
-		// Сортуємо окремо сусідів та не-сусідів фіксованої вершини в B
+		// Sort separately neighbors and non-neighbors of fixed in B
 		std::sort(A_adj_to_fixed.begin(), A_adj_to_fixed.end());
 		std::sort(A_not_adj_to_fixed.begin(), A_not_adj_to_fixed.end());
 
@@ -287,7 +286,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 	}
 	else
 	{
-		// Спочатку записуємо відсортованих сусідів (індекси 1..R)
+		// First, write sorted neighbors (indecies 1..R)
 		std::sort(A_raw.begin(), A_raw.end());
 		for (auto& p : A_raw) 
 		{
@@ -295,7 +294,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 		}
 	}
 
-	// 5. Обробка B із урахуванням фіксації вершини в B
+	// 5. Process B (with fixed vertex in B)
 	if (cfg.fixVertexInB)
 	{
 		milp_to_orig[current_milp_idx++] = fixed_B_orig;
@@ -322,13 +321,13 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 		std::sort(B_adj_to_fixed.begin(), B_adj_to_fixed.end());
 		std::sort(B_not_adj_to_fixed.begin(), B_not_adj_to_fixed.end());
 
-		// MIPL R+2..R+1+neighbours_of_fixed_vertex_in_B - сусіди фіксованої вершини в B
+		// MIPL R+2..R+1+neighbours_of_fixed_vertex_in_B - neighbors of fixed vertex in B
 		for (auto& p : B_adj_to_fixed)
 		{
 			milp_to_orig[current_milp_idx++] = p.second;
 		}
 
-		// MIPL R+1+neighbours_of_fixed_vertex_in_B..N-1 - не-сусіди фіксованої вершини в B
+		// MIPL R+1+neighbours_of_fixed_vertex_in_B..N-1 - non-neighbors of fixed vertex in B
 		for (auto& p : B_not_adj_to_fixed)
 		{
 			milp_to_orig[current_milp_idx++] = p.second;
@@ -354,7 +353,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 	}
 	else
 	{
-		// Потім відсортованих не-сусідів (індекси R+1..N-1)
+		// add sorted non-neighbors (indecies R+1..N-1)
 		std::sort(B_raw.begin(), B_raw.end());
 		for (auto& p : B_raw)
 		{
@@ -362,7 +361,7 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 		}
 	}
 
-	// Виводимо K3-степені (змінні d_i)
+	// Print K3-degrees (variables d_i)
 	for (int i = 0; i < n; ++i) 
 	{
 		int orig = milp_to_orig[i];
@@ -370,21 +369,20 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 			+ " " + std::to_string(k3_degs[orig]) + "\n";
 	}
 
-	// виводимо ребра
+	// print edges
 	for (int u_milp = 0; u_milp < n - 1; ++u_milp)
 	{
 		for (int v_milp = u_milp + 1; v_milp < n; ++v_milp)
 		{
-			// Дістаємо їхні оригінальні індекси в Boost-графі
+			// Get their original indecies in Boost-graph
 			int u_orig = milp_to_orig[u_milp];
 			int v_orig = milp_to_orig[v_milp];
 
-			// Перевіряємо, чи є ребро між цими вершинами в оригінальному графі
-			// Функція edge() у Boost повертає пару, де .second - це bool (існує чи ні)
+			// Check, if there is an edge between these vertices in original graph
 			auto e = edge(u_orig, v_orig, graph);
 			int edge_exists = e.second ? 1 : 0;
 
-			// Виводимо готове рівняння для LP файлу
+			// Print euqtion for LP file
 			res += "x" + std::to_string(u_milp) + "_" + std::to_string(v_milp) + " " + std::to_string(edge_exists) + "\n";
 		}
 	}
@@ -399,45 +397,45 @@ UndirectedGraph loadGraphFromSCIPSolution(const std::string& filename, int numVe
 	std::ifstream file(filename);
 
 	if (!file.is_open()) {
-		std::cerr << "Помилка: не вдалося відкрити файл " << filename << std::endl;
+		std::cerr << "Error: cannot open file " << filename << std::endl;
 		return graph;
 	}
 
 	std::string line;
 	while (getline(file, line))
 	{
-		// Видаляємо пробіли на початку рядка, якщо вони є
+		// Remove leading spaces from the beggining of the line, if any.
 		line.erase(line.begin(), std::find_if(line.begin(), line.end(), [](unsigned char ch) {
 			return !std::isspace(ch);
 			}));
 
 		if (line.empty()) continue;
 
-		// Нас цікавлять тільки змінні ребер, які починаються на 'x'
-		// Також перевіряємо, що наступний символ - це цифра (щоб не сплутати з іншими можливими змінними)
+		// We are interested only in edge variables starting with 'x'
+		// We also check that the next character is a digit (to avoid confusion with other possible variables)
 		if (line[0] == 'x' && isdigit(line[1]))
 		{
 			std::stringstream ss(line);
 			std::string varName;
 			double value;
 
-			// Зчитуємо ім'я змінної (наприклад, "x0_1") та її значення (наприклад, 1)
-			// (об'єктивне значення "(obj:0)" ігнорується, бо ми зчитуємо лише перші два токени)
+			// Read the variable name (e.g., "x0_1") and its value (e.g., 1)
+			// (the objective value "(obj:0)" is ignored because we only read the first two tokens)
 			ss >> varName >> value;
 
-			// Якщо ребро існує (значення більше 0.5, щоб уникнути багів з float, хоча зазвичай там рівно 1)
+			// If the edge exists (value greater than 0.5 to avoid float-related bugs, although it is usually exactly 1)
 			if (value > 0.5)
 			{
 				size_t underscorePos = varName.find('_');
 				if (underscorePos != std::string::npos)
 				{
-					// Витягуємо індекси u та v
-					// varName.substr(1, ...) бере рядок після 'x' до '_'
+					// Extract indices for u and v
+					// varName.substr(1, ...) goes from after 'x' up to '_'
 					int u = stoi(varName.substr(1, underscorePos - 1));
-					// varName.substr(...) бере рядок після '_'
+					// varName.substr(...) goes after '_'
 					int v = stoi(varName.substr(underscorePos + 1));
 
-					// Додаємо ребро у Boost граф
+					// Add edge to the Boost graph
 					add_edge(u, v, graph);
 				}
 			}
@@ -445,7 +443,7 @@ UndirectedGraph loadGraphFromSCIPSolution(const std::string& filename, int numVe
 	}
 
 	file.close();
-	std::cout << "ТестіліоГраф успішно завантажено! Кількість ребер: " << num_edges(graph) << std::endl;
+	std::cout << "Graph has been loaded successfully! Edge count: " << num_edges(graph) << std::endl;
 
 	return graph;
 }
@@ -473,14 +471,13 @@ void GeneratePresolve()
 		.neighbours_of_fixed_vertex_in_A_inside_A = 2,
 		.fixRestNumberOfVerticesInB = true,
 
-		.useLemmasOnEdgeDivision = false,
 		.useLemmas31_34 = false,
 		.usePolytopeMatrix = false
 	};
 	cfg.validate();
 	std::string presolveStr = generatePresoveSplitted(graph9, cfg);
-	//std::ofstream f("rv2_presolve9r_split26_B3_6_FixRestA.mst");
-	std::ofstream f("rv2_presolve9r_split26_fix6A_2_fixrestB.mst");
+	//std::ofstream f("SCIP_Runs/sanitycheck/rv2_presolve9r_split26_B3_6_FixRestA.mst");
+	std::ofstream f("SCIP_Runs/sanitycheck/rv2_presolve9r_split26_fix6A_2_fixrestB.mst");
 	f << presolveStr;
 	f.flush();
 	f.close();
@@ -488,8 +485,8 @@ void GeneratePresolve()
 
 void LoadSolutionFromFile()
 {
-	//UndirectedGraph graph9 = loadGraphFromSCIPSolution("rv2_presolve9r.sol", 24);
-	UndirectedGraph graph9 = loadGraphFromSCIPSolution("solution.sol", 20);
+	//UndirectedGraph graph9 = loadGraphFromSCIPSolution("SCIP_Runs/sanitycheck/rv2_presolve9r.sol", 24);
+	UndirectedGraph graph9 = loadGraphFromSCIPSolution("SCIP_Runs/sanitycheck/solution.sol", 20);
 	std::vector<int> k3degs = K3Irregullar(graph9);
 	
 	for (int i = 0; i < k3degs.size(); ++i)
@@ -505,24 +502,24 @@ void LoadSolutionFromFile()
 	std::cout << "\n";
 
 	// presorting required
-	// Перевірка на попарну відмінність (всі K3-степені мають бути різними)
+	// Check for pairwise distinct (all K3-degrees must be different)
 	bool all_different = true;
 	for (size_t i = 1; i < k3degs.size(); ++i)
 	{
 		if (k3degs[i] == k3degs[i - 1])
 		{
-			std::cout << "WARNING: Знайдено однаковий K3-степінь! Вершини мають дублікат: " << k3degs[i] << "\n";
+			std::cout << "WARNING: Identical K3-degree found! Vertices have a duplicate.: " << k3degs[i] << "\n";
 			all_different = false;
 		}
 	}
 
 	if (all_different)
 	{
-		std::cout << "SUCCESS: Всі K3-степені різні! Це дійсно K3-нерегулярний граф!\n";
+		std::cout << "SUCCESS: All K3-degrees are distinct! This is indeed a K3-irregular graph!\n";
 	}
 	else
 	{
-		std::cout << "FAILED: Граф має однакові K3-степені і НЕ є K3-нерегулярним.\n";
+		std::cout << "FAILED: The graph has identical K3-degrees and is not K3-irregular.\n";
 	}
 }
 

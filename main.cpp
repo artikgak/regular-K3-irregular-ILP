@@ -8,37 +8,41 @@
 
 int main()
 {
-	//solHelper();
-
 	GraphConfig cfg = {
-		.n = 18,
+		.n = 22,
 		.r = 8,
 		.min_k3 = 1,
-		.max_k3 = 20,
+		.max_k3 = 21,
 		.use_split_AB = true,
-		.anchorK3 = 1,
+		.anchorK3 = 21,
 
-		//.fixVertexInB = true,
-		//.k3degFixedInB = 3,
-		//.neighbours_of_fixed_vertex_in_B = 6,
-		//.fixExactNumberOfNeighboursOfFixedInB = true,
-		//.fixRestNumberOfVerticesInA = true,
+		.fixVertexInB = true,
+		.k3degFixedInB = 1,
+		.neighbours_of_fixed_vertex_in_B = 4,
+		.fixExactNumberOfNeighboursOfFixedInB = true,
+		.fixRestNumberOfVerticesInA = true,
 
-		.fixVertexInA = false,
-		.k3degFixedInA = 4,
-		.neighbours_of_fixed_vertex_in_A_inside_A = 8,
-		.fixRestNumberOfVerticesInB = false,
-		
-		.useLemmasOnEdgeDivision = false,
+		/*.fixVertexInA = true,
+		.k3degFixedInA = 23,
+		.neighbours_of_fixed_vertex_in_A_inside_A = 4,
+		.fixRestNumberOfVerticesInB = true,*/
+
+		/*.writeconditionOnDefectParts = true,
+		.defectBound = 2,
 		.useLemmas31_34 = false,
-		.usePolytopeMatrix = false
+		.usePolytopeMatrix = false*/
+
+		//.specialConditionFor9_20 = true,
 	};
 
 	cfg.validate();
 
 	const std::string filename = getFileName(cfg);
-	//GeneratePresolve();
 	generateGraphLP(cfg, filename);
+
+	// for sanity checks
+	//solHelper();
+	//GeneratePresolve();
 
 	return 0;
 }
