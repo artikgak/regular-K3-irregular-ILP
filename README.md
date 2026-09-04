@@ -2,6 +2,8 @@
 
 This repository contains a C++ program that formulates the search for regular $K_3$-irregular graphs as an Integer Linear Programming (ILP) problem. It generates models in the standard `.lp` format. Here I use [SCIP Optimization Suite](https://scipopt.org/) for solving (and performed some experiments with gurobi).
 
+> **Note:** This repository is currently undergoing cleanup and restructuring to improve organization and documentation.
+
 ## Overview
 
 A $K_3$-irregular graph is a graph where no two vertices belong to the same number of triangles (i.e., every vertex has a distinct $K_3$-degree). This program is designed to test the existence of $r$-regular $K_3$-irregular graphs of order $n$. By formulating the structural constraints as an ILP problem, we can use an exact solver like SCIP to computationally prove whether such graphs exist for specific parameter combinations, particularly for small values of $r$ and $n$ (such as $r=8$ or $r=9$).
