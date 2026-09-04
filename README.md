@@ -1,4 +1,4 @@
-# SCIP K3-Irregular Graph Generator
+# ILP K3-Irregular Graph Generator
 
 This repository contains a C++ program that formulates the search for regular $K_3$-irregular graphs as an Integer Linear Programming (ILP) problem. It generates models in the standard `.lp` format. Here I use [SCIP Optimization Suite](https://scipopt.org/) for solving (and performed some experiments with gurobi).
 
