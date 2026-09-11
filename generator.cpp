@@ -145,7 +145,7 @@ void writeTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarReg
                 }
             }
         }
-        out << " = 0\n\n";
+        out << " = 0\n";
     }
 	out << "\n";
 }
