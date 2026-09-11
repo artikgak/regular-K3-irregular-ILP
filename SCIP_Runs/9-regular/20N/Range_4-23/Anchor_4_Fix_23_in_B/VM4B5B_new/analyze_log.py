@@ -31,14 +31,16 @@ with open(log_file, 'r') as f:
         # Match data lines - time can be like "0.0s", "123s", "123m", "1234s"
         # Pattern: time|node|left|LP iter|LP it/n|mem|mdpt|vars|cons|rows|cuts|sepa|confs|strbr|dual|primal|gap|compl
         m = re.match(
-            r'\s*([\d.]+)(s|m)\s*\|\s*([\d.]+[A-Za-z]?)\s*\|\s*(\d+)\s*\|\s*([\d.]+[A-Za-z]?)\s*\|\s*([\d.]+|-)\s*\|\s*(\d+)M'
+            r'\s*([\d.]+)(s|m|h)\s*\|\s*([\d.]+[A-Za-z]?)\s*\|\s*(\d+)\s*\|\s*([\d.]+[A-Za-z]?)\s*\|\s*([\d.]+|-)\s*\|\s*(\d+)M'
             r'.*?\|\s*(\d+)\s*\|.*?\|.*?\|.*?\|([\s\d.]+[A-Za-z]?)\s*\|\s*\d+\s*\|([\s\d.]+[A-Za-z]?)\s*\|.*?\|.*?\|.*?\|.*?\|\s*([\d.]+%|unknown.*?)',
             line
         )
         if m:
             t_val = float(m.group(1))
             t_unit = m.group(2)
-            if t_unit == 'm':
+            if t_unit == 'h':
+                t_sec = t_val * 3600
+            elif t_unit == 'm':
                 t_sec = t_val * 60
             else:
                 t_sec = t_val
@@ -134,7 +136,7 @@ N = min(200, len(completion))
 recent_compl = completion[-N:]
 recent_time = times_sec[-N:]
 
-if len(recent_compl) > 1 and (recent_compl[-1] - recent_compl[0]) > 0:
+if len(recent_compl) > 1 and (recent_compl[-1] - recent_compl[0]) > 0 and (recent_time[-1] - recent_time[0]) > 0:
     rate = (recent_compl[-1] - recent_compl[0]) / (recent_time[-1] - recent_time[0])  # %/sec
     remaining_pct = 100.0 - completion[-1]
     if rate > 0:
@@ -159,7 +161,7 @@ for window_name, window_size in [("Last 50 pts", 50), ("Last 100 pts", 100), ("L
     ws = min(window_size, len(completion))
     c = completion[-ws:]
     t = times_sec[-ws:]
-    if len(c) > 1 and (c[-1] - c[0]) > 0:
+    if len(c) > 1 and (c[-1] - c[0]) > 0 and (t[-1] - t[0]) > 0:
         r = (c[-1] - c[0]) / (t[-1] - t[0])
         rem = (100.0 - c[-1]) / r
         print(f"  {window_name}: rate={r*3600:.4f}%/hr, remaining={rem/3600:.1f} hr ({rem/86400:.1f} days)")
@@ -172,7 +174,7 @@ for window_name, window_size in [("Last 50 pts", 50), ("Last 100 pts", 100), ("O
     ws = min(window_size, len(nodes))
     n = nodes[-ws:]
     t = times_sec[-ws:]
-    if len(n) > 1:
+    if len(n) > 1 and (t[-1] - t[0]) > 0:
         r = (n[-1] - n[0]) / (t[-1] - t[0])
         print(f"  {window_name}: {r:.2f} nodes/sec = {r*60:.1f} nodes/min")
 
