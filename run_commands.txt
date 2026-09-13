@@ -26,7 +26,7 @@ scip -c "read N17_R8_K3_0_17_split_17_wo_lem_str4_v9.lp optimize display solutio
 
 "C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N18_R8_test.lp set heuristics emphasis aggressive optimize" /// better
 
-"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N22_R_spec8_t.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution"
+"C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read N19_R8_K3_0_21_split_21_str4_v9_VM.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp b optimize display solution" > N19_R8_K3_0_21_split_21_test_solver_set_log.txt
 
 "C:\Program Files\SCIPOptSuite 10.0.1\bin\scip.exe" -c "read reg_irreg_N14_R8.lp set heuristics emphasis off set presolving emphasis aggressive set separating emphasis aggressive set nodeselection restartdfs stdpriority 100000 set conflict useinflp  b optimize display solution
 
@@ -59,9 +59,10 @@ Ctrl+A, D
 
 top, htop
 
-screen -S N20R9_4_23B_4D 
-screen -r N20R9_4_23B_4D 
-taskset -c 0 scip -c "read N20_R9_K3_4_23_split_4_fix23B_4_exact_fixrestA_wo_lem_str4_v9_VM.lp optimize display solution" > N20_R9_K3_4_23_split_4_fix23B_4_exact_fixrestA_wo_lem_str4_v9_VM_log.txt
+screen -S N18R8
+screen -r N20R9_4_23B5_V10
+taskset -c 0 scip -c "read N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_v10_7_VM.lp optimize display solution" > N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_v10_7_VM_log.txt
+taskset -c 3 scip -c "read N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_spec9_20v3_v10_VM.lp optimize display solution" > N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_spec9_20v3_v10_VM_log.txt
 
 screen -S N20R9_4_23B_4DCROSS
 screen -r N20R9_4_23B_4DCROSS

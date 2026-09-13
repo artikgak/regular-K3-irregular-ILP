@@ -61,7 +61,7 @@ std::string getFileName(const GraphConfig& cfg)
         res += "_spec9_20v3";
 	}
 
-    res += "_str4_v9.lp";
+    res += "_v10_12.lp";
     return res;
 }
 
@@ -92,7 +92,18 @@ void writeRegularityCondition(std::ostream& out, const GraphConfig& cfg, GraphVa
 	out << "\n";
 }
 
-void writeTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+void writeSumK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+    // sum k3 = 3T
+    out << "sum_k3: ";
+    for (int i = 0; i < cfg.n - 1; i++)
+    {
+        out << varRegister.k3deg(i) << " + ";
+    }
+    out << varRegister.k3deg(cfg.n - 1) << " - 3 " << varRegister.intvar("T") << " = 0\n";
+}
+
+void writeTriangles(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     // triangle definition
     for (int i = 0; i < cfg.n - 2; i++)
@@ -102,9 +113,9 @@ void writeTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarReg
             for (int k = j + 1; k < cfg.n; k++)
             {
                 const string t = varRegister.triangle(i, j, k);
-				const string e_ij = varRegister.edge(i, j);
-				const string e_ik = varRegister.edge(i, k);
-				const string e_jk = varRegister.edge(j, k);
+                const string e_ij = varRegister.edge(i, j);
+                const string e_ik = varRegister.edge(i, k);
+                const string e_jk = varRegister.edge(j, k);
 
                 out << "tri1_" << to_string(i) << "_" << to_string(j) << "_" << to_string(k) << ": "
                     << t << " - " << e_ij << " <= 0\n";
@@ -121,8 +132,11 @@ void writeTrianglesK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarReg
         }
     }
 
-	out << "\n";
+    out << "\n";
+}
 
+void writeK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
     // K3-degree of vertices
     for (int v = 0; v < cfg.n; v++)
     {
@@ -359,7 +373,8 @@ void writeOrderTotalK3degCondition(std::ostream& out, const std::vector<int>& ar
 void writePaiwiseDifferentK3degCondition(std::ostream& out, const std::vector<int>& arr1, const std::vector<int>& arr2, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     // paiwise different
-    const int M = cfg.r * cfg.r; // use upper bound on max_k3_deg + epsilon
+    //const int M = cfg.r * cfg.r; // use upper bound on max_k3_deg + epsilon
+	const int M = cfg.max_k3 - cfg.min_k3 + 1; // use upper bound on max_k3_deg + epsilon
     for (int v : arr1)
     {
         for (int u : arr2)
@@ -417,59 +432,24 @@ void PolytopeAllDistinctK3Degs(std::ostream& out, const GraphConfig& cfg, GraphV
     }
 }
 
-void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+void writeStrongOrderDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
     const VertexSets vs(cfg);
 
-    // new idea: write pairwise first
-    // next total orders
-	
     const auto& verticesInA = vs.verticesInA;
     // ordering of K3-degrees inside A
     // if no fixed exact Rest in A we can do total order inside A
-	// if not then we can only order neighbours of fixed in B in A, and 
+    // if not then we can only order neighbours of fixed in B in A, and 
     // non-neighbours of fixed in B in A, but not between them, because we don't know if they belong to A or B
-	// and add pairwise check of not equality between them
+    // and add pairwise check of not equality between them
     const auto& neighOfFixedInBinA = vs.getNeigOfFixedInBinA();
     const auto& notNeigOfFixedInBinA = vs.getNotNeigOfFixedInBinA();
     const auto& verticesInB = vs.verticesInB;
     const auto& fixedAdjInB = vs.getNeighOfFixedInB();
     const auto& otherInB = vs.getOtherInB();
 
-    if (cfg.usePolytopeMatrix)
-    {
-        PolytopeAllDistinctK3Degs(out, cfg, varRegister);
-    }
-    else 
-    {
-        if (cfg.fixRestNumberOfVerticesInA)
-        {
-	    	writePaiwiseDifferentK3degCondition(out, neighOfFixedInBinA, notNeigOfFixedInBinA, cfg, varRegister);
-        }
-        out << "\n";
-
-        if (cfg.fixVertexInB)
-        {
-            // order inbetween groups
-            writePaiwiseDifferentK3degCondition(out, fixedAdjInB, otherInB, cfg, varRegister);
-        }
-
-        if (cfg.fixVertexInA)
-        {
-            writePaiwiseDifferentK3degCondition(out, vs.getNeighOfFixedInAInA(), vs.getNotNeighOfFixedInAInA(), cfg, varRegister);
-            if (cfg.fixRestNumberOfVerticesInB)
-            {
-                writePaiwiseDifferentK3degCondition(out, vs.getNeighOfFixedInAInB(), vs.getNotNeighOfFixedInAInB(), cfg, varRegister);
-            }
-        }
-
-        // A neq B
-        writePaiwiseDifferentK3degCondition(out, verticesInA, verticesInB, cfg, varRegister);
-        out << "\n";
-    }
-
     // TODO also fix if fixed vertex is not max min then we need pairwise check not equalit of if to other vertices
-	// di < anchor || di > anchor and same for fixed vertex in B if it's not min or max in B
+    // di < anchor || di > anchor and same for fixed vertex in B if it's not min or max in B
     if (cfg.fixRestNumberOfVerticesInA)
     {
         writeOrderTotalK3degCondition(out, neighOfFixedInBinA, varRegister);
@@ -478,7 +458,7 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
 
         writeOrderTotalK3degCondition(out, notNeigOfFixedInBinA, varRegister);
     }
-    
+
     if (cfg.fixVertexInB)
     {
         writeOrderTotalK3degCondition(out, fixedAdjInB, varRegister);
@@ -519,6 +499,56 @@ void writeAllDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegis
     {
         // ordering of K3-degrees inside B
         writeOrderTotalK3degCondition(out, verticesInB, varRegister);
+    }
+}
+
+void writeAllPairwiseDiffK3Degs(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+{
+    const VertexSets vs(cfg);
+	
+    const auto& verticesInA = vs.verticesInA;
+    // ordering of K3-degrees inside A
+    // if no fixed exact Rest in A we can do total order inside A
+	// if not then we can only order neighbours of fixed in B in A, and 
+    // non-neighbours of fixed in B in A, but not between them, because we don't know if they belong to A or B
+	// and add pairwise check of not equality between them
+    const auto& neighOfFixedInBinA = vs.getNeigOfFixedInBinA();
+    const auto& notNeigOfFixedInBinA = vs.getNotNeigOfFixedInBinA();
+    const auto& verticesInB = vs.verticesInB;
+    const auto& fixedAdjInB = vs.getNeighOfFixedInB();
+    const auto& otherInB = vs.getOtherInB();
+
+
+    if (cfg.usePolytopeMatrix)
+    {
+        PolytopeAllDistinctK3Degs(out, cfg, varRegister);
+    }
+    else
+    {
+        if (cfg.fixRestNumberOfVerticesInA)
+        {
+            writePaiwiseDifferentK3degCondition(out, neighOfFixedInBinA, notNeigOfFixedInBinA, cfg, varRegister);
+        }
+        out << "\n";
+
+        if (cfg.fixVertexInB)
+        {
+            // order inbetween groups
+            writePaiwiseDifferentK3degCondition(out, fixedAdjInB, otherInB, cfg, varRegister);
+        }
+
+        if (cfg.fixVertexInA)
+        {
+            writePaiwiseDifferentK3degCondition(out, vs.getNeighOfFixedInAInA(), vs.getNotNeighOfFixedInAInA(), cfg, varRegister);
+            if (cfg.fixRestNumberOfVerticesInB)
+            {
+                writePaiwiseDifferentK3degCondition(out, vs.getNeighOfFixedInAInB(), vs.getNotNeighOfFixedInAInB(), cfg, varRegister);
+            }
+        }
+
+        // A neq B
+        writePaiwiseDifferentK3degCondition(out, verticesInA, verticesInB, cfg, varRegister);
+        out << "\n";
     }
 }
 
@@ -702,7 +732,8 @@ void writeConditionsOnEdges(std::ostream& out, const GraphConfig& cfg, GraphVarR
     }
     out << "\n";
 
-	writeLemmaNeighborsInA(out, cfg, varRegister);
+    // do not use this, it actually sloves SCIP solver
+	//writeLemmaNeighborsInA(out, cfg, varRegister);
 }
 
 void writeconditionOnDefectParts(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
@@ -1142,6 +1173,20 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
 
     f << "Subject To\n\n";
 
+    writeRegularityCondition(f, cfg, varRegister);
+
+    writeK3Degs(f, cfg, varRegister);
+
+    writeNoTrueTwinsCond(f, cfg, varRegister);
+
+    writeTriangles(f, cfg, varRegister);
+
+    writeStrongOrderDiffK3Degs(f, cfg, varRegister);
+
+    writeAllPairwiseDiffK3Degs(f, cfg, varRegister);
+
+	writeSumK3Degs(f, cfg, varRegister);
+
     if (cfg.use_split_AB && cfg.fixVertexInB)
     {
 	    writeFixVertexInB(f, cfg, varRegister);
@@ -1172,22 +1217,6 @@ void generateGraphLP(const GraphConfig& cfg, const std::string& filename)
     {
 		writeSpecialConditionFor9_20(f, cfg, varRegister);
     }
-
-    writeRegularityCondition(f, cfg, varRegister);
-
-    writeNoTrueTwinsCond(f, cfg, varRegister);
-
-    writeTrianglesK3Degs(f, cfg, varRegister);
-
-    // sum k3 = 3T
-    f << "sum_k3: ";
-    for (int i = 0; i < cfg.n - 1; i++)
-    {
-        f << varRegister.k3deg(i) << " + ";
-    }
-    f << varRegister.k3deg(cfg.n - 1) << " - 3 " << varRegister.intvar("T") << " = 0\n";
-
-    writeAllDiffK3Degs(f, cfg, varRegister);
 
     f << "\nBounds\n";
     writeBounds(f, cfg, varRegister);
