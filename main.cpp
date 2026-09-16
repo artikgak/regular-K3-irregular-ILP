@@ -9,18 +9,18 @@
 int main()
 {
 	GraphConfig cfg = {
-		.n = 24,
-		.r = 9,
-		.min_k3 = 3,
-		.max_k3 = 26,
+		.n = 19,
+		.r = 8,
+		.min_k3 = 1,
+		.max_k3 = 20,
 		.use_split_AB = true,
-		.anchorK3 = 26,
+		.anchorK3 = 1,
 
-		.fixVertexInB = true,
-		.k3degFixedInB = 3,
-		.neighbours_of_fixed_vertex_in_B = 6,
-		.fixExactNumberOfNeighboursOfFixedInB = true,
-		.fixRestNumberOfVerticesInA = true,
+		//.fixVertexInB = true,
+		//.k3degFixedInB = 3,
+		//.neighbours_of_fixed_vertex_in_B = 6,
+		//.fixExactNumberOfNeighboursOfFixedInB = true,
+		//.fixRestNumberOfVerticesInA = true,
 
 		/*.fixVertexInA = true,
 		.k3degFixedInA = 23,

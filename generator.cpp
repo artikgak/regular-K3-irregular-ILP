@@ -61,7 +61,7 @@ std::string getFileName(const GraphConfig& cfg)
         res += "_spec9_20v3";
 	}
 
-    res += "_v10_12.lp";
+    res += "_v11.lp";
     return res;
 }
 
@@ -552,35 +552,35 @@ void writeAllPairwiseDiffK3Degs(std::ostream& out, const GraphConfig& cfg, Graph
     }
 }
 
-// if anchor >=21, r=8 then every vertex in A has at least degree 3 inside A as subgraph
-void writeLemmaNeighborsInA(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
-{
-    if (cfg.anchorK3 < 21)
-		return;
-
-    if (cfg.r != 8)
-        return;
-
-    if(cfg.use_split_AB == false)
-		return;
-
-    // We consider the set A to be the vertices from 1 to r (where r=8 for an 8-regular graph).
-    for (int i = 1; i <= cfg.r; i++) 
-    {
-        out << "lemmaA_deg_" << i << ": ";
-        bool first = true;
-        for (int j = 1; j <= cfg.r; j++) 
-        {
-            if (i == j) continue;
-
-            if (!first) out << " + ";
-            out << varRegister.edge(i, j);
-            first = false;
-        }
-        out << " >= 3\n";
-    }
-    out << "\n";
-}
+// Lemma: if anchor >=21, r=8 then every vertex in A has at least degree 3 inside A as subgraph
+//void writeLemmaNeighborsInA(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
+//{
+//    if (cfg.anchorK3 < 21)
+//		return;
+//
+//    if (cfg.r != 8)
+//        return;
+//
+//    if(cfg.use_split_AB == false)
+//		return;
+//
+//    // We consider the set A to be the vertices from 1 to r (where r=8 for an 8-regular graph).
+//    for (int i = 1; i <= cfg.r; i++) 
+//    {
+//        out << "lemmaA_deg_" << i << ": ";
+//        bool first = true;
+//        for (int j = 1; j <= cfg.r; j++) 
+//        {
+//            if (i == j) continue;
+//
+//            if (!first) out << " + ";
+//            out << varRegister.edge(i, j);
+//            first = false;
+//        }
+//        out << " >= 3\n";
+//    }
+//    out << "\n";
+//}
 
 void writeLemmasOnEdgeDivision(std::ostream& out, const GraphConfig& cfg, GraphVarRegister& varRegister)
 {
