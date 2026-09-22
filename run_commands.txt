@@ -59,10 +59,14 @@ Ctrl+A, D
 
 top, htop
 
-screen -S N18R8
-screen -r N20R9_4_23B5_V10
-taskset -c 0 scip -c "read N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_v10_7_VM.lp optimize display solution" > N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_v10_7_VM_log.txt
-taskset -c 3 scip -c "read N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_spec9_20v3_v10_VM.lp optimize display solution" > N20_R9_K3_4_23_split_4_fix23B_5_exact_fixrestA_spec9_20v3_v10_VM_log.txt
+screen -S N22К8_0_21
+screen -r N22К8_0_21
+taskset -c 3 scip -c "read N22_R8_K3_0_21_split_21_fix0B_8_exact_fixrestA_v11.lp optimize display solution" > N22_R8_K3_0_21_split_21_fix0B_8_exact_fixrestA_v11_log.txt
+
+
+taskset -c 0 scip -c "read N19_R8_K3_0_20_split_0_v11.lp optimize display solution" > N19_R8_K3_0_20_split_0_v11_log.txt
+
+scip -c "read N20_R8_K3_0_22_split_22_lem31_34_v11_1.lp set load myscip.set optimize display solution" > N20_R8_K3_0_22_split_22_lem31_34_v11_1_set_log.txt
 
 screen -S N20R9_4_23B_4DCROSS
 screen -r N20R9_4_23B_4DCROSS

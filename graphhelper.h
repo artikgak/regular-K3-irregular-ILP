@@ -320,18 +320,44 @@ std::string generatePresoveSplitted(const UndirectedGraph& graph, const GraphCon
 
 		std::sort(B_adj_to_fixed.begin(), B_adj_to_fixed.end());
 		std::sort(B_not_adj_to_fixed.begin(), B_not_adj_to_fixed.end());
-
-		// MIPL R+2..R+1+neighbours_of_fixed_vertex_in_B - neighbors of fixed vertex in B
-		for (auto& p : B_adj_to_fixed)
+		
+		if (cfg.fixExactNumberOfNeighboursOfFixedInB)
 		{
-			milp_to_orig[current_milp_idx++] = p.second;
+			// MILP R+2..R+1+neighbours_of_fixed_vertex_in_B - neighbors of fixed vertex in B
+			for (auto& p : B_adj_to_fixed)
+			{
+				milp_to_orig[current_milp_idx++] = p.second;
+			}
+
+			// MILP R+1+neighbours_of_fixed_vertex_in_B..N-1 - non-neighbors of fixed vertex in B
+			for (auto& p : B_not_adj_to_fixed)
+			{
+				milp_to_orig[current_milp_idx++] = p.second;
+			}
+		}
+		else 
+		{
+			// We only force `cfg.neighbours_of_fixed_vertex_in_B` neighbors.
+			// The rest are "unforced" and must be sorted together with non-neighbors to satisfy ILP symmetry constraints.
+			const int forced_count = cfg.neighbours_of_fixed_vertex_in_B;
+			for (int i = 0; i < forced_count; ++i)
+			{
+				milp_to_orig[current_milp_idx++] = B_adj_to_fixed[i].second;
+			}
+
+			std::vector<std::pair<int, int>> unforced_B = B_not_adj_to_fixed;
+			for (size_t i = forced_count; i < B_adj_to_fixed.size(); ++i)
+			{
+				unforced_B.push_back(B_adj_to_fixed[i]);
+			}
+			std::sort(unforced_B.begin(), unforced_B.end());
+
+			for (auto& p : unforced_B)
+			{
+				milp_to_orig[current_milp_idx++] = p.second;
+			}
 		}
 
-		// MIPL R+1+neighbours_of_fixed_vertex_in_B..N-1 - non-neighbors of fixed vertex in B
-		for (auto& p : B_not_adj_to_fixed)
-		{
-			milp_to_orig[current_milp_idx++] = p.second;
-		}
 	}
 	else if (cfg.fixVertexInA && cfg.fixRestNumberOfVerticesInB)
 	{
@@ -453,31 +479,31 @@ void GeneratePresolve()
 	std::string expression = "[[1,2,3,4,5,6,7,11,12],[0,2,3,4,5,6,7,9,10],[0,1,3,4,5,6,7,13,23],[0,1,2,4,5,7,8,19,23],[0,1,2,3,5,6,7,8,14],[0,1,2,3,4,6,7,9,23],[0,1,2,4,5,7,8,9,23],[0,1,2,3,4,5,6,10,23],[3,4,6,11,12,16,20,21,22],[1,5,6,11,12,13,20,21,22],[1,7,11,12,14,16,20,21,22],[0,8,9,10,14,15,16,17,18],[0,8,9,10,15,17,18,19,23],[2,9,14,15,16,18,20,21,22],[4,10,11,13,15,17,19,21,22],[11,12,13,14,16,18,19,20,21],[8,10,11,13,15,17,18,19,23],[11,12,14,16,18,19,20,21,22],[11,12,13,15,16,17,20,21,22],[3,12,14,15,16,17,20,21,22],[8,9,10,13,15,17,18,19,23],[8,9,10,13,14,15,17,18,19],[8,9,10,13,14,17,18,19,23],[2,3,5,6,7,12,16,20,22]]";
 	UndirectedGraph graph9 = fromVecToGraph<UndirectedGraph>(parseExpression(expression));
 	GraphConfig cfg = {
-		.n = 20,
+		.n = 24,
 		.r = 9,
 		.min_k3 = 3,
 		.max_k3 = 26,
 		.use_split_AB = true,
 		.anchorK3 = 26,
 
-		//.fixVertexInB = true,
-		//.k3degFixedInB = 3,
-		//.neighbours_of_fixed_vertex_in_B = 6,
+		.fixVertexInB = true,
+		.k3degFixedInB = 3,
+		.neighbours_of_fixed_vertex_in_B = 1,
 		//.fixExactNumberOfNeighboursOfFixedInB = true,
 		//.fixRestNumberOfVerticesInA = true,
 
-		.fixVertexInA = true,
-		.k3degFixedInA = 6,
-		.neighbours_of_fixed_vertex_in_A_inside_A = 2,
-		.fixRestNumberOfVerticesInB = true,
+		//.fixVertexInA = true,
+		//.k3degFixedInA = 6,
+		//.neighbours_of_fixed_vertex_in_A_inside_A = 2,
+		//.fixRestNumberOfVerticesInB = true,
 
-		.useLemmas31_34 = false,
+		.useLemmas31_34 = true,
 		.usePolytopeMatrix = false
 	};
 	cfg.validate();
 	std::string presolveStr = generatePresoveSplitted(graph9, cfg);
 	//std::ofstream f("SCIP_Runs/sanitycheck/rv2_presolve9r_split26_B3_6_FixRestA.mst");
-	std::ofstream f("SCIP_Runs/sanitycheck/rv2_presolve9r_split26_fix6A_2_fixrestB.mst");
+	std::ofstream f("presolve24n9r_split26_fix3B_1_2.mst");
 	f << presolveStr;
 	f.flush();
 	f.close();

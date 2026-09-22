@@ -43,7 +43,7 @@ std::string getFileName(const GraphConfig& cfg)
 
     if (cfg.useLemmas31_34)
     {
-		res += "_lem31_31";
+		res += "_lem31_34";
     }
 
     if (cfg.usePolytopeMatrix)

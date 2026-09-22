@@ -9,16 +9,16 @@
 int main()
 {
 	GraphConfig cfg = {
-		.n = 19,
+		.n = 21,
 		.r = 8,
-		.min_k3 = 1,
-		.max_k3 = 20,
+		.min_k3 = 0,
+		.max_k3 = 22,
 		.use_split_AB = true,
-		.anchorK3 = 1,
+		.anchorK3 = 22,
 
-		//.fixVertexInB = true,
-		//.k3degFixedInB = 3,
-		//.neighbours_of_fixed_vertex_in_B = 6,
+		.fixVertexInB = true,
+		.k3degFixedInB = 0,
+		.neighbours_of_fixed_vertex_in_B = 5,
 		//.fixExactNumberOfNeighboursOfFixedInB = true,
 		//.fixRestNumberOfVerticesInA = true,
 
@@ -26,6 +26,8 @@ int main()
 		.k3degFixedInA = 23,
 		.neighbours_of_fixed_vertex_in_A_inside_A = 4,
 		.fixRestNumberOfVerticesInB = true,*/
+
+		//.useLemmas31_34 = true,
 
 		/*.writeconditionOnDefectParts = true,
 		.defectBound = 2,
