@@ -12,7 +12,7 @@ The ILP models use several theoretical lemmas to significantly reduce the search
 
 This project builds upon our previous work: [**Regular $K_3$-irregular graphs**](https://arxiv.org/abs/2507.18776). 
 
-The complete computational methodology, structural lemmas, and ILP formulations for excluding $r=8$ are detailed in our new paper: **There is no 8-regular $K_3$-irregular graph** (arXiv link to be added).
+The complete computational methodology, structural lemmas, and ILP formulations for excluding $r=8$ are detailed in our new paper: [**There is no 8-regular $K_3$-irregular graph**](https://arxiv.org/abs/2609.37978).
 
 ## How to Build
 
@@ -34,6 +34,7 @@ scip -c "read N22_R8_K3_0_21_split_21.lp optimize display solution" > N22_R8_log
 
 ## Repository Structure
 
+- `SourceCode/`: Source code directory.
 - `main.cpp`: Entry point and configuration template.
 - `generator.cpp` / `generator.h`: Contains the core logic for translating the graph theoretical constraints and lemmas into ILP equations.
 - `graphhelper.h`: Utilities for graph parsing and validating SCIP solutions.
