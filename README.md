@@ -10,9 +10,9 @@ The ILP models use several theoretical lemmas to significantly reduce the search
 
 **The main computational result achieved using this repository is the exhaustive proof of the non-existence of $8$-regular $K_3$-irregular graphs.** 
 
-This project builds upon our previous work: [**Regular $K_3$-irregular graphs**](https://arxiv.org/abs/2507.18776). 
-
 The complete computational methodology, structural lemmas, and ILP formulations for excluding $r=8$ are detailed in our new paper: [**There is no 8-regular $K_3$-irregular graph**](https://arxiv.org/abs/2609.37978).
+
+This project builds upon our previous work: [**Regular $K_3$-irregular graphs**](https://arxiv.org/abs/2507.18776). 
 
 ## How to Build
 
